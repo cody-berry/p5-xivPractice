@@ -11,10 +11,10 @@ let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
 let posX = 700
-let posY = 400
-let drgPosX = 650
+let posY = 450
+let drgPosX = 750
 let drgPosY = 400
-let sgePosX = 750
+let sgePosX = 650
 let sgePosY = 400
 let warPosX = 700
 let warPosY = 350
@@ -28,6 +28,12 @@ let drgSymbol
 let rdmSymbol
 let sgeSymbol
 let warSymbol
+
+let engaged = false
+let engagedAt = 0
+
+let partyWiped = false
+let causeOfWipe = ""
 
 
 function preload() {
@@ -67,8 +73,9 @@ function setup() {
 function draw() {
     background(234, 34, 24)
 
-    // display wooden chess board, basically (with red stuff on outside and a purple entrance on at the bottom)
-    fill(0, 80, 75)
+    // display wooden chess board, basically (with red or wood stuff on outside and a purple entrance on at the bottom)
+    fill(20, 50, 40)
+    if (engaged) fill(0, 80, 75)
     rect(400, 0, 600, 600)
     stroke(300, 50, 50)
     line(650, 600, 750, 600)
@@ -105,21 +112,20 @@ function draw() {
     let tankColor = classColors["TANK"]
 
     stroke(borderColor[0], borderColor[1], borderColor[2])
-    fill(DPSColor[0], DPSColor[1], DPSColor[2])
-    strokeWeight(2)
-    rect(posX - 15, posY - 15, 30, 30)
-    image(rdmSymbol, posX - 15, posY - 15, 30, 30)
-    rect(drgPosX - 15, drgPosY - 15, 30, 30)
-    image(drgSymbol, drgPosX - 15, drgPosY - 15, 30, 30)
     fill(healerColor[0], healerColor[1], healerColor[2])
+    strokeWeight(2)
     rect(sgePosX - 15, sgePosY - 15, 30, 30)
     image(sgeSymbol, sgePosX - 15, sgePosY - 15, 30, 30)
     fill(tankColor[0], tankColor[1], tankColor[2])
     rect(warPosX - 15, warPosY - 15, 30, 30)
     image(warSymbol, warPosX - 15, warPosY - 15, 30, 30)
+    fill(DPSColor[0], DPSColor[1], DPSColor[2])
+    rect(drgPosX - 15, drgPosY - 15, 30, 30)
+    image(drgSymbol, drgPosX - 15, drgPosY - 15, 30, 30)
+    rect(posX - 15, posY - 15, 30, 30)
+    image(rdmSymbol, posX - 15, posY - 15, 30, 30)
 
     // now display the party
-    fill(DPSColor[0], DPSColor[1], DPSColor[2])
     rect(10, 60, 40, 40)
     image(rdmSymbol, 10, 60, 40, 40)
     rect(10, 110, 40, 40)
@@ -138,7 +144,7 @@ function draw() {
     textSize(20)
     textSize(25)
     textSize(30)
-    text("#1   YOU", 55, 90)
+    text("#1      YOU", 55, 90)
     text("#2", 55, 140)
     text("#3", 55, 190)
     text("#4", 55, 240)
@@ -147,6 +153,37 @@ function draw() {
     if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) posY -= 2 // W or ↑ = up
     if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) posX += 2 // D or → = right
     if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) posY += 2 // S or ↓ = down
+
+    // display the ready check
+    if (!engaged) {
+        text("READY CHECK", 10, 300)
+        // button for "I'm ready!"
+        fill(120, 50, 50)
+        if (mouseX > 10 && mouseX < 180 &&
+            mouseY > 320 && mouseY < 350) fill(120, 50, 40)
+        rect(10, 320, 180, 30)
+        fill(0, 0, 100)
+        text("I'm ready!", 15, 345)
+        // if you drew aggro, the party wipes!
+        if (sqrt((posX - bossPosX)**2 + (posY - bossPosY)**2) < 230) {
+            partyWiped = true
+            causeOfWipe = "You drew aggro to the\nboss prematurely."
+            engaged = true
+        }
+    }
+    if (engaged) {
+        if (posX < 32 || posY < 32 ||
+            posX > 978 || posY > 578) {
+            partyWiped = true
+            causeOfWipe = "You entered the edge of\nthe arena."
+        }
+    }
+    if (partyWiped === true) {
+        fill(0, 100, 100)
+        text(causeOfWipe, 10, 300)
+    }
+    print(engagedAt)
+
 
 
     /* debugCorner needs to be last so its z-index is highest */
@@ -157,6 +194,14 @@ function draw() {
     // if (frameCount > 3000) noLoop()
 }
 
+function mousePressed() {
+    if (mouseX > 10 && mouseX < 180 &&
+        mouseY > 320 && mouseY < 350 &&
+        !engaged) {
+        engaged = true
+        engagedAt = millis()
+    }
+}
 
 function keyPressed() {
     /* stop sketch */
