@@ -37,12 +37,21 @@ function setup() {
 
 
 function draw() {
-    background(0, 0, 75)
+    background(0, 80, 75)
+
+    fill(0, 0, 75)
+    noStroke()
+    rect(20, 20, width - 40, height - 40)
 
     stroke(120, 50, 50)
     noFill()
     strokeWeight(25)
     point(posX, posY)
+
+    if ((keyIsDown(65) || keyIsDown(37)) && posX > 12) posX -= 2 // A or ← = left
+    if ((keyIsDown(87) || keyIsDown(38)) && posY > 12) posY -= 2 // W or ↑ = up
+    if ((keyIsDown(68) || keyIsDown(39)) && posX < width - 12) posX += 2 // D or → = right
+    if ((keyIsDown(83) || keyIsDown(40)) && posY < height - 12) posY += 2 // S or ↓ = down
 
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
