@@ -10,6 +10,9 @@ let variableWidthFont
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
+let posX = 300
+let posY = 300
+
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -19,7 +22,7 @@ function preload() {
 
 
 function setup() {
-    let cnv = createCanvas(600, 300)
+    let cnv = createCanvas(600, 600)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
     textFont(font, 14)
@@ -34,7 +37,12 @@ function setup() {
 
 
 function draw() {
-    background(234, 34, 24)
+    background(0, 0, 75)
+
+    stroke(120, 50, 50)
+    noFill()
+    strokeWeight(25)
+    point(posX, posY)
 
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
@@ -64,7 +72,7 @@ function keyPressed() {
 /** 🧹 shows debugging info using text() 🧹 */
 class CanvasDebugCorner {
     constructor(lines) {
-        this.visible = true
+        this.visible = false
         this.size = lines
         this.debugMsgList = [] /* initialize all elements to empty string */
         for (let i in lines)
