@@ -13,11 +13,24 @@ let debugCorner /* output debug text in the bottom left corner of the canvas */
 let posX = 700
 let posY = 300
 
+let classColors
+let borderColor
+
+let drgSymbol
+let rdmSymbol
+let sgeSymbol
+let warSymbol
+
 
 function preload() {
     font = loadFont('data/consola.ttf')
     fixedWidthFont = loadFont('data/consola.ttf')
     variableWidthFont = loadFont('data/meiryo.ttf')
+
+    drgSymbol = loadImage("images/drg.png")
+    rdmSymbol = loadImage("images/rdm.png")
+    sgeSymbol = loadImage("images/sge.png")
+    warSymbol = loadImage("images/war.png")
 }
 
 
@@ -33,18 +46,26 @@ function setup() {
         numpad 1 → freeze sketch</pre>`)
 
     debugCorner = new CanvasDebugCorner(5)
+
+    classColors = {
+        "DPS": [10, 70, 60],
+        "HEALER": [120, 70, 40],
+        "TANK": [240, 70, 40]
+    }
+    borderColor = [60, 70, 60]
 }
 
 
 function draw() {
     background(234, 34, 24)
 
-
+    // display wooden chess board, basically (with red stuff on outside)
     fill(0, 80, 75)
     rect(400, 0, 600, 600)
     fill(20, 50, 40)
     noStroke()
     rect(420, 20, 560, 560)
+    // display the darker parts of the chess board (just a little darker)
     for (let xIncrements = 0; xIncrements < 8; xIncrements++) {
         for (let yIncrements = 0; yIncrements < 8; yIncrements++) {
             if ((xIncrements + yIncrements) % 2 === 0) {
@@ -54,38 +75,45 @@ function draw() {
         }
         stroke(0, 0, 0)
         strokeWeight(1)
-        line(420 + xIncrements*70, 20, 420 + xIncrements*70, 580)
-        line(420, 20 + xIncrements*70, 980, 20 + xIncrements*70)
+        line(420 + xIncrements*70, 20, 420 + xIncrements*70, 580) // x line
+        line(420, 20 + xIncrements*70, 980, 20 + xIncrements*70) // y line
         noStroke()
     }
     stroke(0, 0, 0)
     strokeWeight(1)
-    line(980, 20, 980, 580)
-    line(420, 580, 980, 580)
+    line(980, 20, 980, 580) // total bottom x line
+    line(420, 580, 980, 580) // total right y line
 
-    stroke(60, 70, 60)
-    fill(10, 70, 60)
+    // display you in your position
+    let DPSColor = classColors["DPS"]
+    stroke(borderColor[0], borderColor[1], borderColor[2])
+    fill(DPSColor[0], DPSColor[1], DPSColor[2])
     strokeWeight(2)
-    rect(posX - 15, posY - 15, 30, 30) // display you in your position
+    rect(posX - 15, posY - 15, 30, 30)
+    image(rdmSymbol, posX - 15, posY - 15, 30, 30)
 
     // now display the party
     rect(10, 60, 40, 40)
+    image(rdmSymbol, 10, 60, 40, 40)
     rect(10, 110, 40, 40)
-    fill(120, 70, 40)
+    image(drgSymbol, 10, 110, 40, 40)
+    let healerColor = classColors["HEALER"]
+    fill(healerColor[0], healerColor[1], healerColor[2])
     rect(10, 160, 40, 40)
-    fill(240, 70, 40)
+    image(sgeSymbol, 10, 160, 40, 40)
+    let tankColor = classColors["TANK"]
+    fill(tankColor[0], tankColor[1], tankColor[2])
     rect(10, 210, 40, 40)
+    image(warSymbol, 10, 210, 40, 40)
 
     fill(0, 0, 100)
     textSize(30)
     noStroke()
     text("Party composition:", 5, 25)
     textSize(20)
-    text("You", 13, 87)
     textSize(25)
-    text("1", posX - 7, posY + 8)
     textSize(30)
-    text("#1", 55, 90)
+    text("#1   YOU", 55, 90)
     text("#2", 55, 140)
     text("#3", 55, 190)
     text("#4", 55, 240)
