@@ -1,6 +1,6 @@
 /**
- *  @author 
- *  @date 2023.
+ *  @author Cody
+ *  @date 2024.01.09
  *
  */
 
@@ -11,7 +11,15 @@ let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
 let posX = 700
-let posY = 300
+let posY = 400
+let drgPosX = 650
+let drgPosY = 400
+let sgePosX = 750
+let sgePosY = 400
+let warPosX = 700
+let warPosY = 350
+let bossPosX = 700
+let bossPosY = 100
 
 let classColors
 let borderColor
@@ -59,9 +67,11 @@ function setup() {
 function draw() {
     background(234, 34, 24)
 
-    // display wooden chess board, basically (with red stuff on outside)
+    // display wooden chess board, basically (with red stuff on outside and a purple entrance on at the bottom)
     fill(0, 80, 75)
     rect(400, 0, 600, 600)
+    stroke(300, 50, 50)
+    line(650, 600, 750, 600)
     fill(20, 50, 40)
     noStroke()
     rect(420, 20, 560, 560)
@@ -84,24 +94,39 @@ function draw() {
     line(980, 20, 980, 580) // total bottom x line
     line(420, 580, 980, 580) // total right y line
 
-    // display you in your position
+    // red dot at the top for boss
+    strokeWeight(30)
+    stroke(0, 100, 100)
+    point(bossPosX, bossPosY)
+
+    // display you and your party members in your and their respective position
     let DPSColor = classColors["DPS"]
+    let healerColor = classColors["HEALER"]
+    let tankColor = classColors["TANK"]
+
     stroke(borderColor[0], borderColor[1], borderColor[2])
     fill(DPSColor[0], DPSColor[1], DPSColor[2])
     strokeWeight(2)
     rect(posX - 15, posY - 15, 30, 30)
     image(rdmSymbol, posX - 15, posY - 15, 30, 30)
+    rect(drgPosX - 15, drgPosY - 15, 30, 30)
+    image(drgSymbol, drgPosX - 15, drgPosY - 15, 30, 30)
+    fill(healerColor[0], healerColor[1], healerColor[2])
+    rect(sgePosX - 15, sgePosY - 15, 30, 30)
+    image(sgeSymbol, sgePosX - 15, sgePosY - 15, 30, 30)
+    fill(tankColor[0], tankColor[1], tankColor[2])
+    rect(warPosX - 15, warPosY - 15, 30, 30)
+    image(warSymbol, warPosX - 15, warPosY - 15, 30, 30)
 
     // now display the party
+    fill(DPSColor[0], DPSColor[1], DPSColor[2])
     rect(10, 60, 40, 40)
     image(rdmSymbol, 10, 60, 40, 40)
     rect(10, 110, 40, 40)
     image(drgSymbol, 10, 110, 40, 40)
-    let healerColor = classColors["HEALER"]
     fill(healerColor[0], healerColor[1], healerColor[2])
     rect(10, 160, 40, 40)
     image(sgeSymbol, 10, 160, 40, 40)
-    let tankColor = classColors["TANK"]
     fill(tankColor[0], tankColor[1], tankColor[2])
     rect(10, 210, 40, 40)
     image(warSymbol, 10, 210, 40, 40)
