@@ -39,9 +39,26 @@ function setup() {
 function draw() {
     background(0, 80, 75)
 
-    fill(0, 0, 75)
+    fill(20, 50, 40)
     noStroke()
-    rect(20, 20, width - 40, height - 40)
+    rect(20, 20, 560, 560)
+    for (let xIncrements = 0; xIncrements < 8; xIncrements++) {
+        for (let yIncrements = 0; yIncrements < 8; yIncrements++) {
+            if ((xIncrements + yIncrements) % 2 === 0) {
+                fill(20, 50, 38)
+                rect(21 + xIncrements*70, 21 + yIncrements*70, 68, 68)
+            }
+        }
+        stroke(0, 0, 0)
+        strokeWeight(1)
+        line(20 + xIncrements*70, 20, 20 + xIncrements*70, 580)
+        line(20, 20 + xIncrements*70, 580, 20 + xIncrements*70)
+        noStroke()
+    }
+    stroke(0, 0, 0)
+    strokeWeight(1)
+    line(580, 20, 580, 580)
+    line(20, 580, 580, 580)
 
     stroke(60, 70, 60)
     fill(10, 70, 60)
