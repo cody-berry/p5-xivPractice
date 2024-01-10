@@ -30,10 +30,12 @@ let sgeSymbol
 let warSymbol
 
 let engaged = false
-let engagedAt = 0
+let engagedAt = 100000000000
 
 let partyWiped = false
 let causeOfWipe = ""
+
+let testAoEs
 
 
 function preload() {
@@ -67,6 +69,30 @@ function setup() {
         "TANK": [240, 70, 40]
     }
     borderColor = [60, 70, 60]
+
+    testAoEs = [new CircleAOE(600, 200, 150, 2500),
+                new CircleAOE(800, 200, 200, 3000),
+                new CircleAOE(1000, 200, 250, 3500),
+                new CircleAOE(1000, 400, 300, 4000),
+                new CircleAOE(800, 400, 350, 4500),
+                new CircleAOE(600, 400, 400, 5000),
+                new RectAOE(400, 0, 100, 600, 2500),
+                new RectAOE(500, 0, 100, 600, 3000),
+                new RectAOE(600, 0, 100, 600, 3500),
+                new RectAOE(700, 0, 100, 600, 4000),
+                new RectAOE(800, 0, 100, 600, 4500),
+                new RectAOE(900, 0, 100, 600, 5000),
+            ]
+    testAoEs[1].opacity = -39
+    testAoEs[2].opacity = -78
+    testAoEs[3].opacity = -117
+    testAoEs[4].opacity = -156
+    testAoEs[5].opacity = -195
+    testAoEs[7].opacity = -39
+    testAoEs[8].opacity = -78
+    testAoEs[9].opacity = -117
+    testAoEs[10].opacity = -156
+    testAoEs[11].opacity = -195
 }
 
 
@@ -75,7 +101,7 @@ function draw() {
 
     // display wooden chess board, basically (with red or wood stuff on outside and a purple entrance on at the bottom)
     fill(20, 50, 40)
-    if (engaged) fill(0, 80, 75)
+    if (millis() - engagedAt > 12000) fill(0, 80, 75)
     rect(400, 0, 600, 600)
     stroke(300, 50, 50)
     line(650, 600, 750, 600)
@@ -171,8 +197,8 @@ function draw() {
             engaged = true
         }
     }
-    if (engaged) {
-        if (posX < 32 || posY < 32 ||
+    if (millis() - engagedAt > 12000) {
+        if (posX < 432 || posY < 32 ||
             posX > 978 || posY > 578) {
             partyWiped = true
             causeOfWipe = "You entered the edge of\nthe arena."
@@ -183,6 +209,11 @@ function draw() {
         text(causeOfWipe, 10, 300)
     }
     print(engagedAt)
+
+    for (let testAoE of testAoEs) {
+        testAoE.update()
+        testAoE.displayAoE()
+    }
 
 
 
