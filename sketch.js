@@ -70,29 +70,39 @@ function setup() {
     }
     borderColor = [60, 70, 60]
 
-    testAoEs = [new CircleAOE(600, 200, 150, 2500),
-                new CircleAOE(800, 200, 200, 3000),
-                new CircleAOE(1000, 200, 250, 3500),
-                new CircleAOE(1000, 400, 300, 4000),
-                new CircleAOE(800, 400, 350, 4500),
-                new CircleAOE(600, 400, 400, 5000),
-                new RectAOE(400, 0, 100, 600, 2500),
-                new RectAOE(500, 0, 100, 600, 3000),
-                new RectAOE(600, 0, 100, 600, 3500),
-                new RectAOE(700, 0, 100, 600, 4000),
-                new RectAOE(800, 0, 100, 600, 4500),
-                new RectAOE(900, 0, 100, 600, 5000),
+    testAoEs = [new CircleAOE(600, 200, 150, 5000),
+                new CircleAOE(800, 200, 200, 6000),
+                new CircleAOE(1000, 200, 250, 7000),
+                new CircleAOE(1000, 400, 300, 8000),
+                new CircleAOE(800, 400, 350, 9000),
+                new CircleAOE(600, 400, 400, 10000),
+                new RectAOE(400, 0, 100, 600, 5000),
+                new RectAOE(500, 0, 100, 600, 6000),
+                new RectAOE(600, 0, 100, 600, 7000),
+                new RectAOE(700, 0, 100, 600, 8000),
+                new RectAOE(800, 0, 100, 600, 9000),
+                new RectAOE(900, 0, 100, 600, 10000),
+                new RectAOE(700, 0, 300, 600, 5000),
+                new RectAOE(600, 0, 200, 600, 7500),
+                new RectAOE(400, 0, 300, 600, 10000),
+                new DonutAOE(700, 300, 50, 5000),
+                new DonutAOE(800, 400, 50, 11000),
             ]
-    testAoEs[1].opacity = -39
-    testAoEs[2].opacity = -78
-    testAoEs[3].opacity = -117
-    testAoEs[4].opacity = -156
-    testAoEs[5].opacity = -195
-    testAoEs[7].opacity = -39
-    testAoEs[8].opacity = -78
-    testAoEs[9].opacity = -117
-    testAoEs[10].opacity = -156
-    testAoEs[11].opacity = -195
+    testAoEs[1].opacity = -78
+    testAoEs[2].opacity = -156
+    testAoEs[3].opacity = -234
+    testAoEs[4].opacity = -312
+    testAoEs[5].opacity = -390
+    testAoEs[7].opacity = -78
+    testAoEs[8].opacity = -156
+    testAoEs[9].opacity = -234
+    testAoEs[10].opacity = -312
+    testAoEs[11].opacity = -390
+    testAoEs[12].opacity = -250
+    testAoEs[13].opacity = -375
+    testAoEs[14].opacity = -500
+    testAoEs[15].opacity = -78
+    testAoEs[16].opacity = -468
 }
 
 
