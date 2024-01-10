@@ -137,3 +137,63 @@ class ConeAOE {
         arc(this.x, this.y, this.size, this.size, radians(this.startAngle), radians(this.endAngle))
     }
 }
+
+class MovingCircleAOE {
+    constructor(startingPosX, startingPosY, startingSize, goesOffInMillis, xDelta, yDelta, sizeDelta, timeDelta) {
+        this.x = startingPosX
+        this.y = startingPosY
+        this.size = startingSize
+        this.goesOffAt = millis() + goesOffInMillis
+        this.xDiff = xDelta
+        this.yDiff = yDelta
+        this.sizeDiff = sizeDelta
+        this.millisBetween = timeDelta
+        this.opacity = 50
+        this.wentOff = false
+        this.iterations = 0
+    }
+
+    update() {
+        this.opacity -= 1
+        if (!this.wentOff && millis() > this.goesOffAt) {
+            this.iterations += 1
+            this.wentOff = true
+            this.opacity = 50
+
+            if (abs(this.x - posX) < 16 + this.size || abs(this.y - posY) < 16 + this.size) {
+                partyWiped = true
+                causeOfWipe = "You got hit by an \nexoflare."
+            }
+        } if (this.wentOff && millis() > this.goesOffAt + this.millisBetween*this.iterations) {
+            this.iterations += 1
+            this.opacity = 50
+            this.x += this.xDiff
+            if (this.x + this.size <= 400 || this.x - this.size >= 1000) {
+                this.x = -10000
+            } if (this.y + this.size <= 0 || this.y - this.size >= 600) {
+                this.y = -10000
+            }
+            this.y += this.yDiff
+            this.size += this.sizeDiff
+
+            if (abs(this.x - posX) < 16 || abs(this.y - posY) < 16) {
+                partyWiped = true
+                causeOfWipe = "You got hit by an \nexoflare."
+            }
+        }
+    }
+
+    displayAoE() {
+        if (!this.wentOff) {
+            stroke(0, 100, 100, 20)
+            fill(0, 100, 100, 20)
+            circle(this.x, this.y, this.size)
+            stroke(0, 100, 100, 50)
+            noFill()
+            circle(this.x + this.xDiff, this.y + this.yDiff, this.size + this.sizeDiff)
+        } else {
+            fill(0, 100, 100, this.opacity)
+            circle(this.x, this.y, this.size)
+        }
+    }
+}

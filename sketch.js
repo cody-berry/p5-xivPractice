@@ -35,7 +35,7 @@ let engagedAt = 100000000000
 let partyWiped = false
 let causeOfWipe = ""
 
-let testAoEs
+let exoflares
 
 
 function preload() {
@@ -70,46 +70,17 @@ function setup() {
     }
     borderColor = [60, 70, 60]
 
-    testAoEs = [new RectAOE(400, 0, 20, 600, 5000),
-                new RectAOE(980, 0, 20, 600, 5000),
-                new RectAOE(420, 0, 560, 20, 5000),
-                new RectAOE(420, 580, 560, 20, 5000),
-                new RectAOE(420, 300, 70, 300, 5000),
-                new RectAOE(490, 300, 70, 300, 5500),
-                new RectAOE(560, 300, 70, 300, 6000),
-                new RectAOE(630, 300, 70, 300, 6500),
-                new RectAOE(700, 300, 70, 300, 7000),
-                new RectAOE(770, 300, 70, 300, 7500),
-                new RectAOE(840, 300, 70, 300, 8000),
-                new RectAOE(910, 300, 70, 300, 9000),
-                new DonutAOE(490, 550, 50, 9000),
-                new ConeAOE(700, 300, 1000, 180, 225, 5000),
-                new ConeAOE(700, 300, 1000, 225, 270, 5500),
-                new ConeAOE(700, 300, 1000, 270, 315, 6000),
-                new ConeAOE(700, 300, 1000, 315, 360, 6500),
-                new ConeAOE(700, 300, 1000, 0, 45, 7000),
-                new ConeAOE(700, 300, 1000, 45, 90, 7500),
-                new ConeAOE(700, 300, 1000, 90, 135, 8000),
-                new ConeAOE(700, 300, 1000, 135, 180, 9000),
+    exoflares = [
+        new MovingCircleAOE(400, 0, 200, 6500, 86, 0, 0, 1000),
+        new MovingCircleAOE(1000, 200, 200, 6500, -86, 0, 0, 1000),
+        new MovingCircleAOE(400, 400, 200, 6500, 86, 0, 0, 1000),
+        new MovingCircleAOE(1000, 600, 200, 6500, -86, 0, 0, 1000),
+        new MovingCircleAOE(650, 300, 200, 6500, -86, 0, 0, 1000),
+        new MovingCircleAOE(750, 300, 200, 6500, 86, 0, 0, 1000),
+        new MovingCircleAOE(700, 350, 200, 6500, 0, 86, 0, 1000),
+        new MovingCircleAOE(700, 250, 200, 6500, 0, -68, 0, 1000)
     ]
 
-    testAoEs[4].opacity = -39*3
-    testAoEs[5].opacity = -39*4
-    testAoEs[6].opacity = -39*5
-    testAoEs[7].opacity = -39*6
-    testAoEs[8].opacity = -39*7
-    testAoEs[9].opacity = -39*8
-    testAoEs[10].opacity = -39*9
-    testAoEs[11].opacity = -39*11
-    testAoEs[12].opacity = -39*11
-    testAoEs[13].opacity = -39*3
-    testAoEs[14].opacity = -39*4
-    testAoEs[15].opacity = -39*5
-    testAoEs[16].opacity = -39*6
-    testAoEs[17].opacity = -39*7
-    testAoEs[18].opacity = -39*8
-    testAoEs[19].opacity = -39*9
-    testAoEs[20].opacity = -39*11
 }
 
 
@@ -117,8 +88,7 @@ function draw() {
     background(234, 34, 24)
 
     // display wooden chess board, basically (with red or wood stuff on outside and a purple entrance on at the bottom)
-    fill(20, 50, 40)
-    if (millis() - engagedAt > 12000) fill(0, 80, 75)
+    fill(0, 80, 75)
     rect(400, 0, 600, 600)
     stroke(300, 50, 50)
     line(650, 600, 750, 600)
@@ -198,36 +168,36 @@ function draw() {
     if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) posY += 2 // S or ↓ = down
 
     // display the ready check
-    if (!engaged) {
-        text("READY CHECK", 10, 300)
-        // button for "I'm ready!"
-        fill(120, 50, 50)
-        if (mouseX > 10 && mouseX < 180 &&
-            mouseY > 320 && mouseY < 350) fill(120, 50, 40)
-        rect(10, 320, 180, 30)
-        fill(0, 0, 100)
-        text("I'm ready!", 15, 345)
-        // if you drew aggro, the party wipes!
-        if (sqrt((posX - bossPosX)**2 + (posY - bossPosY)**2) < 230) {
-            partyWiped = true
-            causeOfWipe = "You drew aggro to the\nboss prematurely."
-            engaged = true
-        }
+    // if (!engaged) {
+    //     text("READY CHECK", 10, 300)
+    //     // button for "I'm ready!"
+    //     fill(120, 50, 50)
+    //     if (mouseX > 10 && mouseX < 180 &&
+    //         mouseY > 320 && mouseY < 350) fill(120, 50, 40)
+    //     rect(10, 320, 180, 30)
+    //     fill(0, 0, 100)
+    //     text("I'm ready!", 15, 345)
+    //     // if you drew aggro, the party wipes!
+    //     if (sqrt((posX - bossPosX)**2 + (posY - bossPosY)**2) < 230) {
+    //         partyWiped = true
+    //         causeOfWipe = "You drew aggro to the\nboss prematurely."
+    //         engaged = true
+    //     }
+    // }
+
+    if (posX < 432 || posY < 32 ||
+        posX > 978 || posY > 578) {
+        partyWiped = true
+        causeOfWipe = "You entered the edge of\nthe arena."
     }
-    if (millis() - engagedAt > 12000) {
-        if (posX < 432 || posY < 32 ||
-            posX > 978 || posY > 578) {
-            partyWiped = true
-            causeOfWipe = "You entered the edge of\nthe arena."
-        }
-    }
+
     if (partyWiped === true) {
         fill(0, 100, 100)
         text(causeOfWipe, 10, 300)
     }
     print(engagedAt)
 
-    for (let testAoE of testAoEs) {
+    for (let testAoE of exoflares) {
         testAoE.update()
         testAoE.displayAoE()
     }
