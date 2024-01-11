@@ -170,87 +170,41 @@ function draw() {
     textSize(20)
     textSize(25)
     textSize(30)
-    text("#1      YOU", 55, 90)
-    text("#2", 55, 140)
-    text("#3", 55, 190)
-    text("#4", 55, 240)
+    text("YOU", 185, 90)
 
-    // display stacks and spreads
+    // display stacks and spreads (at correct time).
     // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140.
     let xPosStack = (stackFirst) ? 105 : 140
     let xPosSpread = (stackFirst) ? 140 : 105
-    fill(0, 80, 50)
-    rect(xPosStack - 15, 20 + whoGetsStack[0]*50, 30, 30)
-    rect(xPosStack - 15, 20 + whoGetsStack[1]*50, 30, 30)
+    if (millis() < 13500) {
+        fill(0, 80, 50)
+        if (!stackFirst || millis() < 8500) {
+            rect(xPosStack - 15, 20 + whoGetsStack[0] * 50, 30, 30)
+            rect(xPosStack - 15, 20 + whoGetsStack[1] * 50, 30, 30)
+        } if (stackFirst || millis() < 8500) {
+            rect(xPosSpread - 15, 70, 30, 30)
+            rect(xPosSpread - 15, 120, 30, 30)
+            rect(xPosSpread - 15, 170, 30, 30)
+            rect(xPosSpread - 15, 220, 30, 30)
+        }
 
-    rect(xPosSpread - 15, 70, 30, 30)
-    rect(xPosSpread - 15, 120, 30, 30)
-    rect(xPosSpread - 15, 170, 30, 30)
-    rect(xPosSpread - 15, 220, 30, 30)
+        fill(0, 0, 100)
+        // display a "2" for stack
+        if (!stackFirst || millis() < 8500) {
+            text("2", xPosStack - 10, 45 + whoGetsStack[0] * 50)
+            text("2", xPosStack - 10, 45 + whoGetsStack[1] * 50)
+        }
 
-    noFill()
-    stroke(300, 100, 100) // display stack with purple stack marker
-    line(xPosStack - 14, 24 + whoGetsStack[0]*50, xPosStack - 3, 35 + whoGetsStack[0]*50) // left
-    line(xPosStack - 14, 46 + whoGetsStack[0]*50, xPosStack - 3, 35 + whoGetsStack[0]*50)
-    line(xPosStack - 14, 24 + whoGetsStack[1]*50, xPosStack - 3, 35 + whoGetsStack[1]*50)
-    line(xPosStack - 14, 46 + whoGetsStack[1]*50, xPosStack - 3, 35 + whoGetsStack[1]*50)
-
-    line(xPosStack - 10, 22 + whoGetsStack[0]*50, xPosStack, 32 + whoGetsStack[0]*50) // top
-    line(xPosStack + 10, 22 + whoGetsStack[0]*50, xPosStack, 32 + whoGetsStack[0]*50)
-    line(xPosStack - 10, 22 + whoGetsStack[1]*50, xPosStack, 32 + whoGetsStack[1]*50)
-    line(xPosStack + 10, 22 + whoGetsStack[1]*50, xPosStack, 32 + whoGetsStack[1]*50)
-
-    line(xPosStack + 14, 46 + whoGetsStack[0]*50, xPosStack + 3, 35 + whoGetsStack[0]*50) // right
-    line(xPosStack + 14, 24 + whoGetsStack[0]*50, xPosStack + 3, 35 + whoGetsStack[0]*50)
-    line(xPosStack + 14, 46 + whoGetsStack[1]*50, xPosStack + 3, 35 + whoGetsStack[1]*50)
-    line(xPosStack + 14, 24 + whoGetsStack[1]*50, xPosStack + 3, 35 + whoGetsStack[1]*50)
-
-    line(xPosStack + 10, 48 + whoGetsStack[0]*50, xPosStack, 38 + whoGetsStack[0]*50) // bottom
-    line(xPosStack - 10, 48 + whoGetsStack[0]*50, xPosStack, 38 + whoGetsStack[0]*50)
-    line(xPosStack + 10, 48 + whoGetsStack[1]*50, xPosStack, 38 + whoGetsStack[1]*50)
-    line(xPosStack - 10, 48 + whoGetsStack[1]*50, xPosStack, 38 + whoGetsStack[1]*50)
-
-    stroke(300, 100, 75)
-    line(xPosStack - 14, 27 + whoGetsStack[0]*50, xPosStack - 6, 35 + whoGetsStack[0]*50) // left
-    line(xPosStack - 14, 43 + whoGetsStack[0]*50, xPosStack - 6, 35 + whoGetsStack[0]*50)
-    line(xPosStack - 14, 27 + whoGetsStack[1]*50, xPosStack - 6, 35 + whoGetsStack[1]*50)
-    line(xPosStack - 14, 43 + whoGetsStack[1]*50, xPosStack - 6, 35 + whoGetsStack[1]*50)
-
-    line(xPosStack - 7, 22 + whoGetsStack[0]*50, xPosStack, 29 + whoGetsStack[0]*50) // top
-    line(xPosStack + 7, 22 + whoGetsStack[0]*50, xPosStack, 29 + whoGetsStack[0]*50)
-    line(xPosStack - 7, 22 + whoGetsStack[1]*50, xPosStack, 29 + whoGetsStack[1]*50)
-    line(xPosStack + 7, 22 + whoGetsStack[1]*50, xPosStack, 29 + whoGetsStack[1]*50)
-
-    line(xPosStack + 14, 43 + whoGetsStack[0]*50, xPosStack + 6, 35 + whoGetsStack[0]*50) // right
-    line(xPosStack + 14, 27 + whoGetsStack[0]*50, xPosStack + 6, 35 + whoGetsStack[0]*50)
-    line(xPosStack + 14, 43 + whoGetsStack[1]*50, xPosStack + 6, 35 + whoGetsStack[1]*50)
-    line(xPosStack + 14, 27 + whoGetsStack[1]*50, xPosStack + 6, 35 + whoGetsStack[1]*50)
-
-    line(xPosStack + 7, 48 + whoGetsStack[0]*50, xPosStack, 41 + whoGetsStack[0]*50) // bottom
-    line(xPosStack - 7, 48 + whoGetsStack[0]*50, xPosStack, 41 + whoGetsStack[0]*50)
-    line(xPosStack + 7, 48 + whoGetsStack[1]*50, xPosStack, 41 + whoGetsStack[1]*50)
-    line(xPosStack - 7, 48 + whoGetsStack[1]*50, xPosStack, 41 + whoGetsStack[1]*50)
-
-    stroke(300, 100, 50)
-    line(xPosStack - 14, 30 + whoGetsStack[0]*50, xPosStack - 9, 35 + whoGetsStack[0]*50) // left
-    line(xPosStack - 14, 40 + whoGetsStack[0]*50, xPosStack - 9, 35 + whoGetsStack[0]*50)
-    line(xPosStack - 14, 30 + whoGetsStack[1]*50, xPosStack - 9, 35 + whoGetsStack[1]*50)
-    line(xPosStack - 14, 40 + whoGetsStack[1]*50, xPosStack - 9, 35 + whoGetsStack[1]*50)
-
-    line(xPosStack - 4, 22 + whoGetsStack[0]*50, xPosStack, 26 + whoGetsStack[0]*50) // top
-    line(xPosStack + 4, 22 + whoGetsStack[0]*50, xPosStack, 26 + whoGetsStack[0]*50)
-    line(xPosStack - 4, 22 + whoGetsStack[1]*50, xPosStack, 26 + whoGetsStack[1]*50)
-    line(xPosStack + 4, 22 + whoGetsStack[1]*50, xPosStack, 26 + whoGetsStack[1]*50)
-
-    line(xPosStack + 14, 40 + whoGetsStack[0]*50, xPosStack + 9, 35 + whoGetsStack[0]*50) // right
-    line(xPosStack + 14, 30 + whoGetsStack[0]*50, xPosStack + 9, 35 + whoGetsStack[0]*50)
-    line(xPosStack + 14, 40 + whoGetsStack[1]*50, xPosStack + 9, 35 + whoGetsStack[1]*50)
-    line(xPosStack + 14, 30 + whoGetsStack[1]*50, xPosStack + 9, 35 + whoGetsStack[1]*50)
-
-    line(xPosStack + 4, 48 + whoGetsStack[0]*50, xPosStack, 44 + whoGetsStack[0]*50) // bottom
-    line(xPosStack - 4, 48 + whoGetsStack[0]*50, xPosStack, 44 + whoGetsStack[0]*50)
-    line(xPosStack + 4, 48 + whoGetsStack[1]*50, xPosStack, 44 + whoGetsStack[1]*50)
-    line(xPosStack - 4, 48 + whoGetsStack[1]*50, xPosStack, 44 + whoGetsStack[1]*50)
+        // display a circle for spread
+        if (stackFirst || millis() < 8500) {
+            stroke(0, 0, 100)
+            noFill()
+            circle(xPosSpread, 85, 20)
+            circle(xPosSpread, 135, 20)
+            circle(xPosSpread, 185, 20)
+            circle(xPosSpread, 235, 20)
+        }
+    }
 
 
 
