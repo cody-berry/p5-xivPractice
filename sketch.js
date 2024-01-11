@@ -75,10 +75,10 @@ function setup() {
         new MovingCircleAOE(1000, 200, 200, 6500, -86, 0, 0, 1000),
         new MovingCircleAOE(400, 400, 200, 6500, 86, 0, 0, 1000),
         new MovingCircleAOE(1000, 600, 200, 6500, -86, 0, 0, 1000),
-        new MovingCircleAOE(650, 300, 200, 6500, -86, 0, 0, 1000),
-        new MovingCircleAOE(750, 300, 200, 6500, 86, 0, 0, 1000),
-        new MovingCircleAOE(700, 350, 200, 6500, 0, 86, 0, 1000),
-        new MovingCircleAOE(700, 250, 200, 6500, 0, -68, 0, 1000)
+        new MovingCircleAOE(620, 300, 200, 6500, -86, 0, 0, 1000),
+        new MovingCircleAOE(780, 300, 200, 6500, 86, 0, 0, 1000),
+        new MovingCircleAOE(700, 380, 200, 6500, 0, 86, 0, 1000),
+        new MovingCircleAOE(700, 220, 200, 6500, 0, -86, 0, 1000)
     ]
 
 }
