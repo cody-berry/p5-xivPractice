@@ -160,7 +160,7 @@ class MovingCircleAOE {
             this.wentOff = true
             this.opacity = 50
 
-            if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2) {
+            if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2 + 16) {
                 partyWiped = true
                 causeOfWipe = "You got hit by an \nexoflare."
             }
@@ -176,7 +176,7 @@ class MovingCircleAOE {
             this.y += this.yDiff
             this.size += this.sizeDiff
 
-            if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2) {
+            if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2 + 16) {
                 partyWiped = true
                 causeOfWipe = "You got hit by an \nexoflare."
             }

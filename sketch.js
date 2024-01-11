@@ -11,15 +11,15 @@ let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
 let posX = 700
-let posY = 450
-let drgPosX = 750
-let drgPosY = 400
-let sgePosX = 650
-let sgePosY = 400
+let posY = 300
+let drgPosX = 700
+let drgPosY = 300
+let sgePosX = 700
+let sgePosY = 300
 let warPosX = 700
-let warPosY = 350
-let bossPosX = 700
-let bossPosY = 100
+let warPosY = 300
+let bossPosX = -100
+let bossPosY = -100
 
 let classColors
 let borderColor
@@ -36,6 +36,7 @@ let partyWiped = false
 let causeOfWipe = ""
 
 let exoflares
+let swapMovement // whether the top-right or top-left is originally safe, basically
 
 
 function preload() {
@@ -70,11 +71,14 @@ function setup() {
     }
     borderColor = [60, 70, 60]
 
+
+    swapMovement = random([false, true]) // assign now so that we can position exoflares properly
     exoflares = [
-        new MovingCircleAOE(400, 0, 200, 6500, 86, 0, 0, 1000),
-        new MovingCircleAOE(1000, 200, 200, 6500, -86, 0, 0, 1000),
-        new MovingCircleAOE(400, 400, 200, 6500, 86, 0, 0, 1000),
-        new MovingCircleAOE(1000, 600, 200, 6500, -86, 0, 0, 1000),
+        new MovingCircleAOE(400, (swapMovement) ? 200 : 0, 200, 6500, 86, 0, 0, 1000),
+        new MovingCircleAOE(1000, (swapMovement) ? 0 : 200, 200, 6500, -86, 0, 0, 1000),
+        new MovingCircleAOE(400, (swapMovement) ? 600 : 400, 200, 6500, 86, 0, 0, 1000),
+        new MovingCircleAOE(1000, (swapMovement) ? 400 : 600, 200, 6500, -86, 0, 0, 1000),
+
         new MovingCircleAOE(620, 300, 200, 6500, -86, 0, 0, 1000),
         new MovingCircleAOE(780, 300, 200, 6500, 86, 0, 0, 1000),
         new MovingCircleAOE(700, 380, 200, 6500, 0, 86, 0, 1000),
@@ -123,6 +127,23 @@ function draw() {
     let DPSColor = classColors["DPS"]
     let healerColor = classColors["HEALER"]
     let tankColor = classColors["TANK"]
+
+    // but first update so that people can dodge exoflares!
+    if (millis() < 2000) {
+        drgPosX -= (swapMovement) ? -1.6 : 1.6
+        drgPosY += 2
+        warPosX += (swapMovement) ? -1.6 : 1.6
+        warPosY -= 2
+    } if (millis() > 2000 && millis() < 2500) {
+        drgPosX -= (swapMovement) ? -2 : 2
+        warPosX += (swapMovement) ? -2 : 2
+    } if (millis() > 8800 && millis() < 9600) {
+        drgPosY -= 2
+        warPosY += 2
+    } if (millis() > 9800 && millis() < 11500) {
+        drgPosX += (swapMovement) ? -2 : 2
+        warPosX -= (swapMovement) ? -2 : 2
+    }
 
     stroke(borderColor[0], borderColor[1], borderColor[2])
     fill(healerColor[0], healerColor[1], healerColor[2])
