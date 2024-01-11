@@ -140,6 +140,9 @@ class ConeAOE {
 
 class Exaflare {
     constructor(startingPosX, startingPosY, startingSize, goesOffInMillis, xDelta, yDelta, sizeDelta, timeDelta) {
+        this.prevX = startingPosX
+        this.prevY = startingPosY
+        this.prevCircleOpacity = 10
         this.x = startingPosX
         this.y = startingPosY
         this.size = startingSize
@@ -155,6 +158,10 @@ class Exaflare {
 
     update() {
         this.opacity -= 1
+        if (exoflareHelper) {
+            this.opacity = max(this.opacity, 10)
+        }
+        this.prevCircleOpacity -= 0.2
         if (!this.wentOff && millis() > this.goesOffAt) {
             this.iterations += 1
             this.wentOff = true
@@ -166,7 +173,10 @@ class Exaflare {
             }
         } if (this.wentOff && millis() > this.goesOffAt + this.millisBetween*this.iterations) {
             this.iterations += 1
+            this.prevCircleOpacity = this.opacity
             this.opacity = 50
+            this.prevX = this.x
+            this.prevY = this.y
             this.x += this.xDiff
             if (this.x + this.size <= 400 || this.x - this.size >= 1000) {
                 this.x = -10000
@@ -209,6 +219,10 @@ class Exaflare {
         } else {
             fill(0, 100, 100, this.opacity)
             circle(this.x, this.y, this.size)
+            if (exoflareHelper) {
+                fill(0, 100, 100, this.prevCircleOpacity)
+                circle(this.prevX, this.prevY, this.size)
+            }
         }
     }
 }

@@ -33,6 +33,7 @@ let partyWiped = false
 let causeOfWipe = ""
 
 let exoflares
+let exoflareHelper
 let AoEs // these are from stack and spread
 
 let swapMovement // whether the top-right or top-left is originally safe, basically
@@ -92,13 +93,27 @@ function setup() {
         whoGetsStack[1] = random([1, 2, 3, 4])
     }
     whoGetsStack.sort()
+
+    exoflareHelper = false
 }
 
 
 function draw() {
     background(234, 34, 24)
 
-    // display awooden chess board, basically
+    // add exoflare helper toggle
+    if (!exoflareHelper) {
+        fill(0, 0, 25)
+        if (mouseX > 0 && mouseX < 230 &&
+            mouseY > height - 30 && mouseY < height) fill(0, 0, 20)
+        noStroke()
+        rect(0, height - 30, 230, 30)
+        fill(0, 0, 100)
+        text("Enable helper", 5, height - 3)
+    }
+
+
+    // display a wooden chess board, basically
     // #(with red or wood stuff on outside and a purple entrance on at the bottom)
     fill(0, 80, 75)
     rect(400, 0, 600, 600)
@@ -261,11 +276,9 @@ function draw() {
 }
 
 function mousePressed() {
-    if (mouseX > 10 && mouseX < 180 &&
-        mouseY > 320 && mouseY < 350 &&
-        !engaged) {
-        engaged = true
-        engagedAt = millis()
+    if (mouseX > 0 && mouseX < 230 &&
+        mouseY > height - 30 && mouseY < height) {
+        exoflareHelper = true
     }
 }
 
