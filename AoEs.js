@@ -138,7 +138,7 @@ class ConeAOE {
     }
 }
 
-class MovingCircleAOE {
+class Exaflare {
     constructor(startingPosX, startingPosY, startingSize, goesOffInMillis, xDelta, yDelta, sizeDelta, timeDelta) {
         this.x = startingPosX
         this.y = startingPosY

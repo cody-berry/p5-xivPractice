@@ -21,9 +21,6 @@ let warPosY = 300
 let bossPosX = -100
 let bossPosY = -100
 
-let classColors
-let borderColor
-
 let drgSymbol
 let rdmSymbol
 let sgeSymbol
@@ -36,7 +33,12 @@ let partyWiped = false
 let causeOfWipe = ""
 
 let exoflares
+let AoEs // these are from stack and spread
+
 let swapMovement // whether the top-right or top-left is originally safe, basically
+let stackFirst // do we stack first or spread first?
+let whoGetsStack // who got "stack"?
+let swap // only used for sage: did both DPS or both supports get it?
 
 
 function preload() {
@@ -44,10 +46,10 @@ function preload() {
     fixedWidthFont = loadFont('data/consola.ttf')
     variableWidthFont = loadFont('data/meiryo.ttf')
 
-    drgSymbol = loadImage("images/drg.png")
-    rdmSymbol = loadImage("images/rdm.png")
-    sgeSymbol = loadImage("images/sge.png")
-    warSymbol = loadImage("images/war.png")
+    drgSymbol = loadImage("images/Dragoon_Icon_3.png")
+    rdmSymbol = loadImage("images/Red_Mage_Icon_3.png")
+    sgeSymbol = loadImage("images/Sage_Icon_3.png")
+    warSymbol = loadImage("images/Warrior_Icon_3.png")
 }
 
 
@@ -55,7 +57,7 @@ function setup() {
     let cnv = createCanvas(1000, 600)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
-    textFont(font, 14)
+    textFont(variableWidthFont, 14)
 
     /* initialize instruction div */
     instructions = select('#ins')
@@ -64,34 +66,40 @@ function setup() {
 
     debugCorner = new CanvasDebugCorner(5)
 
-    classColors = {
-        "DPS": [10, 70, 60],
-        "HEALER": [120, 70, 40],
-        "TANK": [240, 70, 40]
-    }
-    borderColor = [60, 70, 60]
-
-
-    swapMovement = random([false, true]) // assign now so that we can position exoflares properly
+    // assign now so that we can position exoflares properly
+    swapMovement = random([false, true])
     exoflares = [
-        new MovingCircleAOE(400, (swapMovement) ? 200 : 0, 200, 6500, 86, 0, 0, 1000),
-        new MovingCircleAOE(1000, (swapMovement) ? 0 : 200, 200, 6500, -86, 0, 0, 1000),
-        new MovingCircleAOE(400, (swapMovement) ? 600 : 400, 200, 6500, 86, 0, 0, 1000),
-        new MovingCircleAOE(1000, (swapMovement) ? 400 : 600, 200, 6500, -86, 0, 0, 1000),
-
-        new MovingCircleAOE(620, 300, 200, 6500, -86, 0, 0, 1000),
-        new MovingCircleAOE(780, 300, 200, 6500, 86, 0, 0, 1000),
-        new MovingCircleAOE(700, 380, 200, 6500, 0, 86, 0, 1000),
-        new MovingCircleAOE(700, 220, 200, 6500, 0, -86, 0, 1000)
+        // Add exoflares on the east and west. They go to the top-left and
+        // bottom-right if swapMovement is false, and the top-right and
+        // bottom-left if swapMovement is true.
+        new Exaflare(400, (swapMovement) ? 200 : 0, 200, 6500, 86, 0, 0, 1000),
+        new Exaflare(1000, (swapMovement) ? 0 : 200, 200, 6500, -86, 0, 0, 1000),
+        new Exaflare(400, (swapMovement) ? 600 : 400, 200, 6500, 86, 0, 0, 1000),
+        new Exaflare(1000, (swapMovement) ? 400 : 600, 200, 6500, -86, 0, 0, 1000),
+        // These are the cardinal exoflares. They're always in the same
+        // orientation.
+        new Exaflare(620, 300, 200, 6500, -86, 0, 0, 1000),
+        new Exaflare(780, 300, 200, 6500, 86, 0, 0, 1000),
+        new Exaflare(700, 380, 200, 6500, 0, 86, 0, 1000),
+        new Exaflare(700, 220, 200, 6500, 0, -86, 0, 1000)
     ]
 
+    stackFirst = random([false, true])
+    whoGetsStack = [0, 0]
+    whoGetsStack[0] = random([1, 2, 3, 4])
+    whoGetsStack[1] = whoGetsStack[0]
+    while (whoGetsStack[0] === whoGetsStack[1]) {
+        whoGetsStack[1] = random([1, 2, 3, 4])
+    }
+    whoGetsStack.sort()
 }
 
 
 function draw() {
     background(234, 34, 24)
 
-    // display wooden chess board, basically (with red or wood stuff on outside and a purple entrance on at the bottom)
+    // display awooden chess board, basically
+    // #(with red or wood stuff on outside and a purple entrance on at the bottom)
     fill(0, 80, 75)
     rect(400, 0, 600, 600)
     stroke(300, 50, 50)
@@ -124,9 +132,6 @@ function draw() {
     point(bossPosX, bossPosY)
 
     // display you and your party members in your and their respective position
-    let DPSColor = classColors["DPS"]
-    let healerColor = classColors["HEALER"]
-    let tankColor = classColors["TANK"]
 
     // but first update so that people can dodge exoflares!
     if (millis() < 2000) {
@@ -145,30 +150,17 @@ function draw() {
         warPosX -= (swapMovement) ? -2 : 2
     }
 
-    stroke(borderColor[0], borderColor[1], borderColor[2])
-    fill(healerColor[0], healerColor[1], healerColor[2])
-    strokeWeight(2)
-    rect(sgePosX - 15, sgePosY - 15, 30, 30)
-    image(sgeSymbol, sgePosX - 15, sgePosY - 15, 30, 30)
-    fill(tankColor[0], tankColor[1], tankColor[2])
-    rect(warPosX - 15, warPosY - 15, 30, 30)
-    image(warSymbol, warPosX - 15, warPosY - 15, 30, 30)
-    fill(DPSColor[0], DPSColor[1], DPSColor[2])
-    rect(drgPosX - 15, drgPosY - 15, 30, 30)
-    image(drgSymbol, drgPosX - 15, drgPosY - 15, 30, 30)
-    rect(posX - 15, posY - 15, 30, 30)
-    image(rdmSymbol, posX - 15, posY - 15, 30, 30)
+    strokeWeight(3)
+
+    image(sgeSymbol, sgePosX - 20, sgePosY - 20, 40, 40)
+    image(warSymbol, warPosX - 20, warPosY - 20, 40, 40)
+    image(drgSymbol, drgPosX - 20, drgPosY - 20, 40, 40)
+    image(rdmSymbol, posX - 20, posY - 20, 40, 40)
 
     // now display the party
-    rect(10, 60, 40, 40)
     image(rdmSymbol, 10, 60, 40, 40)
-    rect(10, 110, 40, 40)
     image(drgSymbol, 10, 110, 40, 40)
-    fill(healerColor[0], healerColor[1], healerColor[2])
-    rect(10, 160, 40, 40)
     image(sgeSymbol, 10, 160, 40, 40)
-    fill(tankColor[0], tankColor[1], tankColor[2])
-    rect(10, 210, 40, 40)
     image(warSymbol, 10, 210, 40, 40)
 
     fill(0, 0, 100)
@@ -182,6 +174,87 @@ function draw() {
     text("#2", 55, 140)
     text("#3", 55, 190)
     text("#4", 55, 240)
+
+    // display stacks and spreads
+    // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140.
+    let xPosStack = (stackFirst) ? 105 : 140
+    let xPosSpread = (stackFirst) ? 140 : 105
+    fill(0, 80, 50)
+    rect(xPosStack - 15, 20 + whoGetsStack[0]*50, 30, 30)
+    rect(xPosStack - 15, 20 + whoGetsStack[1]*50, 30, 30)
+
+    rect(xPosSpread - 15, 70, 30, 30)
+    rect(xPosSpread - 15, 120, 30, 30)
+    rect(xPosSpread - 15, 170, 30, 30)
+    rect(xPosSpread - 15, 220, 30, 30)
+
+    noFill()
+    stroke(300, 100, 100) // display stack with purple stack marker
+    line(xPosStack - 14, 24 + whoGetsStack[0]*50, xPosStack - 3, 35 + whoGetsStack[0]*50) // left
+    line(xPosStack - 14, 46 + whoGetsStack[0]*50, xPosStack - 3, 35 + whoGetsStack[0]*50)
+    line(xPosStack - 14, 24 + whoGetsStack[1]*50, xPosStack - 3, 35 + whoGetsStack[1]*50)
+    line(xPosStack - 14, 46 + whoGetsStack[1]*50, xPosStack - 3, 35 + whoGetsStack[1]*50)
+
+    line(xPosStack - 10, 22 + whoGetsStack[0]*50, xPosStack, 32 + whoGetsStack[0]*50) // top
+    line(xPosStack + 10, 22 + whoGetsStack[0]*50, xPosStack, 32 + whoGetsStack[0]*50)
+    line(xPosStack - 10, 22 + whoGetsStack[1]*50, xPosStack, 32 + whoGetsStack[1]*50)
+    line(xPosStack + 10, 22 + whoGetsStack[1]*50, xPosStack, 32 + whoGetsStack[1]*50)
+
+    line(xPosStack + 14, 46 + whoGetsStack[0]*50, xPosStack + 3, 35 + whoGetsStack[0]*50) // right
+    line(xPosStack + 14, 24 + whoGetsStack[0]*50, xPosStack + 3, 35 + whoGetsStack[0]*50)
+    line(xPosStack + 14, 46 + whoGetsStack[1]*50, xPosStack + 3, 35 + whoGetsStack[1]*50)
+    line(xPosStack + 14, 24 + whoGetsStack[1]*50, xPosStack + 3, 35 + whoGetsStack[1]*50)
+
+    line(xPosStack + 10, 48 + whoGetsStack[0]*50, xPosStack, 38 + whoGetsStack[0]*50) // bottom
+    line(xPosStack - 10, 48 + whoGetsStack[0]*50, xPosStack, 38 + whoGetsStack[0]*50)
+    line(xPosStack + 10, 48 + whoGetsStack[1]*50, xPosStack, 38 + whoGetsStack[1]*50)
+    line(xPosStack - 10, 48 + whoGetsStack[1]*50, xPosStack, 38 + whoGetsStack[1]*50)
+
+    stroke(300, 100, 75)
+    line(xPosStack - 14, 27 + whoGetsStack[0]*50, xPosStack - 6, 35 + whoGetsStack[0]*50) // left
+    line(xPosStack - 14, 43 + whoGetsStack[0]*50, xPosStack - 6, 35 + whoGetsStack[0]*50)
+    line(xPosStack - 14, 27 + whoGetsStack[1]*50, xPosStack - 6, 35 + whoGetsStack[1]*50)
+    line(xPosStack - 14, 43 + whoGetsStack[1]*50, xPosStack - 6, 35 + whoGetsStack[1]*50)
+
+    line(xPosStack - 7, 22 + whoGetsStack[0]*50, xPosStack, 29 + whoGetsStack[0]*50) // top
+    line(xPosStack + 7, 22 + whoGetsStack[0]*50, xPosStack, 29 + whoGetsStack[0]*50)
+    line(xPosStack - 7, 22 + whoGetsStack[1]*50, xPosStack, 29 + whoGetsStack[1]*50)
+    line(xPosStack + 7, 22 + whoGetsStack[1]*50, xPosStack, 29 + whoGetsStack[1]*50)
+
+    line(xPosStack + 14, 43 + whoGetsStack[0]*50, xPosStack + 6, 35 + whoGetsStack[0]*50) // right
+    line(xPosStack + 14, 27 + whoGetsStack[0]*50, xPosStack + 6, 35 + whoGetsStack[0]*50)
+    line(xPosStack + 14, 43 + whoGetsStack[1]*50, xPosStack + 6, 35 + whoGetsStack[1]*50)
+    line(xPosStack + 14, 27 + whoGetsStack[1]*50, xPosStack + 6, 35 + whoGetsStack[1]*50)
+
+    line(xPosStack + 7, 48 + whoGetsStack[0]*50, xPosStack, 41 + whoGetsStack[0]*50) // bottom
+    line(xPosStack - 7, 48 + whoGetsStack[0]*50, xPosStack, 41 + whoGetsStack[0]*50)
+    line(xPosStack + 7, 48 + whoGetsStack[1]*50, xPosStack, 41 + whoGetsStack[1]*50)
+    line(xPosStack - 7, 48 + whoGetsStack[1]*50, xPosStack, 41 + whoGetsStack[1]*50)
+
+    stroke(300, 100, 50)
+    line(xPosStack - 14, 30 + whoGetsStack[0]*50, xPosStack - 9, 35 + whoGetsStack[0]*50) // left
+    line(xPosStack - 14, 40 + whoGetsStack[0]*50, xPosStack - 9, 35 + whoGetsStack[0]*50)
+    line(xPosStack - 14, 30 + whoGetsStack[1]*50, xPosStack - 9, 35 + whoGetsStack[1]*50)
+    line(xPosStack - 14, 40 + whoGetsStack[1]*50, xPosStack - 9, 35 + whoGetsStack[1]*50)
+
+    line(xPosStack - 4, 22 + whoGetsStack[0]*50, xPosStack, 26 + whoGetsStack[0]*50) // top
+    line(xPosStack + 4, 22 + whoGetsStack[0]*50, xPosStack, 26 + whoGetsStack[0]*50)
+    line(xPosStack - 4, 22 + whoGetsStack[1]*50, xPosStack, 26 + whoGetsStack[1]*50)
+    line(xPosStack + 4, 22 + whoGetsStack[1]*50, xPosStack, 26 + whoGetsStack[1]*50)
+
+    line(xPosStack + 14, 40 + whoGetsStack[0]*50, xPosStack + 9, 35 + whoGetsStack[0]*50) // right
+    line(xPosStack + 14, 30 + whoGetsStack[0]*50, xPosStack + 9, 35 + whoGetsStack[0]*50)
+    line(xPosStack + 14, 40 + whoGetsStack[1]*50, xPosStack + 9, 35 + whoGetsStack[1]*50)
+    line(xPosStack + 14, 30 + whoGetsStack[1]*50, xPosStack + 9, 35 + whoGetsStack[1]*50)
+
+    line(xPosStack + 4, 48 + whoGetsStack[0]*50, xPosStack, 44 + whoGetsStack[0]*50) // bottom
+    line(xPosStack - 4, 48 + whoGetsStack[0]*50, xPosStack, 44 + whoGetsStack[0]*50)
+    line(xPosStack + 4, 48 + whoGetsStack[1]*50, xPosStack, 44 + whoGetsStack[1]*50)
+    line(xPosStack - 4, 48 + whoGetsStack[1]*50, xPosStack, 44 + whoGetsStack[1]*50)
+
+
+
+    noStroke()
 
     if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) posX -= 2 // A or ← = left
     if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) posY -= 2 // W or ↑ = up
