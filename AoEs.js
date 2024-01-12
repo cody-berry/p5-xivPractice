@@ -6,13 +6,15 @@ class CircleAOE {
         this.radius = size
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
+        this.stopAccumulatingOpacity = false
     }
 
     // update the AoEs opacity
     update() {
-        if (this.opacity < 20 && this.goesOffAt - millis() > 100) {
+        if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
             this.opacity += 1
-        } if (this.goesOffAt - millis() < 20)  {
+            if (this.opacity >= 20) this.stopAccumulatingOpacity = true
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
             this.opacity -= 1
         }
         if (this.goesOffAt < millis()) {
@@ -35,13 +37,15 @@ class RectAOE {
         this.height = height
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
+        this.stopAccumulatingOpacity = false
     }
 
     // this is the same every time
     update() {
-        if (this.opacity < 20 && this.goesOffAt - millis() > 100) {
+        if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
             this.opacity += 1
-        } if (this.goesOffAt - millis() < 20)  {
+            if (this.opacity >= 20) this.stopAccumulatingOpacity = true
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
             this.opacity -= 1
         }
         if (this.goesOffAt < millis()) {
@@ -63,13 +67,15 @@ class DonutAOE {
         this.size = size
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
+        this.stopAccumulatingOpacity = false
     }
 
     // update the AoEs opacity
     update() {
-        if (this.opacity < 20 && this.goesOffAt - millis() > 100) {
+        if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
             this.opacity += 1
-        } if (this.goesOffAt - millis() < 20)  {
+            if (this.opacity >= 20) this.stopAccumulatingOpacity = true
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
             this.opacity -= 1
         }
         if (this.goesOffAt < millis()) {
@@ -87,6 +93,7 @@ class DonutAOE {
             }
             endContour()
             endShape(CLOSE)
+            this.opacity -= 1
         }
     }
 

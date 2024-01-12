@@ -34,7 +34,7 @@ let causeOfWipe = ""
 
 let exoflares
 let exoflareHelper
-let AoEs // these are from stack and spread
+let AoEs
 
 let swapMovement // whether the top-right or top-left is originally safe, basically
 let stackFirst // do we stack first or spread first?
@@ -84,6 +84,24 @@ function setup() {
         new Exaflare(700, 380, 200, 6500, 0, 86, 0, 1000),
         new Exaflare(700, 220, 200, 6500, 0, -86, 0, 1000)
     ]
+    AoEs = [
+        new RectAOE(420, 0, 70, height, 15000),
+        new RectAOE(490, 0, 70, height, 15500),
+        new RectAOE(560, 0, 70, height, 16000),
+        new RectAOE(630, 0, 70, height, 16500),
+        new RectAOE(700, 0, 70, height, 17000),
+        new RectAOE(770, 0, 70, height, 17500),
+        new RectAOE(840, 0, 70, height, 18000),
+        new RectAOE(910, 0, 70, height, 18500),
+        new RectAOE(400, 20, height, 70, 15000),
+        new RectAOE(400, 90, height, 70, 15500),
+        new RectAOE(400, 160, height, 70, 16000),
+        new RectAOE(400, 230, height, 70, 16500),
+        new RectAOE(400, 300, height, 70, 17000),
+        new RectAOE(400, 370, height, 70, 17500),
+        new RectAOE(400, 440, height, 70, 18000),
+        new RectAOE(400, 510, height, 70, 18500),
+    ]
 
     stackFirst = random([false, true])
     whoGetsStack = [0, 0]
@@ -93,6 +111,8 @@ function setup() {
         whoGetsStack[1] = random([1, 2, 3, 4])
     }
     whoGetsStack.sort()
+    swap = (whoGetsStack[0] === 1 && whoGetsStack[1] === 2) || (whoGetsStack[0] === 3 && whoGetsStack[1] === 4)
+    print(swap)
 
     exoflareHelper = false
 }
@@ -149,20 +169,37 @@ function draw() {
     // display you and your party members in your and their respective position
 
     // but first update so that people can dodge exoflares!
-    if (millis() < 2000) {
-        drgPosX -= (swapMovement) ? -1.6 : 1.6
+    if (millis() < 2000) { // get in original position
+        drgPosX += (swapMovement) ? -1.3 : 1.3
+        drgPosY += 1.3
+        warPosX -= (swapMovement) ? -1.3 : 1.3
+        warPosY -= 1.3
+        sgePosY -= (swap) ? -2 : 2
+        if (stackFirst) {
+            sgePosY += (swap) ? -0.8 : 0.8
+        }
+        sgePosX += (swapMovement^swap^stackFirst) ? -1.4 : 1.4
+    } if (millis() > 6500 && millis() < 7500) { // move to adjust.
+        drgPosX += (swapMovement) ? -1.3 : 1.3
+        warPosX -= (swapMovement) ? -1.3 : 1.3
+        sgePosX += (swapMovement^swap^stackFirst) ? -1.4 : 1.4
+    } if (millis() > 8800 && millis() < 9600) { // more moving to adjust
         drgPosY += 2
-        warPosX += (swapMovement) ? -1.6 : 1.6
         warPosY -= 2
-    } if (millis() > 2000 && millis() < 2500) {
+        if (stackFirst) {
+            sgePosY -= (swap) ? -2 : 2
+        } else {
+            sgePosY += (swap) ? -2 : 2
+            sgePosX -= (swap^swapMovement) ? -1 : 1
+        }
+    } if (millis() > 9800 && millis() < 11500 && !stackFirst) {
         drgPosX -= (swapMovement) ? -2 : 2
         warPosX += (swapMovement) ? -2 : 2
-    } if (millis() > 8800 && millis() < 9600) {
-        drgPosY -= 2
-        warPosY += 2
-    } if (millis() > 9800 && millis() < 11500) {
-        drgPosX += (swapMovement) ? -2 : 2
-        warPosX -= (swapMovement) ? -2 : 2
+        sgePosX -= (swapMovement^swap) ? -2 : 2
+    } if (millis() > 11500 && millis() < 12500 && !stackFirst) {
+        sgePosY -= (swap) ? -2 : 2
+    } if (millis() > 9800 && millis() < 13000 && stackFirst) {
+        sgePosX -= (swapMovement^swap^stackFirst) ? -2 : 2
     }
 
     strokeWeight(3)
