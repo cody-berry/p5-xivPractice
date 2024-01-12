@@ -201,6 +201,7 @@ function draw() {
         sgePosY -= (swap) ? -2 : 2
     } if (millis() > 9800 && millis() < 13000 && stackFirst) {
         sgePosX -= (swapMovement^swap^stackFirst) ? -2 : 2
+        sgePosY += (swap) ? -0.5 : 0.5
     }
 
     strokeWeight(3)

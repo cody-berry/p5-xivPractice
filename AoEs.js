@@ -224,10 +224,14 @@ class Exaflare {
             line(18, -10, -18, -10)
             pop()
         } else {
-            fill(0, 100, 100, this.opacity)
+            fill(200, 80, 80, this.opacity)
             circle(this.x, this.y, this.size)
+            fill(200, 90, 70, this.opacity)
+            circle(this.x, this.y, this.size - 50)
+            fill(200, 100, 50, this.opacity)
+            circle(this.x, this.y, this.size - 100)
             if (exoflareHelper) {
-                fill(0, 100, 100, this.prevCircleOpacity)
+                fill(200, 80, 80, this.prevCircleOpacity)
                 circle(this.prevX, this.prevY, this.size)
             }
         }
@@ -287,7 +291,7 @@ class SpreadCircle {
 
     displayAOE() {
         if (millis() > this.goesOffAt) {
-            fill(0, 100, 100, this.opacity)
+            fill(11, 100, 100, this.opacity)
             circle(this.x, this.y, this.size)
         }
     }
@@ -351,7 +355,7 @@ class StackCircle {
 
     displayAOE() {
         if (millis() > this.goesOffAt) {
-            fill(0, 100, 100, this.opacity)
+            fill(11, 100, 100, this.opacity)
             circle(this.x, this.y, this.size)
         }
     }
