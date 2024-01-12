@@ -41,6 +41,8 @@ let stackFirst // do we stack first or spread first?
 let whoGetsStack // who got "stack"?
 let swap // only used for sage: did both DPS or both supports get it?
 
+let lastHitBy // Keeps track of what and when each character suffered an AoE
+
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -59,6 +61,13 @@ function setup() {
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
     textFont(variableWidthFont, 14)
+
+    lastHitBy = {
+        1: ["None", 0],
+        2: ["None", 0],
+        3: ["None", 0],
+        4: ["None", 0]
+    }
 
     /* initialize instruction div */
     instructions = select('#ins')
@@ -85,22 +94,10 @@ function setup() {
         new Exaflare(700, 220, 200, 6500, 0, -86, 0, 1000)
     ]
     AoEs = [
-        new RectAOE(420, 0, 70, height, 15000),
-        new RectAOE(490, 0, 70, height, 15500),
-        new RectAOE(560, 0, 70, height, 16000),
-        new RectAOE(630, 0, 70, height, 16500),
-        new RectAOE(700, 0, 70, height, 17000),
-        new RectAOE(770, 0, 70, height, 17500),
-        new RectAOE(840, 0, 70, height, 18000),
-        new RectAOE(910, 0, 70, height, 18500),
-        new RectAOE(400, 20, height, 70, 15000),
-        new RectAOE(400, 90, height, 70, 15500),
-        new RectAOE(400, 160, height, 70, 16000),
-        new RectAOE(400, 230, height, 70, 16500),
-        new RectAOE(400, 300, height, 70, 17000),
-        new RectAOE(400, 370, height, 70, 17500),
-        new RectAOE(400, 440, height, 70, 18000),
-        new RectAOE(400, 510, height, 70, 18500),
+        new SpreadCircle(1, 200, 8500),
+        new SpreadCircle(2, 200, 8500),
+        new SpreadCircle(3, 200, 8500),
+        new SpreadCircle(4, 200, 8500)
     ]
 
     stackFirst = random([false, true])
@@ -297,9 +294,12 @@ function draw() {
     }
     print(engagedAt)
 
-    for (let testAoE of exoflares) {
-        testAoE.update()
-        testAoE.displayAoE()
+    for (let exoflare of exoflares) {
+        exoflare.update()
+        exoflare.displayAoE()
+    } for (let AoE of AoEs) {
+        AoE.update()
+        AoE.displayAOE()
     }
 
 

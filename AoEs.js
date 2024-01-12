@@ -233,3 +233,58 @@ class Exaflare {
         }
     }
 }
+
+class SpreadCircle {
+    constructor(playerTargeted, // 1 for you, 2 for the dragoon, 3 for the sage, and 4 for the warrior
+                size, goesOffAt) {
+        this.player = playerTargeted
+        this.x = 0
+        this.y = 0
+        this.size = size
+        this.goesOffAt = goesOffAt
+        this.opacity = 110
+        this.wentOff = false
+    }
+
+    // updates for the opacity
+    update() {
+        if (millis() > this.goesOffAt) {
+            // when it goes off, check if anyone is in the vicinity
+            if (!this.wentOff) {
+                this.wentOff = true
+                for (let position of [
+                    [posX, posY, 1],
+                    [drgPosX, drgPosY, 2],
+                    [sgePosX, sgePosY, 3],
+                    [warPosX, warPosY, 4]
+                ]) {
+                    if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size) {
+                        lastHitBy[position[2]] = ["spread", millis()]
+                        print(lastHitBy)
+                    }
+                }
+            }
+            this.opacity -= 5
+            if (this.player === 1) { // 1 is you
+                this.x = posX
+                this.y = posY
+            } if (this.player === 2) { // 2 is the dragoon
+                this.x = drgPosX
+                this.y = drgPosY
+            } if (this.player === 3) { // 3 is the sage
+                this.x = sgePosX
+                this.y = sgePosY
+            } if (this.player === 4) { // 4 is the warrior
+                this.x = warPosX
+                this.y = warPosY
+            }
+        }
+    }
+
+    displayAOE() {
+        if (millis() > this.goesOffAt) {
+            fill(0, 100, 100, this.opacity)
+            circle(this.x, this.y, this.size)
+        }
+    }
+}
