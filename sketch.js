@@ -93,12 +93,6 @@ function setup() {
         new Exaflare(700, 380, 200, 6500, 0, 86, 0, 1000),
         new Exaflare(700, 220, 200, 6500, 0, -86, 0, 1000)
     ]
-    AoEs = [
-        new SpreadCircle(1, 200, 8500),
-        new SpreadCircle(2, 200, 8500),
-        new SpreadCircle(3, 200, 8500),
-        new SpreadCircle(4, 200, 8500)
-    ]
 
     stackFirst = random([false, true])
     whoGetsStack = [0, 0]
@@ -112,6 +106,16 @@ function setup() {
     print(swap)
 
     exoflareHelper = false
+
+
+    AoEs = [
+        new SpreadCircle(1, 200, (stackFirst) ? 13500 : 8500),
+        new SpreadCircle(2, 200, (stackFirst) ? 13520 : 8520),
+        new SpreadCircle(3, 200, (stackFirst) ? 13540 : 8540),
+        new SpreadCircle(4, 200, (stackFirst) ? 13560 : 8560),
+        new StackCircle(whoGetsStack[0], 200, (stackFirst) ? 8500 : 13500, 2),
+        new StackCircle(whoGetsStack[1], 200, (stackFirst) ? 8520 : 13520, 2)
+    ]
 }
 
 

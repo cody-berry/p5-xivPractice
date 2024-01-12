@@ -242,7 +242,7 @@ class SpreadCircle {
         this.y = 0
         this.size = size
         this.goesOffAt = goesOffAt
-        this.opacity = 110
+        this.opacity = 102
         this.wentOff = false
     }
 
@@ -252,6 +252,19 @@ class SpreadCircle {
             // when it goes off, check if anyone is in the vicinity
             if (!this.wentOff) {
                 this.wentOff = true
+                if (this.player === 1) { // 1 is you
+                    this.x = posX
+                    this.y = posY
+                } if (this.player === 2) { // 2 is the dragoon
+                    this.x = drgPosX
+                    this.y = drgPosY
+                } if (this.player === 3) { // 3 is the sage
+                    this.x = sgePosX
+                    this.y = sgePosY
+                } if (this.player === 4) { // 4 is the warrior
+                    this.x = warPosX
+                    this.y = warPosY
+                }
                 for (let position of [
                     [posX, posY, 1],
                     [drgPosX, drgPosY, 2],
@@ -261,23 +274,78 @@ class SpreadCircle {
                     if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size) {
                         lastHitBy[position[2]] = ["spread", millis()]
                         print(lastHitBy)
+                        if (position[2] !== this.player) {
+                            partyWiped = true
+                            causeOfWipe = "Someone clipped \nsomeone else with spread."
+                        }
                     }
                 }
             }
-            this.opacity -= 5
-            if (this.player === 1) { // 1 is you
-                this.x = posX
-                this.y = posY
-            } if (this.player === 2) { // 2 is the dragoon
-                this.x = drgPosX
-                this.y = drgPosY
-            } if (this.player === 3) { // 3 is the sage
-                this.x = sgePosX
-                this.y = sgePosY
-            } if (this.player === 4) { // 4 is the warrior
-                this.x = warPosX
-                this.y = warPosY
+            this.opacity -= 3
+        }
+    }
+
+    displayAOE() {
+        if (millis() > this.goesOffAt) {
+            fill(0, 100, 100, this.opacity)
+            circle(this.x, this.y, this.size)
+        }
+    }
+}
+
+class StackCircle {
+    constructor(playerTargeted, size, goesOffAt, minPlayers) {
+        this.player = playerTargeted
+        this.x = 0
+        this.y = 0
+        this.size = size
+        this.goesOffAt = goesOffAt
+        this.opacity = 102
+        this.wentOff = false
+        this.minPlayers = minPlayers
+    }
+
+    update() {
+        if (millis() > this.goesOffAt) {
+            // when it goes off, check if anyone is in the vicinity
+            if (!this.wentOff) {
+                this.wentOff = true
+                if (this.player === 1) { // 1 is you
+                    this.x = posX
+                    this.y = posY
+                } if (this.player === 2) { // 2 is the dragoon
+                    this.x = drgPosX
+                    this.y = drgPosY
+                } if (this.player === 3) { // 3 is the sage
+                    this.x = sgePosX
+                    this.y = sgePosY
+                } if (this.player === 4) { // 4 is the warrior
+                    this.x = warPosX
+                    this.y = warPosY
+                }
+                let playersHit = 0
+                for (let position of [
+                    [posX, posY, 1],
+                    [drgPosX, drgPosY, 2],
+                    [sgePosX, sgePosY, 3],
+                    [warPosX, warPosY, 4]
+                ]) {
+                    if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size) {
+                        if (lastHitBy[position[2]][1] > millis() - 1000) {
+                            partyWiped = true
+                            causeOfWipe = "2 stack people stacked up."
+                        }
+                        lastHitBy[position[2]] = ["stack", millis()]
+                        print(lastHitBy)
+                        playersHit += 1
+                    }
+                } if (playersHit < this.minPlayers) {
+                    // if less than the minimum players have stacked up, one dies
+                    partyWiped = true
+                    causeOfWipe = "Too little people stacked up."
+                }
             }
+            this.opacity -= 3
         }
     }
 
