@@ -205,11 +205,13 @@ class Exaflare {
             stroke(0, 100, 100, 20)
             fill(0, 100, 100, 20)
             circle(this.x, this.y, this.size)
-            stroke(0, 100, 100, 50)
-            noFill()
-            circle(this.x + this.xDiff, this.y + this.yDiff, this.size + this.sizeDiff)
-            noStroke()
-            fill(0, 0, 100)
+            if (exoflareHelper) {
+                stroke(0, 100, 100, 50)
+                noFill()
+                circle(this.x + this.xDiff, this.y + this.yDiff, this.size + this.sizeDiff)
+                noStroke()
+                fill(0, 0, 100)
+            }
 
             // display arrow (rotate)
             push()
@@ -275,7 +277,7 @@ class SpreadCircle {
                     [sgePosX, sgePosY, 3],
                     [warPosX, warPosY, 4]
                 ]) {
-                    if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size) {
+                    if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size/2) {
                         lastHitBy[position[2]] = ["spread", millis()]
                         print(lastHitBy)
                         if (position[2] !== this.player) {
@@ -334,7 +336,7 @@ class StackCircle {
                     [sgePosX, sgePosY, 3],
                     [warPosX, warPosY, 4]
                 ]) {
-                    if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size) {
+                    if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size/2) {
                         if (lastHitBy[position[2]][1] > millis() - 1000) {
                             partyWiped = true
                             causeOfWipe = "2 stack people stacked up."

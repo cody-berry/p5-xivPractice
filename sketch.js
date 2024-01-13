@@ -82,16 +82,16 @@ function setup() {
         // Add exoflares on the east and west. They go to the top-left and
         // bottom-right if swapMovement is false, and the top-right and
         // bottom-left if swapMovement is true.
-        new Exaflare(400, (swapMovement) ? 200 : 0, 200, 6500, 86, 0, 0, 1000),
-        new Exaflare(1000, (swapMovement) ? 0 : 200, 200, 6500, -86, 0, 0, 1000),
-        new Exaflare(400, (swapMovement) ? 600 : 400, 200, 6500, 86, 0, 0, 1000),
-        new Exaflare(1000, (swapMovement) ? 400 : 600, 200, 6500, -86, 0, 0, 1000),
+        new Exaflare(450, (swapMovement) ? 220 : 40, 180, 6500, 79, 0, 0, 1000),
+        new Exaflare(950, (swapMovement) ? 40 : 220, 180, 6500, -79, 0, 0, 1000),
+        new Exaflare(450, (swapMovement) ? 560 : 380, 180, 6500, 79, 0, 0, 1000),
+        new Exaflare(950, (swapMovement) ? 380 : 560, 180, 6500, -79, 0, 0, 1000),
         // These are the cardinal exoflares. They're always in the same
         // orientation.
-        new Exaflare(620, 300, 200, 6500, -86, 0, 0, 1000),
-        new Exaflare(780, 300, 200, 6500, 86, 0, 0, 1000),
-        new Exaflare(700, 380, 200, 6500, 0, 86, 0, 1000),
-        new Exaflare(700, 220, 200, 6500, 0, -86, 0, 1000)
+        new Exaflare(620, 300, 200, 6500, -79, 0, 0, 1000),
+        new Exaflare(780, 300, 200, 6500, 79, 0, 0, 1000),
+        new Exaflare(700, 380, 200, 6500, 0, 79, 0, 1000),
+        new Exaflare(700, 220, 200, 6500, 0, -79, 0, 1000)
     ]
 
     stackFirst = random([false, true])
@@ -109,12 +109,12 @@ function setup() {
 
 
     AoEs = [
-        new SpreadCircle(1, 200, (stackFirst) ? 13500 : 8500),
-        new SpreadCircle(2, 200, (stackFirst) ? 13520 : 8520),
-        new SpreadCircle(3, 200, (stackFirst) ? 13540 : 8540),
-        new SpreadCircle(4, 200, (stackFirst) ? 13560 : 8560),
-        new StackCircle(whoGetsStack[0], 200, (stackFirst) ? 8500 : 13500, 2),
-        new StackCircle(whoGetsStack[1], 200, (stackFirst) ? 8520 : 13520, 2)
+        new SpreadCircle(1, 200, (stackFirst) ? 13470 : 8470),
+        new SpreadCircle(2, 200, (stackFirst) ? 13490 : 8490),
+        new SpreadCircle(3, 200, (stackFirst) ? 13510 : 8510),
+        new SpreadCircle(4, 200, (stackFirst) ? 13530 : 8530),
+        new StackCircle(whoGetsStack[0], 200, (stackFirst) ? 8490 : 13490, 2),
+        new StackCircle(whoGetsStack[1], 200, (stackFirst) ? 8510 : 13510, 2)
     ]
 }
 
@@ -170,38 +170,40 @@ function draw() {
     // display you and your party members in your and their respective position
 
     // but first update so that people can dodge exoflares!
-    if (millis() < 2000) { // get in original position
-        drgPosX += (swapMovement) ? -1.3 : 1.3
+    if (millis() < 2500) { // get in original position
+        drgPosX += (swapMovement) ? -1 : 1
+        drgPosY += 1
+        warPosX -= (swapMovement) ? -1 : 1
+        warPosY -= 1
+        sgePosY -= (swap) ? -1.3 : 1.3
+        if (stackFirst) {
+            sgePosY += (swap) ? -0.5 : 0.5
+        }
+        sgePosX += (swapMovement^swap^stackFirst) ? -1.2 : 1.2
+    } if (millis() > 6500 && millis() < 7600) { // move to adjust.
+        drgPosX += (swapMovement) ? -1.2 : 1.2
+        warPosX -= (swapMovement) ? -1.2 : 1.2
+        sgePosX += (swapMovement^swap^stackFirst) ? -1.3 : 1.3
+    } if (millis() > 8800 && millis() < 9800) { // more moving to adjust
         drgPosY += 1.3
-        warPosX -= (swapMovement) ? -1.3 : 1.3
         warPosY -= 1.3
-        sgePosY -= (swap) ? -2 : 2
         if (stackFirst) {
-            sgePosY += (swap) ? -0.8 : 0.8
-        }
-        sgePosX += (swapMovement^swap^stackFirst) ? -1.4 : 1.4
-    } if (millis() > 6500 && millis() < 7500) { // move to adjust.
-        drgPosX += (swapMovement) ? -1.3 : 1.3
-        warPosX -= (swapMovement) ? -1.3 : 1.3
-        sgePosX += (swapMovement^swap^stackFirst) ? -1.4 : 1.4
-    } if (millis() > 8800 && millis() < 9600) { // more moving to adjust
-        drgPosY += 2
-        warPosY -= 2
-        if (stackFirst) {
-            sgePosY -= (swap) ? -2 : 2
+            sgePosY -= (swap) ? -1.3 : 1.3
         } else {
-            sgePosY += (swap) ? -2 : 2
-            sgePosX -= (swap^swapMovement) ? -1 : 1
+            sgePosY += (swap) ? -1.3 : 1.3
+            sgePosX -= (swap^swapMovement) ? -0.6 : 0.6
         }
-    } if (millis() > 9800 && millis() < 11500 && !stackFirst) {
-        drgPosX -= (swapMovement) ? -2 : 2
-        warPosX += (swapMovement) ? -2 : 2
-        sgePosX -= (swapMovement^swap) ? -2 : 2
-    } if (millis() > 11500 && millis() < 12500 && !stackFirst) {
-        sgePosY -= (swap) ? -2 : 2
-    } if (millis() > 9800 && millis() < 13000 && stackFirst) {
-        sgePosX -= (swapMovement^swap^stackFirst) ? -2 : 2
-        sgePosY += (swap) ? -0.5 : 0.5
+    } if (millis() > 9800 && millis() < 12500 && !stackFirst) {
+        drgPosX -= (swapMovement) ? -1.3 : 1.3
+        warPosX += (swapMovement) ? -1.3 : 1.3
+        sgePosX -= (swapMovement^swap) ? -1.3 : 1.3
+    } if (millis() > 11500 && millis() < 13000 && !stackFirst) {
+        sgePosY -= (swap) ? -1.3 : 1.3
+    } if (millis() > 8800 && millis() < 13000 && stackFirst) {
+        sgePosX -= (swapMovement^swap^stackFirst) ? -1.3 : 1.3
+        sgePosY -= (swap) ? -0.2 : 0.2
+    } if (millis() > 12000 && millis() < 13000 && stackFirst) {
+        sgePosY += (swap) ? -1.3 : 1.3
     }
 
     strokeWeight(3)
@@ -264,10 +266,10 @@ function draw() {
 
     noStroke()
 
-    if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) posX -= 2 // A or ← = left
-    if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) posY -= 2 // W or ↑ = up
-    if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) posX += 2 // D or → = right
-    if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) posY += 2 // S or ↓ = down
+    if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) posX -= 1.3 // A or ← = left
+    if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) posY -= 1.3 // W or ↑ = up
+    if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) posX += 1.3 // D or → = right
+    if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) posY += 1.3 // S or ↓ = down
 
     // display the ready check
     // if (!engaged) {
