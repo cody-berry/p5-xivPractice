@@ -40,6 +40,7 @@ let swapMovement // whether the top-right or top-left is originally safe, basica
 let stackFirst // do we stack first or spread first?
 let whoGetsStack // who got "stack"?
 let swap // only used for sage: did both DPS or both supports get it?
+let rotateExaflares // the exaflares could be on the north and south or on the east and west
 
 let lastHitBy // Keeps track of what and when each character suffered an AoE
 
@@ -78,14 +79,20 @@ function setup() {
 
     // assign now so that we can position exoflares properly
     swapMovement = random([false, true])
+    rotateExaflares = random([false, true])
     exoflares = [
         // Add exoflares on the east and west. They go to the top-left and
         // bottom-right if swapMovement is false, and the top-right and
         // bottom-left if swapMovement is true.
-        new Exaflare(450, (swapMovement) ? 220 : 40, 180, 6500, 79, 0, 0, 1000),
-        new Exaflare(950, (swapMovement) ? 40 : 220, 180, 6500, -79, 0, 0, 1000),
-        new Exaflare(450, (swapMovement) ? 560 : 380, 180, 6500, 79, 0, 0, 1000),
-        new Exaflare(950, (swapMovement) ? 380 : 560, 180, 6500, -79, 0, 0, 1000),
+        // Or on north and south!
+        new Exaflare((!rotateExaflares) ? 450 : ((swapMovement) ? 620 : 440),
+                     (rotateExaflares) ? 50 : ((swapMovement) ? 220 : 40), 180, 6500, (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
+        new Exaflare((!rotateExaflares) ? 950 : ((swapMovement) ? 440 : 620),
+                     (rotateExaflares) ? 550 : ((swapMovement) ? 40 : 220), 180, 6500, (rotateExaflares) ? 0 : -79, (!rotateExaflares) ? 0 : -79, 0, 1000),
+        new Exaflare((!rotateExaflares) ? 450 : ((swapMovement) ? 960 : 780),
+                     (rotateExaflares) ? 50 : ((swapMovement) ? 560 : 380), 180, 6500, (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
+        new Exaflare((!rotateExaflares) ? 950 : ((swapMovement) ? 780 : 960),
+                     (rotateExaflares) ? 550 : ((swapMovement) ? 380 : 560), 180, 6500, (rotateExaflares) ? 0 : -79, (!rotateExaflares) ? 0 : -79, 0, 1000),
         // These are the cardinal exoflares. They're always in the same
         // orientation.
         new Exaflare(620, 300, 200, 6500, -79, 0, 0, 1000),
