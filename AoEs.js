@@ -364,5 +364,50 @@ class StackCircle {
 }
 
 class SoakTower {
+    constructor(color, xPos, yPos, radius, goesOffIn) {
+        this.color = color
+        this.x = xPos
+        this.y = yPos
+        this.size = radius
+        this.goesOffAt = goesOffIn + millis()
+        this.wentOff = false
+        this.soaked = false
+    }
 
+    update() {
+        if (millis() > this.goesOffAt) {
+            if (this.wentOff === false) {
+                for (let position of [
+                    [posX, posY],
+                    [drgPosX, drgPosY],
+                    [warPosX, warPosY],
+                    [sgePosX, sgePosY]
+                ]) {
+                    // if the tower wasn't soaked, the party wipes
+                    if (sqrt((position[0] - this.x) ** 2 + (position[1] - this.y) ** 2) < this.size) {
+                        this.soaked = true
+                    }
+                }
+            }
+
+            if (!this.soaked) {
+                partyWiped = true
+                causeOfWipe = "A tower went unsoaked."
+            }
+
+            this.wentOff = true
+        }
+    }
+
+    displayTower() {
+        if (!this.wentOff) {
+            stroke(this.color[0], this.color[1], this.color[2])
+            strokeWeight(1)
+            noFill()
+            circle(this.x, this.y, this.size*2)
+            fill(this.color[0], this.color[1], this.color[2])
+            noStroke()
+            text(ceil((this.goesOffAt - millis())/1000), this.x - 10, this.y + 10)
+        }
+    }
 }

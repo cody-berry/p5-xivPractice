@@ -36,6 +36,8 @@ let exoflares
 let exoflareHelper
 let AoEs
 
+let soakTowers
+
 let swapMovement // whether the top-right or top-left is originally safe, basically
 let stackFirst // do we stack first or spread first?
 let whoGetsStack // who got "stack"?
@@ -341,31 +343,11 @@ function draw() {
         //     }
         // }
 
-        if (posX < 432 || posY < 32 ||
-            posX > 978 || posY > 578) {
-            partyWiped = true
-            causeOfWipe = "You entered the edge \nof the arena."
-        }
-
-        if (partyWiped === true) {
-            fill(0, 100, 100)
-            text(causeOfWipe, 10, 300)
-        }
-        print(engagedAt)
-
         for (let exoflare of exoflares) {
             exoflare.update()
             exoflare.displayAoE()
         }
 
-        // display the donut of not being able to see anything
-        noStroke()
-        let size = (exoflareHelper) ? 320 : 200
-        for (let opacity = 0; opacity < 18; opacity += 0.5) {
-            fill(0, 0, 0, opacity)
-            displayDonut(posX, posY, size)
-            size += (exoflareHelper) ? opacity / 2 : opacity / 3
-        }
         for (let AoE of AoEs) {
             AoE.update()
             AoE.displayAoE()
@@ -379,7 +361,34 @@ function draw() {
         fill(234, 34, 24)
         noStroke()
         rect(350, 0, 50, height)
+    } if (mechanic === "Malformed Reincarnation") {
+        for (let soakTower of soakTowers) {
+            soakTower.update()
+            soakTower.displayTower()
+        }
     }
+
+
+    // display the donut of not being able to see anything
+    noStroke()
+    let size = (exoflareHelper) ? 320 : 200
+    for (let opacity = 0; opacity < 18; opacity += 0.5) {
+        fill(0, 0, 0, opacity)
+        displayDonut(posX, posY, size)
+        size += (exoflareHelper) ? opacity / 2 : opacity / 3
+    }
+
+    if (posX < 432 || posY < 32 ||
+        posX > 978 || posY > 578) {
+        partyWiped = true
+        causeOfWipe = "You entered the edge \nof the arena."
+    }
+
+    if (partyWiped === true) {
+        fill(0, 100, 100)
+        text(causeOfWipe, 10, 300)
+    }
+    print(engagedAt)
 
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
@@ -465,14 +474,52 @@ function mousePressed() {
         warPosY = 300
         bossPosX = -100
         bossPosY = -100
+        partyWiped = false
     }
     if (mouseX > 0 && mouseX < 125 &&
         mouseY > 430 && mouseY < 490) {
         mechanic = "Fighting Spirits"
+        partyWiped = false
     }
     if (mouseX > 0 && mouseX < 205 &&
         mouseY > 490 && mouseY < 550) {
         mechanic = "Malformed Reincarnation"
+        mechanicStarted = millis()
+        posX = 450
+        posY = 50
+        soakTowers = [
+            new SoakTower([15, 100, 100], 450, 50, 50, 0),
+            new SoakTower([335, 100, 100], 575, 50, 50, 2000),
+            new SoakTower([305, 100, 100], 700, 50, 50, 4000),
+            new SoakTower([270, 100, 100], 825, 50, 50, 6000),
+            new SoakTower([240, 100, 100], 950, 50, 50, 8000),
+            new SoakTower([240, 100, 100], 950, 150, 50, 10000),
+            new SoakTower([270, 100, 100], 825, 150, 50, 12000),
+            new SoakTower([305, 100, 100], 700, 150, 50, 14000),
+            new SoakTower([335, 100, 100], 575, 150, 50, 16000),
+            new SoakTower([15, 100, 100], 450, 150, 50, 18000),
+            new SoakTower([15, 100, 100], 450, 250, 50, 20000),
+            new SoakTower([335, 100, 100], 575, 250, 50, 22000),
+            new SoakTower([305, 100, 100], 700, 250, 50, 24000),
+            new SoakTower([270, 100, 100], 825, 250, 50, 26000),
+            new SoakTower([240, 100, 100], 950, 250, 50, 28000),
+            new SoakTower([240, 100, 100], 950, 350, 50, 30000),
+            new SoakTower([270, 100, 100], 825, 350, 50, 32000),
+            new SoakTower([305, 100, 100], 700, 350, 50, 34000),
+            new SoakTower([335, 100, 100], 575, 350, 50, 36000),
+            new SoakTower([15, 100, 100], 450, 350, 50, 38000),
+            new SoakTower([15, 100, 100], 450, 450, 50, 40000),
+            new SoakTower([335, 100, 100], 575, 450, 50, 42000),
+            new SoakTower([305, 100, 100], 700, 450, 50, 44000),
+            new SoakTower([270, 100, 100], 825, 450, 50, 46000),
+            new SoakTower([240, 100, 100], 950, 450, 50, 48000),
+            new SoakTower([240, 100, 100], 950, 550, 50, 50000),
+            new SoakTower([270, 100, 100], 825, 550, 50, 52000),
+            new SoakTower([305, 100, 100], 700, 550, 50, 54000),
+            new SoakTower([335, 100, 100], 575, 550, 50, 56000),
+            new SoakTower([15, 100, 100], 450, 550, 50, 58000)
+        ]
+        partyWiped = false
     }
 }
 
