@@ -372,10 +372,12 @@ class SoakTower {
         this.goesOffAt = goesOffIn + millis()
         this.wentOff = false
         this.soaked = false
+        this.opacity = 100
     }
 
     update() {
         if (millis() > this.goesOffAt) {
+            this.opacity -= 5
             if (this.wentOff === false) {
                 for (let position of [
                     [posX, posY],
@@ -388,12 +390,15 @@ class SoakTower {
                         this.soaked = true
                     }
                 }
+
+                if (!this.soaked) {
+                    partyWiped = true
+                    causeOfWipe = "A tower went unsoaked."
+                    this.opacity = 150
+                }
             }
 
-            if (!this.soaked) {
-                partyWiped = true
-                causeOfWipe = "A tower went unsoaked."
-            }
+
 
             this.wentOff = true
         }
@@ -408,6 +413,16 @@ class SoakTower {
             fill(this.color[0], this.color[1], this.color[2])
             noStroke()
             text(ceil((this.goesOffAt - millis())/1000), this.x - 10, this.y + 10)
+        } if (this.wentOff && this.soaked) {
+            stroke(this.color[0], this.color[1], this.color[2], this.opacity)
+            strokeWeight(1)
+            noFill()
+            circle(this.x, this.y, this.size*2)
+        } if (this.wentOff && !this.soaked) {
+            stroke(this.color[0], this.color[1], this.color[2], this.opacity)
+            strokeWeight((150 - this.opacity)/5)
+            noFill()
+            circle(this.x, this.y, this.size*2 + (150 - this.opacity)*8)
         }
     }
 }
