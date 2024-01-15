@@ -242,12 +242,12 @@ class Exaflare {
 
 class SpreadCircle {
     constructor(playerTargeted, // 1 for you, 2 for the dragoon, 3 for the sage, and 4 for the warrior
-                size, goesOffAt) {
+                size, goesOffIn) {
         this.player = playerTargeted
         this.x = 0
         this.y = 0
         this.size = size
-        this.goesOffAt = goesOffAt
+        this.goesOffAt = goesOffIn + millis()
         this.opacity = 102
         this.wentOff = false
     }
@@ -300,12 +300,12 @@ class SpreadCircle {
 }
 
 class StackCircle {
-    constructor(playerTargeted, size, goesOffAt, minPlayers) {
+    constructor(playerTargeted, size, goesOffIn, minPlayers) {
         this.player = playerTargeted
         this.x = 0
         this.y = 0
         this.size = size
-        this.goesOffAt = goesOffAt
+        this.goesOffAt = goesOffIn + millis()
         this.opacity = 102
         this.wentOff = false
         this.minPlayers = minPlayers
@@ -361,4 +361,8 @@ class StackCircle {
             circle(this.x, this.y, this.size)
         }
     }
+}
+
+class SoakTower {
+
 }
