@@ -177,40 +177,45 @@ function draw() {
     // display you and your party members in your and their respective position
 
     // but first update so that people can dodge exoflares!
-    if (millis() < 2500) { // get in original position
-        drgPosX += (swapMovement) ? -1 : 1
-        drgPosY += 1
-        warPosX -= (swapMovement) ? -1 : 1
-        warPosY -= 1
-        sgePosY -= (swap) ? -1.3 : 1.3
-        if (stackFirst) {
-            sgePosY += (swap) ? -0.5 : 0.5
-        }
-        sgePosX += (swapMovement^swap^stackFirst) ? -1.2 : 1.2
-    } if (millis() > 6500 && millis() < 7600) { // move to adjust.
-        drgPosX += (swapMovement) ? -1.2 : 1.2
-        warPosX -= (swapMovement) ? -1.2 : 1.2
-        sgePosX += (swapMovement^swap^stackFirst) ? -1.3 : 1.3
-    } if (millis() > 8800 && millis() < 9800) { // more moving to adjust
-        drgPosY += 1.3
-        warPosY -= 1.3
-        if (stackFirst) {
+    if (millis() > 3500 && millis() < 5100) {
+        sgePosY -= (swap) ? -1.35 : 1.35
+        sgePosX -= (swapMovement^swap) ? -1.25 : 1.25
+    } if (millis() > 5100 && millis() < 5500 && !stackFirst) {
+        sgePosY -= (swap) ? -1.35 : 1.35
+        sgePosX -= (swapMovement^swap) ? -1.25 : 1.25
+    } if (millis() > 5500 && millis() < 6800 && !stackFirst) {
+        if (rotateExaflares) {
             sgePosY -= (swap) ? -1.3 : 1.3
         } else {
-            sgePosY += (swap) ? -1.3 : 1.3
-            sgePosX -= (swap^swapMovement) ? -0.6 : 0.6
+            sgePosX -= (swapMovement^swap) ? -1.3 : 1.3
         }
-    } if (millis() > 9800 && millis() < 12500 && !stackFirst) {
-        drgPosX -= (swapMovement) ? -1.3 : 1.3
-        warPosX += (swapMovement) ? -1.3 : 1.3
+    } if (millis() > 4900 && millis() < 6500) {
+        warPosY -= 1.3
+        warPosX -= (swapMovement) ? -1.3 : 1.3
+        drgPosY += 1.3
+        drgPosX += (swapMovement) ? -1.3 : 1.3
+    } if (millis() > 7500 && millis() < 8500 && !stackFirst) {
+        if (rotateExaflares) {
+            sgePosX -= (swapMovement^swap) ? -1.3 : 1.3
+        } else {
+            sgePosY -= (swap) ? -1.3 : 1.3
+        }
+    } if (millis() > 8500 && millis() < 9800 && stackFirst) {
         sgePosX -= (swapMovement^swap) ? -1.3 : 1.3
-    } if (millis() > 11500 && millis() < 13000 && !stackFirst) {
         sgePosY -= (swap) ? -1.3 : 1.3
-    } if (millis() > 8800 && millis() < 13000 && stackFirst) {
-        sgePosX -= (swapMovement^swap^stackFirst) ? -1.3 : 1.3
-        sgePosY -= (swap) ? -0.2 : 0.2
-    } if (millis() > 12000 && millis() < 13000 && stackFirst) {
-        sgePosY += (swap) ? -1.3 : 1.3
+    } if (millis() > 8500 && millis() < 10000) {
+        warPosY -= 1.3
+        warPosX -= (swapMovement) ? -1.3 : 1.3
+        drgPosY += 1.3
+        drgPosX += (swapMovement) ? -1.3 : 1.3
+    } if (millis() > 10000 && millis() < 13500 && stackFirst) {
+        if (!rotateExaflares) {
+            warPosX += (swapMovement) ? -1.3 : 1.3
+            drgPosX -= (swapMovement) ? -1.3 : 1.3
+        } else {
+            warPosY += 1.3
+            drgPosY -= 1.3
+        }
     }
 
     strokeWeight(3)
