@@ -121,7 +121,7 @@ function setup() {
         new SpreadCircle(3, 200, (stackFirst) ? 13510 : 8510),
         new SpreadCircle(4, 200, (stackFirst) ? 13530 : 8530),
         new StackCircle(whoGetsStack[0], 200, (stackFirst) ? 8490 : 13490, 2),
-        new StackCircle(whoGetsStack[1], 200, (stackFirst) ? 8510 : 13510, 2)
+        new StackCircle(whoGetsStack[1], 200, (stackFirst) ? 8510 : 13510, 2),
     ]
 }
 
@@ -316,12 +316,29 @@ function draw() {
     for (let exoflare of exoflares) {
         exoflare.update()
         exoflare.displayAoE()
-    } for (let AoE of AoEs) {
-        AoE.update()
-        AoE.displayAOE()
     }
 
+    // display the donut of not being able to see anything
+    noStroke()
+    let size = (exoflareHelper) ? 320 : 200
+    for (let opacity = 0; opacity < 18; opacity += 0.5) {
+        fill(0, 0, 0, opacity)
+        displayDonut(posX, posY, size)
+        size += (exoflareHelper) ? opacity/2 : opacity/3
+    }
+    for (let AoE of AoEs) {
+        AoE.update()
+        AoE.displayAoE()
+    }
 
+    strokeWeight(1)
+    stroke(0, 0, 0)
+
+
+    // make it so that you can't see the corner exaflare stidcking out
+    fill(234, 34, 24)
+    noStroke()
+    rect(350, 0, 50, height)
 
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
@@ -329,6 +346,22 @@ function draw() {
     debugCorner.showBottom()
 
     // if (frameCount > 3000) noLoop()
+}
+
+function displayDonut(posX, posY, size) {
+    beginShape()
+    vertex(400, 0)
+    vertex(1000, 0)
+    vertex(1000, 600)
+    vertex(400, 600)
+    beginContour()
+    for (let angle = TWO_PI; angle > 0; angle -= 0.1) {
+        let x = posX + cos(angle) * size
+        let y = posY + sin(angle) * size
+        vertex(max(x, 400), y)
+    }
+    endContour()
+    endShape(CLOSE)
 }
 
 function mousePressed() {

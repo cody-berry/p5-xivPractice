@@ -15,7 +15,7 @@ class CircleAOE {
             this.opacity += 1
             if (this.opacity >= 20) this.stopAccumulatingOpacity = true
         } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
-            this.opacity -= 1
+            this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
             fill(0, 100, 50, min(this.opacity*20, 100)/2)
@@ -46,7 +46,7 @@ class RectAOE {
             this.opacity += 1
             if (this.opacity >= 20) this.stopAccumulatingOpacity = true
         } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
-            this.opacity -= 1
+            this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
             fill(0, 100, 50, min(this.opacity*20, 100)/2)
@@ -76,7 +76,7 @@ class DonutAOE {
             this.opacity += 1
             if (this.opacity >= 20) this.stopAccumulatingOpacity = true
         } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
-            this.opacity -= 1
+            this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
             fill(0, 100, 100, min(this.opacity*20, 100)/2)
@@ -131,7 +131,7 @@ class ConeAOE {
         if (this.opacity < 20 && this.goesOffAt - millis() > 100) {
             this.opacity += 1
         } if (this.goesOffAt - millis() < 20)  {
-            this.opacity -= 1
+            this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
             fill(0, 100, 100, min(this.opacity*20, 100)/2)
@@ -282,7 +282,7 @@ class SpreadCircle {
                         print(lastHitBy)
                         if (position[2] !== this.player) {
                             partyWiped = true
-                            causeOfWipe = "Someone clipped \nsomeone else with spread."
+                            causeOfWipe = "Someone clipped \nsomeone else with \nspread."
                         }
                     }
                 }
@@ -291,7 +291,7 @@ class SpreadCircle {
         }
     }
 
-    displayAOE() {
+    displayAoE() {
         if (millis() > this.goesOffAt) {
             fill(11, 100, 100, this.opacity)
             circle(this.x, this.y, this.size)
@@ -339,7 +339,7 @@ class StackCircle {
                     if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size/2) {
                         if (lastHitBy[position[2]][1] > millis() - 1000) {
                             partyWiped = true
-                            causeOfWipe = "2 stack people stacked up."
+                            causeOfWipe = "2 stack people stacked \nup."
                         }
                         lastHitBy[position[2]] = ["stack", millis()]
                         print(lastHitBy)
@@ -348,14 +348,14 @@ class StackCircle {
                 } if (playersHit < this.minPlayers) {
                     // if less than the minimum players have stacked up, one dies
                     partyWiped = true
-                    causeOfWipe = "Too little people stacked up."
+                    causeOfWipe = "Too little people \nstacked up."
                 }
             }
             this.opacity -= 3
         }
     }
 
-    displayAOE() {
+    displayAoE() {
         if (millis() > this.goesOffAt) {
             fill(11, 100, 100, this.opacity)
             circle(this.x, this.y, this.size)
