@@ -47,6 +47,7 @@ let areThereTriples
 let majorityRed
 let triplesGivenTo
 let triplesNotGivenTo
+let droppedTowers
 
 let swapMovement // whether the top-right or top-left is originally safe, basically
 let stackFirst // do we stack first or spread first?
@@ -420,6 +421,31 @@ function draw() {
                     strokeWeight(2)
                     if (millis() - mechanicStarted < 10000) {
                         circle(70, yPos - 15, 20) // drop blue
+                    } else {
+                        if (!droppedTowers) {
+                            if (player === 4) {
+                                droppedTowers = true
+                            }
+                            let playerPosX = 0
+                            let playerPosY = 0
+                            if (player === 1) {
+                                playerPosX = posX
+                                playerPosY = posY
+                            } if (player === 2) {
+                                playerPosX = drgPosX
+                                playerPosY = drgPosY
+                            } if (player === 3) {
+                                playerPosX = sgePosX
+                                playerPosY = sgePosY
+                            } if (player === 4) {
+                                playerPosX = warPosX
+                                playerPosY = warPosY
+                            }
+                            blueSoakTowers.push(
+                                new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
+                            )
+                            print(playerPosX, playerPosY, player)
+                        }
                     }
                     noStroke()
                     fill(15, 100, 100)
@@ -436,6 +462,31 @@ function draw() {
                     strokeWeight(2)
                     if (millis() - mechanicStarted < 10000) {
                         circle(70, yPos - 15, 20) // drop red
+                    } else {
+                        if (!droppedTowers) {
+                            if (player === 4) {
+                                droppedTowers = true
+                            }
+                            let playerPosX = 0
+                            let playerPosY = 0
+                            if (player === 1) {
+                                playerPosX = posX
+                                playerPosY = posY
+                            } if (player === 2) {
+                                playerPosX = drgPosX
+                                playerPosY = drgPosY
+                            } if (player === 3) {
+                                playerPosX = sgePosX
+                                playerPosY = sgePosY
+                            } if (player === 4) {
+                                playerPosX = warPosX
+                                playerPosY = warPosY
+                            }
+                            orangeSoakTowers.push(
+                                new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
+                            )
+                            print(playerPosX, playerPosY, player)
+                        }
                     }
                     noStroke()
                     fill(240, 100, 100)
@@ -454,6 +505,31 @@ function draw() {
                     strokeWeight(2)
                     if (millis() - mechanicStarted < 10000) {
                         circle(70, yPos - 15, 20) // drop red
+                    } else {
+                        if (!droppedTowers) {
+                            if (player === 4) {
+                                droppedTowers = true
+                            }
+                            let playerPosX = 0
+                            let playerPosY = 0
+                            if (player === 1) {
+                                playerPosX = posX
+                                playerPosY = posY
+                            } if (player === 2) {
+                                playerPosX = drgPosX
+                                playerPosY = drgPosY
+                            } if (player === 3) {
+                                playerPosX = sgePosX
+                                playerPosY = sgePosY
+                            } if (player === 4) {
+                                playerPosX = warPosX
+                                playerPosY = warPosY
+                            }
+                            orangeSoakTowers.push(
+                                new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
+                            )
+                            print(playerPosX, playerPosY, player)
+                        }
                     }
                     noStroke()
                     fill(15, 100, 100)
@@ -472,6 +548,31 @@ function draw() {
                     strokeWeight(2)
                     if (millis() - mechanicStarted < 10000) {
                         circle(70, yPos - 15, 20) // drop blue
+                    } else {
+                        if (!droppedTowers) {
+                            if (player === 4) {
+                                droppedTowers = true
+                            }
+                            let playerPosX = 0
+                            let playerPosY = 0
+                            if (player === 1) {
+                                playerPosX = posX
+                                playerPosY = posY
+                            } if (player === 2) {
+                                playerPosX = drgPosX
+                                playerPosY = drgPosY
+                            } if (player === 3) {
+                                playerPosX = sgePosX
+                                playerPosY = sgePosY
+                            } if (player === 4) {
+                                playerPosX = warPosX
+                                playerPosY = warPosY
+                            }
+                            blueSoakTowers.push(
+                                new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
+                            )
+                            print(playerPosX, playerPosY, player)
+                        }
                     }
                     noStroke()
                     fill(240, 100, 100)
@@ -488,6 +589,8 @@ function draw() {
             }
         }
     }
+
+
 
 
     // display the donut of not being able to see anything
@@ -616,50 +719,62 @@ function mousePressed() {
         blueSoakTowers = []
         orangeSoakTowers = []
 
+        posX = 700
+        posY = 300
+        drgPosX = 700
+        drgPosY = 300
+        sgePosX = 700
+        sgePosY = 300
+        warPosX = 700
+        warPosY = 300
+        bossPosX = -100
+        bossPosY = -100
+
         if (topRightIsBlue) {
             blueSoakTowers.push(
-                new SoakTower([240, 100, 100], 900, 100, 70, 16000),
-                new SoakTower([240, 100, 100], 775, 225, 70, 14600)
+                new SoakTower([240, 100, 100], 910, 90, 65, 16000),
+                new SoakTower([240, 100, 100], 770, 230, 65, 14600)
             )
         } else {
             orangeSoakTowers.push(
-                new SoakTower([15, 100, 100], 900, 100, 70, 16000),
-                new SoakTower([15, 100, 100], 775, 225, 70, 14600)
+                new SoakTower([15, 100, 100], 910, 90, 65, 16000),
+                new SoakTower([15, 100, 100], 770, 230, 65, 14600)
             )
         }
         if (topLeftIsBlue) {
             blueSoakTowers.push(
-                new SoakTower([240, 100, 100], 500, 100, 70, 16000),
-                new SoakTower([240, 100, 100], 625, 225, 70, 14600)
+                new SoakTower([240, 100, 100], 490, 90, 65, 16000),
+                new SoakTower([240, 100, 100], 630, 230, 65, 14600)
             )
         } else {
             orangeSoakTowers.push(
-                new SoakTower([15, 100, 100], 500, 100, 70, 16000),
-                new SoakTower([15, 100, 100], 625, 225, 70, 14600)
+                new SoakTower([15, 100, 100], 490, 90, 65, 16000),
+                new SoakTower([15, 100, 100], 630, 230, 65, 14600)
             )
         }
         if (bottomRightIsBlue) {
             blueSoakTowers.push(
-                new SoakTower([240, 100, 100], 900, 500, 75, 16000),
-                new SoakTower([240, 100, 100], 775, 375, 75, 14600)
+                new SoakTower([240, 100, 100], 910, 510, 65, 16000),
+                new SoakTower([240, 100, 100], 770, 370, 65, 14600)
             )
         } else {
             orangeSoakTowers.push(
-                new SoakTower([15, 100, 100], 900, 500, 75, 16000),
-                new SoakTower([15, 100, 100], 775, 375, 75, 14600)
+                new SoakTower([15, 100, 100], 910, 510, 65, 16000),
+                new SoakTower([15, 100, 100], 770, 370, 65, 14600)
             )
         }
         if (bottomLeftIsBlue) {
             blueSoakTowers.push(
-                new SoakTower([240, 100, 100], 500, 500, 75, 16000),
-                new SoakTower([240, 100, 100], 625, 375, 75, 14600)
+                new SoakTower([240, 100, 100], 490, 510, 65, 16000),
+                new SoakTower([240, 100, 100], 630, 370, 65, 14600)
             )
         } else {
             orangeSoakTowers.push(
-                new SoakTower([15, 100, 100], 500, 500, 75, 16000),
-                new SoakTower([15, 100, 100], 625, 375, 75, 14600)
+                new SoakTower([15, 100, 100], 490, 510, 65, 16000),
+                new SoakTower([15, 100, 100], 630, 370, 65, 14600)
             )
         }
+        droppedTowers = false
         partyWiped = false
 
         // give out the triples now
