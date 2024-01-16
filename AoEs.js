@@ -415,7 +415,7 @@ class SoakTower {
             text(ceil((this.goesOffAt - millis())/1000), this.x - 10, this.y + 10)
         } if (this.wentOff && this.soaked) {
             stroke(this.color[0], this.color[1], this.color[2], this.opacity)
-            strokeWeight(1)
+            strokeWeight(5)
             noFill()
             circle(this.x, this.y, this.size*2)
         } if (this.wentOff && !this.soaked) {

@@ -36,7 +36,17 @@ let exoflares
 let exoflareHelper
 let AoEs
 
-let soakTowers
+let blueSoakTowers
+let orangeSoakTowers
+let directionOfBlue
+let topRightIsBlue
+let topLeftIsBlue
+let bottomRightIsBlue
+let bottomLeftIsBlue
+let areThereTriples
+let majorityRed
+let triplesGivenTo
+let triplesNotGivenTo
 
 let swapMovement // whether the top-right or top-left is originally safe, basically
 let stackFirst // do we stack first or spread first?
@@ -211,10 +221,39 @@ function draw() {
 
     // display you and your party members in your and their respective position
     // after checking for moving
-    if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) posX -= 1.3 // A or ← = left
-    if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) posY -= 1.3 // W or ↑ = up
-    if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) posX += 1.3 // D or → = right
-    if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) posY += 1.3 // S or ↓ = down
+    let directions = []
+    if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) directions.push(1) // A or ← = left/1
+    if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) directions.push(2) // W or ↑ = up/2
+    if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) directions.push(3) // D or → = right/3
+    if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) directions.push(4) // S or ↓ = down/4
+    if (directions.length === 1) { // move the full 1.3
+        if (directions[0] === 1) posX -= 1.3
+        if (directions[0] === 2) posY -= 1.3
+        if (directions[0] === 3) posX += 1.3
+        if (directions[0] === 4) posY += 1.3
+    } if (directions.length === 2) { // move 0.92 each direction
+        if (directions[0] === 1) posX -= 0.92
+        if (directions[0] === 2) posY -= 0.92
+        if (directions[0] === 3) posX += 0.92
+        if (directions[0] === 4) posY += 0.92
+        if (directions[1] === 1) posX -= 0.92
+        if (directions[1] === 2) posY -= 0.92
+        if (directions[1] === 3) posX += 0.92
+        if (directions[1] === 4) posY += 0.92
+    } if (directions.length === 3) { // move the full 1.3 each direction. Virtually 1
+        if (directions[0] === 1) posX -= 1.3
+        if (directions[0] === 2) posY -= 1.3
+        if (directions[0] === 3) posX += 1.3
+        if (directions[0] === 4) posY += 1.3
+        if (directions[1] === 1) posX -= 1.3
+        if (directions[1] === 2) posY -= 1.3
+        if (directions[1] === 3) posX += 1.3
+        if (directions[1] === 4) posY += 1.3
+        if (directions[2] === 1) posX -= 1.3
+        if (directions[2] === 2) posY -= 1.3
+        if (directions[2] === 3) posX += 1.3
+        if (directions[2] === 4) posY += 1.3
+    }
     image(sgeSymbol, sgePosX - 20, sgePosY - 20, 40, 40)
     image(warSymbol, warPosX - 20, warPosY - 20, 40, 40)
     image(drgSymbol, drgPosX - 20, drgPosY - 20, 40, 40)
@@ -362,9 +401,91 @@ function draw() {
         noStroke()
         rect(350, 0, 50, height)
     } if (mechanic === "Malformed Reincarnation") {
-        for (let soakTower of soakTowers) {
+        for (let soakTower of blueSoakTowers) {
             soakTower.update()
             soakTower.displayTower()
+        }
+        for (let soakTower of orangeSoakTowers) {
+            soakTower.update()
+            soakTower.displayTower()
+        }
+
+        // display the rodential and odder debuffs
+        for (let player of [1, 2, 3, 4]) {
+            let yPos = 45 + player*50
+            if (triplesGivenTo.includes(player)) {
+                if (majorityRed.includes(player)) { // drop blue, soak red-red-red
+                    stroke(240, 100, 100)
+                    noFill()
+                    strokeWeight(2)
+                    if (millis() - mechanicStarted < 10000) {
+                        circle(70, yPos - 15, 20) // drop blue
+                    }
+                    noStroke()
+                    fill(15, 100, 100)
+                    if (millis() - mechanicStarted < 14600) {
+                        text("123", 100, yPos)
+                    } else if (millis() - mechanicStarted < 16000) {
+                        text("23", 117, yPos)
+                    } else if (millis() - mechanicStarted < 17400) {
+                        text("3", 136, yPos)
+                    }
+                } else { // drop red, soak blue-blue-blue
+                    stroke(15, 100, 100)
+                    noFill()
+                    strokeWeight(2)
+                    if (millis() - mechanicStarted < 10000) {
+                        circle(70, yPos - 15, 20) // drop red
+                    }
+                    noStroke()
+                    fill(240, 100, 100)
+                    if (millis() - mechanicStarted < 14600) {
+                        text("123", 100, yPos - 5)
+                    } else if (millis() - mechanicStarted < 16000) {
+                        text("23", 117, yPos - 5)
+                    } else if (millis() - mechanicStarted < 17400) {
+                        text("3", 136, yPos - 5)
+                    }
+                }
+            } else {
+                if (majorityRed.includes(player)) { // drop red, soak red-red-blue
+                    stroke(15, 100, 100)
+                    noFill()
+                    strokeWeight(2)
+                    if (millis() - mechanicStarted < 10000) {
+                        circle(70, yPos - 15, 20) // drop red
+                    }
+                    noStroke()
+                    fill(15, 100, 100)
+                    if (millis() - mechanicStarted < 14600) {
+                        text("12", 100, yPos - 2)
+                    } else if (millis() - mechanicStarted < 16000) {
+                        text("2", 117, yPos - 2)
+                    }
+                    fill(240, 100, 100)
+                    if (millis() - mechanicStarted < 17400) {
+                        text("3", 137, yPos - 4.5)
+                    }
+                } else { // drop blue, soak blue-blue-red
+                    stroke(240, 100, 100)
+                    noFill()
+                    strokeWeight(2)
+                    if (millis() - mechanicStarted < 10000) {
+                        circle(70, yPos - 15, 20) // drop blue
+                    }
+                    noStroke()
+                    fill(240, 100, 100)
+                    if (millis() - mechanicStarted < 14600) {
+                        text("12", 100, yPos - 7)
+                    } else if (millis() - mechanicStarted < 16000) {
+                        text("2", 117, yPos - 7)
+                    }
+                    fill(15, 100, 100)
+                    if (millis() - mechanicStarted < 17400) {
+                        text("3", 137, yPos - 4.5)
+                    }
+                }
+            }
         }
     }
 
@@ -485,20 +606,92 @@ function mousePressed() {
         mouseY > 490 && mouseY < 550) {
         mechanic = "Malformed Reincarnation"
         mechanicStarted = millis()
-        posX = 450
-        posY = 50
-        soakTowers = [
-            new SoakTower([15, 100, 100], 450, 50, 100, 1000),
-            new SoakTower([270, 100, 100], 700, 50, 100, 4000),
-            new SoakTower([240, 100, 100], 950, 50, 100, 7000),
-            new SoakTower([240, 100, 100], 950, 300, 100, 10000),
-            new SoakTower([270, 100, 100], 700, 300, 100, 13000),
-            new SoakTower([15, 100, 100], 450, 300, 100, 16000),
-            new SoakTower([15, 100, 100], 450, 450, 100, 19000),
-            new SoakTower([270, 100, 100], 700, 450, 100, 22000),
-            new SoakTower([240, 100, 100], 950, 450, 100, 25000),
-        ]
+        directionOfBlue = random([1, 2, 3, 4])
+        // 1 is top, 2 is right, 3 is bottom, 4 is left
+        topRightIsBlue = (directionOfBlue === 1 || directionOfBlue === 2)
+        topLeftIsBlue = (directionOfBlue === 1 || directionOfBlue === 4)
+        bottomRightIsBlue = (directionOfBlue === 2 || directionOfBlue === 3)
+        bottomLeftIsBlue = (directionOfBlue === 3 || directionOfBlue === 4)
+
+        blueSoakTowers = []
+        orangeSoakTowers = []
+
+        if (topRightIsBlue) {
+            blueSoakTowers.push(
+                new SoakTower([240, 100, 100], 900, 100, 70, 16000),
+                new SoakTower([240, 100, 100], 775, 225, 70, 14600)
+            )
+        } else {
+            orangeSoakTowers.push(
+                new SoakTower([15, 100, 100], 900, 100, 70, 16000),
+                new SoakTower([15, 100, 100], 775, 225, 70, 14600)
+            )
+        }
+        if (topLeftIsBlue) {
+            blueSoakTowers.push(
+                new SoakTower([240, 100, 100], 500, 100, 70, 16000),
+                new SoakTower([240, 100, 100], 625, 225, 70, 14600)
+            )
+        } else {
+            orangeSoakTowers.push(
+                new SoakTower([15, 100, 100], 500, 100, 70, 16000),
+                new SoakTower([15, 100, 100], 625, 225, 70, 14600)
+            )
+        }
+        if (bottomRightIsBlue) {
+            blueSoakTowers.push(
+                new SoakTower([240, 100, 100], 900, 500, 75, 16000),
+                new SoakTower([240, 100, 100], 775, 375, 75, 14600)
+            )
+        } else {
+            orangeSoakTowers.push(
+                new SoakTower([15, 100, 100], 900, 500, 75, 16000),
+                new SoakTower([15, 100, 100], 775, 375, 75, 14600)
+            )
+        }
+        if (bottomLeftIsBlue) {
+            blueSoakTowers.push(
+                new SoakTower([240, 100, 100], 500, 500, 75, 16000),
+                new SoakTower([240, 100, 100], 625, 375, 75, 14600)
+            )
+        } else {
+            orangeSoakTowers.push(
+                new SoakTower([15, 100, 100], 500, 500, 75, 16000),
+                new SoakTower([15, 100, 100], 625, 375, 75, 14600)
+            )
+        }
         partyWiped = false
+
+        // give out the triples now
+        areThereTriples = random([false, true])
+        if (areThereTriples) {
+            triplesGivenTo = [0, 0]
+            triplesGivenTo[0] = random([1, 2, 3, 4])
+            triplesGivenTo[1] = triplesGivenTo[0]
+            while (triplesGivenTo[0] === triplesGivenTo[1]) {
+                triplesGivenTo[1] = random([1, 2, 3, 4])
+            }
+            triplesNotGivenTo = []
+            for (let player of [1, 2, 3, 4]) {
+                if (!triplesGivenTo.includes(player)) {
+                    triplesNotGivenTo.push(player)
+                }
+            }
+            majorityRed = [
+                random([triplesGivenTo[0], triplesGivenTo[1]]), // 1 triple and 1 standard are majority red
+                random([triplesNotGivenTo[0], triplesNotGivenTo[1]])
+            ]
+        } else {
+            triplesGivenTo = []
+            triplesNotGivenTo = [1, 2, 3, 4]
+            majorityRed = [0, 0]
+            majorityRed[0] = random([1, 2, 3, 4])
+            majorityRed[1] = majorityRed[0]
+            while (majorityRed[0] === majorityRed[1]) {
+                majorityRed[1] = random([1, 2, 3, 4])
+            }
+        }
+        print(areThereTriples, triplesGivenTo, triplesNotGivenTo, majorityRed)
     }
 }
 
