@@ -420,9 +420,16 @@ class SoakTower {
             circle(this.x, this.y, this.size*2)
         } if (this.wentOff && !this.soaked) {
             stroke(this.color[0], this.color[1], this.color[2], this.opacity)
-            strokeWeight((150 - this.opacity)/5)
+            strokeWeight(10)
             noFill()
             circle(this.x, this.y, this.size*2 + (150 - this.opacity)*8)
+            strokeWeight(1)
+            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10, 0))
+            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 400, 0))
+            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 800, 0))
+            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 1200, 0))
+            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 1600, 0))
+            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 2000, 0))
         }
     }
 }

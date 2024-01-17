@@ -39,6 +39,7 @@ let AoEs
 let blueSoakTowers
 let orangeSoakTowers
 let directionOfBlue
+let rotatePlayers
 let topRightIsBlue
 let topLeftIsBlue
 let bottomRightIsBlue
@@ -178,42 +179,101 @@ function draw() {
         fill(0, 0, 20)
     }
     rect(0, 490, 205, 60)
+    fill(0, 0, 25)
+    if (mouseX > 135 && mouseX < 255 &&
+        mouseY > 400 && mouseY < 490) {
+        fill(0, 0, 20)
+    }
+    rect(135, 400, 120, 90)
 
     fill(0, 0, 100)
     text("Exoflares", 0, 427)
+    text("Triple", 135, 427)
     text("Fighting", 0, 457)
+    text("Kazumi-", 135, 457)
     text("Spirits", 0, 487)
+    text("Giri", 135, 487)
     text("Malformed", 0, 517)
     text("Reincarnation", 0, 547)
 
 
     // display a wooden chess board, basically
-    // #(with red or wood stuff on outside and a purple entrance on at the bottom)
-    fill(0, 80, 75)
-    rect(400, 0, 600, 600)
-    stroke(300, 50, 50)
-    line(650, 600, 750, 600)
-    fill(20, 50, 40)
-    noStroke()
-    rect(420, 20, 560, 560)
-    // display the darker parts of the chess board (just a little darker)
-    for (let xIncrements = 0; xIncrements < 8; xIncrements++) {
-        for (let yIncrements = 0; yIncrements < 8; yIncrements++) {
-            if ((xIncrements + yIncrements) % 2 === 0) {
-                fill(20, 50, 38)
-                rect(421 + xIncrements*70, 21 + yIncrements*70, 68, 68)
+    // (with red, green, or wood stuff on outside and a purple entrance on at the bottom)
+    if (mechanic === "Exoflares" || mechanic === "Fighting Spirits" || mechanic === "Malformed Reincarnation") { // Gorai
+        fill(0, 80, 75)
+        rect(400, 0, 600, 600)
+        stroke(300, 50, 50)
+        line(650, 600, 750, 600)
+        fill(20, 50, 40)
+        noStroke()
+        rect(420, 20, 560, 560)
+        // display the darker parts of the chess board (just a little darker)
+        for (let xIncrements = 0; xIncrements < 8; xIncrements++) {
+            for (let yIncrements = 0; yIncrements < 8; yIncrements++) {
+                if ((xIncrements + yIncrements) % 2 === 0) {
+                    fill(20, 50, 38)
+                    rect(421 + xIncrements * 70, 21 + yIncrements * 70, 68, 68)
+                }
             }
+            stroke(0, 0, 0)
+            strokeWeight(1)
+            line(420 + xIncrements * 70, 20, 420 + xIncrements * 70, 580) // x line
+            line(420, 20 + xIncrements * 70, 980, 20 + xIncrements * 70) // y line
+            noStroke()
         }
         stroke(0, 0, 0)
         strokeWeight(1)
-        line(420 + xIncrements*70, 20, 420 + xIncrements*70, 580) // x line
-        line(420, 20 + xIncrements*70, 980, 20 + xIncrements*70) // y line
+        line(980, 20, 980, 580) // total bottom x line
+        line(420, 580, 980, 580) // total right y line
+    } if (mechanic === "Triple Kazumi-Giri") { // Moko
+        let rowHeight = 600/19
+        let columnWidth = 30
+        fill(0, 0, 50)
+        rect(400, 0, 600, 600)
+        stroke(0, 0, 0)
+        for (let yIncrements = 1; yIncrements < 20; yIncrements++) {
+            if ([1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18].includes(yIncrements)) {
+                line(400, rowHeight*yIncrements, 1000, rowHeight*yIncrements)
+            } else {
+                line(400 + columnWidth, rowHeight * yIncrements, 400 + columnWidth * 3, rowHeight * yIncrements)
+                line(400 + columnWidth * 5, rowHeight * yIncrements, 400 + columnWidth * 7, rowHeight * yIncrements)
+                line(400 + columnWidth * 9, rowHeight * yIncrements, 400 + columnWidth * 11, rowHeight * yIncrements)
+                line(400 + columnWidth * 13, rowHeight * yIncrements, 400 + columnWidth * 15, rowHeight * yIncrements)
+                line(400 + columnWidth * 17, rowHeight * yIncrements, 400 + columnWidth * 19, rowHeight * yIncrements)
+            }
+            if ([1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17].includes(yIncrements)) {
+                line(400 + columnWidth, rowHeight * yIncrements, 400 + columnWidth, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 3, rowHeight * yIncrements, 400 + columnWidth * 3, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 4, rowHeight * yIncrements, 400 + columnWidth * 4, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 5, rowHeight * yIncrements, 400 + columnWidth * 5, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 7, rowHeight * yIncrements, 400 + columnWidth * 7, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 8, rowHeight * yIncrements, 400 + columnWidth * 8, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 9, rowHeight * yIncrements, 400 + columnWidth * 9, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 11, rowHeight * yIncrements, 400 + columnWidth * 11, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 12, rowHeight * yIncrements, 400 + columnWidth * 12, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 13, rowHeight * yIncrements, 400 + columnWidth * 13, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 15, rowHeight * yIncrements, 400 + columnWidth * 15, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 16, rowHeight * yIncrements, 400 + columnWidth * 16, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 17, rowHeight * yIncrements, 400 + columnWidth * 17, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 19, rowHeight * yIncrements, 400 + columnWidth * 19, rowHeight * (yIncrements + 1))
+            }
+        }
+
+        fill(120, 80, 50, 20)
         noStroke()
+        beginShape()
+        vertex(400, 0)
+        vertex(400, 600)
+        vertex(1000, 600)
+        vertex(1000, 0)
+        beginContour()
+        vertex(400 + columnWidth*2, rowHeight*2 - 3)
+        vertex(1000 - columnWidth*2, rowHeight*2 - 3)
+        vertex(1000 - columnWidth*2, 600 - rowHeight*2 + 3)
+        vertex(400 + columnWidth*2, 600 - rowHeight*2 + 3)
+        endContour()
+        endShape()
     }
-    stroke(0, 0, 0)
-    strokeWeight(1)
-    line(980, 20, 980, 580) // total bottom x line
-    line(420, 580, 980, 580) // total right y line
 
     // red dot at the top for boss
     strokeWeight(30)
@@ -232,7 +292,7 @@ function draw() {
         if (directions[0] === 2) posY -= 1.3
         if (directions[0] === 3) posX += 1.3
         if (directions[0] === 4) posY += 1.3
-    } if (directions.length === 2) { // move 0.92 each direction
+    } if (directions.length === 2) { // move 0.92 both directions. They cancel out each other if tey're opposite, still
         if (directions[0] === 1) posX -= 0.92
         if (directions[0] === 2) posY -= 0.92
         if (directions[0] === 3) posX += 0.92
@@ -241,7 +301,7 @@ function draw() {
         if (directions[1] === 2) posY -= 0.92
         if (directions[1] === 3) posX += 0.92
         if (directions[1] === 4) posY += 0.92
-    } if (directions.length === 3) { // move the full 1.3 each direction. Virtually 1
+    } if (directions.length === 3) { // move the full 1.3 each direction. Virtually moving 1 of the directions
         if (directions[0] === 1) posX -= 1.3
         if (directions[0] === 2) posY -= 1.3
         if (directions[0] === 3) posX += 1.3
@@ -588,7 +648,56 @@ function draw() {
                 }
             }
         }
+
+        // automate everyone
+        if (millis() - mechanicStarted < 5500) {
+            if (triplesGivenTo.includes(2)) { // 2 is the dragoon
+                // we want to get north if triples are given here
+                drgPosY -= 1.3
+            }
+        } if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 4000 && rotatePlayers) {
+            if (triplesGivenTo.includes(2)) { // 2 is the dragoon
+                drgPosY += 0.92
+                drgPosX += 0.92
+            } else {
+                drgPosY -= 0.86
+                drgPosX -= 0.92
+            }
+        } if (millis() - mechanicStarted > 5500 && millis() - mechanicStarted < 6500) {
+            // now we want to drop our tower
+            if (rotatePlayers) {
+                drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -1.3 : 1.3
+            } else {
+                drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
+            }
+        }
+        // now we need to soak our towers
+        // start with the first
+        if (millis() - mechanicStarted > 10000 && millis() - mechanicStarted < 13000) {
+            if (rotatePlayers) {
+                drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
+                drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -0.5 : 0.5
+            } else {
+                drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -1 : 1
+                drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.5 : 0.5
+            }
+        } if (millis() - mechanicStarted > 14600 && millis() - mechanicStarted < 16000) {
+            if (rotatePlayers) {
+                drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
+                drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -0.92 : 0.92
+            } else {
+                drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -0.92 : 0.92
+                drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
+            }
+        } if (millis() - mechanicStarted > 16000 && millis() - mechanicStarted < 17000) {
+            if (rotatePlayers) {
+                drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -1.3 : 1.3
+            } else {
+                drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
+            }
+        }
     }
+
 
 
 
@@ -711,6 +820,7 @@ function mousePressed() {
         mechanicStarted = millis()
         directionOfBlue = random([1, 2, 3, 4])
         // 1 is top, 2 is right, 3 is bottom, 4 is left
+        rotatePlayers = (directionOfBlue === 1 || directionOfBlue === 3)
         topRightIsBlue = (directionOfBlue === 1 || directionOfBlue === 2)
         topLeftIsBlue = (directionOfBlue === 1 || directionOfBlue === 4)
         bottomRightIsBlue = (directionOfBlue === 2 || directionOfBlue === 3)
@@ -720,13 +830,13 @@ function mousePressed() {
         orangeSoakTowers = []
 
         posX = 700
-        posY = 300
+        posY = 500
         drgPosX = 700
-        drgPosY = 300
+        drgPosY = 500
         sgePosX = 700
-        sgePosY = 300
+        sgePosY = 100
         warPosX = 700
-        warPosY = 300
+        warPosY = 100
         bossPosX = -100
         bossPosY = -100
 
@@ -807,6 +917,20 @@ function mousePressed() {
             }
         }
         print(areThereTriples, triplesGivenTo, triplesNotGivenTo, majorityRed)
+    } if (mouseX > 135 && mouseX < 255 &&
+        mouseY > 400 && mouseY < 490) {
+        mechanic = "Triple Kazumi-Giri"
+        mechanicStarted = millis()
+        posX = 700
+        posY = 400
+        drgPosX = 780
+        drgPosY = 360
+        sgePosX = 620
+        sgePosY = 360
+        warPosX = 700
+        warPosY = 200
+        bossPosX = 700
+        bossPosY = 300
     }
 }
 
