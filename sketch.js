@@ -20,6 +20,7 @@ let warPosX = 700
 let warPosY = 300
 let bossPosX = -100
 let bossPosY = -100
+let bossFacing
 
 let drgSymbol
 let rdmSymbol
@@ -226,6 +227,7 @@ function draw() {
         line(980, 20, 980, 580) // total bottom x line
         line(420, 580, 980, 580) // total right y line
     } if (mechanic === "Triple Kazumi-Giri") { // Moko
+        // start with the background
         let rowHeight = 600/19
         let columnWidth = 30
         fill(0, 0, 50)
@@ -233,15 +235,15 @@ function draw() {
         stroke(0, 0, 0)
         for (let yIncrements = 1; yIncrements < 20; yIncrements++) {
             if ([1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18].includes(yIncrements)) {
-                line(400, rowHeight*yIncrements, 1000, rowHeight*yIncrements)
-            } else {
+                line(400, rowHeight*yIncrements, 1000, rowHeight*yIncrements) // straight line across
+            } else { // many fragmented lines across
                 line(400 + columnWidth, rowHeight * yIncrements, 400 + columnWidth * 3, rowHeight * yIncrements)
                 line(400 + columnWidth * 5, rowHeight * yIncrements, 400 + columnWidth * 7, rowHeight * yIncrements)
                 line(400 + columnWidth * 9, rowHeight * yIncrements, 400 + columnWidth * 11, rowHeight * yIncrements)
                 line(400 + columnWidth * 13, rowHeight * yIncrements, 400 + columnWidth * 15, rowHeight * yIncrements)
                 line(400 + columnWidth * 17, rowHeight * yIncrements, 400 + columnWidth * 19, rowHeight * yIncrements)
             }
-            if ([1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17].includes(yIncrements)) {
+            if ([1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17].includes(yIncrements)) { // display vertical connectors
                 line(400 + columnWidth, rowHeight * yIncrements, 400 + columnWidth, rowHeight * (yIncrements + 1))
                 line(400 + columnWidth * 3, rowHeight * yIncrements, 400 + columnWidth * 3, rowHeight * (yIncrements + 1))
                 line(400 + columnWidth * 4, rowHeight * yIncrements, 400 + columnWidth * 4, rowHeight * (yIncrements + 1))
@@ -273,6 +275,22 @@ function draw() {
         vertex(400 + columnWidth*2, 600 - rowHeight*2 + 3)
         endContour()
         endShape()
+
+        // add ring that represents facing
+        stroke(0, 0, 100)
+        noFill()
+        circle(bossPosX, bossPosY, 80) // note: this is 80 diameter, not 80 radius
+        fill(0, 0, 100)
+        noStroke()
+        if (bossFacing === 1) { // up
+            triangle(bossPosX - 10, bossPosY - 40, bossPosX + 10, bossPosY - 40, bossPosX, bossPosY - 56)
+        } if (bossFacing === 2) { // right
+            triangle(bossPosX - 40, bossPosY - 10, bossPosX - 40, bossPosY + 10, bossPosX - 56, bossPosY)
+        } if (bossFacing === 3) { // down
+            triangle(bossPosX - 10, bossPosY + 40, bossPosX + 10, bossPosY + 40, bossPosX, bossPosY + 56)
+        } if (bossFacing === 4) { // left
+            triangle(bossPosX + 40, bossPosY - 10, bossPosX + 40, bossPosY + 10, bossPosX + 56, bossPosY)
+        }
     }
 
     // red dot at the top for boss
@@ -931,6 +949,7 @@ function mousePressed() {
         warPosY = 200
         bossPosX = 700
         bossPosY = 300
+        bossFacing = random([1, 2, 3, 4]) // 1 top, 2 right, 3 bottom, 4 left
     }
 }
 
