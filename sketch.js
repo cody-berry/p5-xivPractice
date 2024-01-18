@@ -20,7 +20,6 @@ let warPosX = 700
 let warPosY = 300
 let bossPosX = -100
 let bossPosY = -100
-let bossFacing
 
 let drgSymbol
 let rdmSymbol
@@ -62,6 +61,13 @@ let lastHitBy // Keeps track of what and when each character suffered an AoE
 let mechanic // keeps track of what mechanic we're practicing
 let mechanicStarted
 
+let bossFacing
+let cleaveOneColor
+let cleaveOneSafeDirection
+let cleaveTwoColor
+let cleaveTwoSafeDirection
+let cleaveThreeColor
+let cleaveThreeSafeDirection
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -291,6 +297,49 @@ function draw() {
         } if (bossFacing === 4) { // left
             triangle(bossPosX + 40, bossPosY - 10, bossPosX + 40, bossPosY + 10, bossPosX + 56, bossPosY)
         }
+
+        // display the symbols for each cleave
+        if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 1800) { // cleave #1
+            fill(0, 0, 0)
+            rect(bossPosX - 15, bossPosY - 45, 30, 30)
+            if (cleaveOneColor === "orange") {
+                fill(15, 100, 100)
+            } else {
+                fill(180, 100, 100)
+            }
+            angleMode(DEGREES)
+            // display an arc with the cleaveOneSafeDirection not included (this is filled as a pie segment)
+            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
+            angleMode(RADIANS)
+        } if (millis() - mechanicStarted > 2000 && millis() - mechanicStarted < 3800) { // cleave #2
+            fill(0, 0, 0)
+            rect(bossPosX - 15, bossPosY - 45, 30, 30)
+            if (cleaveTwoColor === "orange") {
+                fill(15, 100, 100)
+            } else {
+                fill(180, 100, 100)
+            }
+            angleMode(DEGREES)
+            // display an arc with the cleaveTwoSafeDirection not included (this is filled as a pie segment)
+            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90, 135 + cleaveTwoSafeDirection*90)
+            angleMode(RADIANS)
+        } if (millis() - mechanicStarted > 4000 && millis() - mechanicStarted < 5800) { // cleave #2
+            fill(0, 0, 0)
+            rect(bossPosX - 15, bossPosY - 45, 30, 30)
+            if (cleaveThreeColor === "orange") {
+                fill(15, 100, 100)
+            } else {
+                fill(180, 100, 100)
+            }
+            angleMode(DEGREES)
+            // display an arc with the cleaveThreeSafeDirection not included (this is filled as a pie segment)
+            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90, 135 + cleaveThreeSafeDirection*90)
+            angleMode(RADIANS)
+        }
+
+        for (let AoE in AoEs) {
+            AoE.displayAoE()
+        }
     }
 
     // red dot at the top for boss
@@ -310,7 +359,7 @@ function draw() {
         if (directions[0] === 2) posY -= 1.3
         if (directions[0] === 3) posX += 1.3
         if (directions[0] === 4) posY += 1.3
-    } if (directions.length === 2) { // move 0.92 both directions. They cancel out each other if tey're opposite, still
+    } if (directions.length === 2) { // move 0.92 both directions. They still cancel out each other if they're opposite
         if (directions[0] === 1) posX -= 0.92
         if (directions[0] === 2) posY -= 0.92
         if (directions[0] === 3) posX += 0.92
@@ -319,7 +368,7 @@ function draw() {
         if (directions[1] === 2) posY -= 0.92
         if (directions[1] === 3) posX += 0.92
         if (directions[1] === 4) posY += 0.92
-    } if (directions.length === 3) { // move the full 1.3 each direction. Virtually moving 1 of the directions
+    } if (directions.length === 3) { // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
         if (directions[0] === 1) posX -= 1.3
         if (directions[0] === 2) posY -= 1.3
         if (directions[0] === 3) posX += 1.3
@@ -950,6 +999,15 @@ function mousePressed() {
         bossPosX = 700
         bossPosY = 300
         bossFacing = random([1, 2, 3, 4]) // 1 top, 2 right, 3 bottom, 4 left
+
+        cleaveOneColor = random(["orange", "blue"])
+        cleaveTwoColor = random(["orange", "blue"])
+        cleaveThreeColor = random(["orange", "blue"])
+        cleaveOneSafeDirection = random([1, 2, 3, 4])
+        cleaveTwoSafeDirection = random([1, 2, 3, 4])
+        cleaveThreeSafeDirection = random([1, 2, 3, 4])
+
+        AoEs = []
     }
 }
 
