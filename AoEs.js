@@ -18,6 +18,7 @@ class CircleAOE {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
+            this.opacity -= 0.2
             fill(0, 100, 50, min(this.opacity*20, 100)/2)
             circle(this.x, this.y, this.radius)
         }
@@ -49,6 +50,7 @@ class RectAOE {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
+            this.opacity -= 0.2
             fill(0, 100, 50, min(this.opacity*20, 100)/2)
             rect(this.x, this.y, this.width, this.height)
         }
@@ -79,6 +81,7 @@ class DonutAOE {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
+            this.opacity -= 0.2
             fill(0, 100, 100, min(this.opacity*20, 100)/2)
             beginShape()
             vertex(400, 0)
@@ -93,7 +96,6 @@ class DonutAOE {
             }
             endContour()
             endShape(CLOSE)
-            this.opacity -= 1
         }
     }
 
@@ -124,16 +126,19 @@ class ConeAOE {
         this.endAngle = endingAngle
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
+        this.stopAccumulatingOpacity = false
     }
 
     // update the AoE's opacity
     update() {
         if (this.opacity < 20 && this.goesOffAt - millis() > 100) {
             this.opacity += 1
-        } if (this.goesOffAt - millis() < 20)  {
+            if (this.opacity > 20) this.stopAccumulatingOpacity = true
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
+            this.opacity -= 0.2
             fill(0, 100, 100, min(this.opacity*20, 100)/2)
             arc(this.x, this.y, this.size, this.size, radians(this.startAngle), radians(this.endAngle))
         }

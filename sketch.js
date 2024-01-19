@@ -68,6 +68,9 @@ let cleaveTwoColor
 let cleaveTwoSafeDirection
 let cleaveThreeColor
 let cleaveThreeSafeDirection
+let firstAoEResolved
+let secondAoEResolved
+let thirdAoEResolved
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -285,17 +288,17 @@ function draw() {
         // add ring that represents facing
         stroke(0, 0, 100)
         noFill()
-        circle(bossPosX, bossPosY, 80) // note: this is 80 diameter, not 80 radius
+        circle(bossPosX, bossPosY, 160) // note: this is 320 diameter, not 320 radius
         fill(0, 0, 100)
         noStroke()
         if (bossFacing === 1) { // up
-            triangle(bossPosX - 10, bossPosY - 40, bossPosX + 10, bossPosY - 40, bossPosX, bossPosY - 56)
+            triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10, bossPosY - 80, bossPosX, bossPosY - 96)
         } if (bossFacing === 2) { // right
-            triangle(bossPosX - 40, bossPosY - 10, bossPosX - 40, bossPosY + 10, bossPosX - 56, bossPosY)
+            triangle(bossPosX + 80, bossPosY - 10, bossPosX + 80, bossPosY + 10, bossPosX + 96, bossPosY)
         } if (bossFacing === 3) { // down
-            triangle(bossPosX - 10, bossPosY + 40, bossPosX + 10, bossPosY + 40, bossPosX, bossPosY + 56)
+            triangle(bossPosX - 10, bossPosY + 80, bossPosX + 10, bossPosY + 80, bossPosX, bossPosY + 96)
         } if (bossFacing === 4) { // left
-            triangle(bossPosX + 40, bossPosY - 10, bossPosX + 40, bossPosY + 10, bossPosX + 56, bossPosY)
+            triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80, bossPosY + 10, bossPosX - 96, bossPosY)
         }
 
         // display the symbols for each cleave
@@ -337,7 +340,22 @@ function draw() {
             angleMode(RADIANS)
         }
 
-        for (let AoE in AoEs) {
+        if (millis() - mechanicStarted > 6000 && !firstAoEResolved) {
+            firstAoEResolved = true
+            AoEs.push( // make these resolve immediately!
+                (cleaveOneColor === "orange") ? // orange = circle, blue = donut
+                new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                new DonutAOE(bossPosX, bossPosY, 80, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 5
+            AoEs.push(
+                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 5
+        }
+
+        for (let AoE of AoEs) {
+            AoE.update()
             AoE.displayAoE()
         }
     }
@@ -990,15 +1008,15 @@ function mousePressed() {
         mechanicStarted = millis()
         posX = 700
         posY = 400
-        drgPosX = 780
-        drgPosY = 360
-        sgePosX = 620
-        sgePosY = 360
-        warPosX = 700
-        warPosY = 200
+        drgPosX = -100
+        drgPosY = -100
+        sgePosX = -100
+        sgePosY = -100
+        warPosX = -100
+        warPosY = -100
         bossPosX = 700
         bossPosY = 300
-        bossFacing = random([1, 2, 3, 4]) // 1 top, 2 right, 3 bottom, 4 left
+        bossFacing = 1 // 1 top, 2 right, 3 bottom, 4 left
 
         cleaveOneColor = random(["orange", "blue"])
         cleaveTwoColor = random(["orange", "blue"])
@@ -1006,6 +1024,10 @@ function mousePressed() {
         cleaveOneSafeDirection = random([1, 2, 3, 4])
         cleaveTwoSafeDirection = random([1, 2, 3, 4])
         cleaveThreeSafeDirection = random([1, 2, 3, 4])
+
+        firstAoEResolved = false
+        secondAoEResolved = false
+        thirdAoEResolved = false
 
         AoEs = []
     }
