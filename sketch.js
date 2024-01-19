@@ -169,42 +169,35 @@ function draw() {
     }
 
     // add mechanic buttons
-    stroke(0, 0, 0)
     fill(0, 0, 25)
+    stroke(0, 0, 100)
     strokeWeight(1)
-    if (mouseX > 0 && mouseX < 135 &&
-        mouseY > 400 && mouseY < 430) {
-        fill(0, 0, 20)
-    }
-    rect(0, 400, 135, 30)
+    if (mouseX > 0 && mouseX < 90 &&
+        mouseY > 390 && mouseY < 410) fill(0, 0, 15)
+    rect(-10, 390, 100, 20)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 125 &&
-        mouseY > 430 && mouseY < 490) {
-        fill(0, 0, 20)
-    }
-    rect(0, 430, 135, 60)
+    if (mouseX > 0 && mouseX < 148 &&
+        mouseY > 410 && mouseY < 434) fill(0, 0, 15)
+    rect(-10, 410, 158, 24)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 205 &&
-        mouseY > 490 && mouseY < 550) {
-        fill(0, 0, 20)
-    }
-    rect(0, 490, 205, 60)
+    if (mouseX > 0 && mouseX < 245 &&
+        mouseY > 434 && mouseY < 454) fill(0, 0, 15)
+    rect(-10, 434, 255, 20)
     fill(0, 0, 25)
-    if (mouseX > 135 && mouseX < 255 &&
-        mouseY > 400 && mouseY < 490) {
-        fill(0, 0, 20)
-    }
-    rect(135, 400, 120, 90)
+    if (mouseX > 0 && mouseX < 175 &&
+        mouseY > 454 && mouseY < 478) fill(0, 0, 15)
+    rect(-10, 454, 185, 24)
+    fill(0, 0, 25)
 
     fill(0, 0, 100)
-    text("Exoflares", 0, 427)
-    text("Triple", 135, 427)
-    text("Fighting", 0, 457)
-    text("Kazumi-", 135, 457)
-    text("Spirits", 0, 487)
-    text("Giri", 135, 487)
-    text("Malformed", 0, 517)
-    text("Reincarnation", 0, 547)
+    noStroke()
+    textSize(20)
+    text("Exoflares", 0, 408)
+    text("Fighting Spirits", 0, 428)
+    text("Malformed Reincarnation", 0, 452)
+    text("Triple Kazumi-Giri", 0, 472)
+
+    stroke(0, 0, 0)
 
 
     // display a wooden chess board, basically
@@ -349,9 +342,49 @@ function draw() {
             )
             AoEs[AoEs.length - 1].opacity = 5
             AoEs.push(
-                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90, 0)
+                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 0)
             )
             AoEs[AoEs.length - 1].opacity = 5
+
+            // face away from the cleave. Always plus 2 or minus 2
+            bossFacing = (cleaveOneSafeDirection + 2) % 4
+            if (bossFacing === 0) bossFacing = 4
+        }
+
+        if (millis() - mechanicStarted > 8000 && !secondAoEResolved) {
+            secondAoEResolved = true
+            AoEs.push( // make these resolve immediately!
+                (cleaveTwoColor === "orange") ? // orange = circle, blue = donut
+                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                    new DonutAOE(bossPosX, bossPosY, 80, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 5
+            AoEs.push(
+                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 5
+
+            // face away from the cleave. Always plus 2 or minus 2
+            bossFacing = (cleaveTwoSafeDirection + bossFacing - 1 + 2) % 4
+            if (bossFacing === 0) bossFacing = 4
+        }
+
+        if (millis() - mechanicStarted > 10000 && !thirdAoEResolved) {
+            thirdAoEResolved = true
+            AoEs.push( // make these resolve immediately!
+                (cleaveThreeColor === "orange") ? // orange = circle, blue = donut
+                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                    new DonutAOE(bossPosX, bossPosY, 80, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 5
+            AoEs.push(
+                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 5
+
+            // face away from the cleave. Always plus 2 or minus 2
+            bossFacing = (cleaveThreeSafeDirection + bossFacing - 1 + 2) % 4
+            if (bossFacing === 0) bossFacing = 4
         }
 
         for (let AoE of AoEs) {
@@ -838,8 +871,8 @@ function mousePressed() {
         exoflareHelper = true
     }
 
-    if (mouseX > 0 && mouseX < 135 &&
-        mouseY > 400 && mouseY < 430) {
+    if (mouseX > 0 && mouseX < 90 &&
+        mouseY > 390 && mouseY < 410) {
         mechanic = "Exoflares"
         mechanicStarted = millis()
         swapMovement = random([false, true])
@@ -894,13 +927,13 @@ function mousePressed() {
         bossPosY = -100
         partyWiped = false
     }
-    if (mouseX > 0 && mouseX < 125 &&
-        mouseY > 430 && mouseY < 490) {
+    if (mouseX > 0 && mouseX < 148 &&
+        mouseY > 410 && mouseY < 434) {
         mechanic = "Fighting Spirits"
         partyWiped = false
     }
-    if (mouseX > 0 && mouseX < 205 &&
-        mouseY > 490 && mouseY < 550) {
+    if (mouseX > 0 && mouseX < 245 &&
+        mouseY > 434 && mouseY < 454) {
         mechanic = "Malformed Reincarnation"
         mechanicStarted = millis()
         directionOfBlue = random([1, 2, 3, 4])
@@ -1002,8 +1035,8 @@ function mousePressed() {
             }
         }
         print(areThereTriples, triplesGivenTo, triplesNotGivenTo, majorityRed)
-    } if (mouseX > 135 && mouseX < 255 &&
-        mouseY > 400 && mouseY < 490) {
+    } if (mouseX > 0 && mouseX < 175 &&
+        mouseY > 454 && mouseY < 478) {
         mechanic = "Triple Kazumi-Giri"
         mechanicStarted = millis()
         posX = 700
