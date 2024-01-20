@@ -72,6 +72,8 @@ let firstAoEResolved
 let secondAoEResolved
 let thirdAoEResolved
 
+let circleResolved
+
 function preload() {
     font = loadFont('data/consola.ttf')
     fixedWidthFont = loadFont('data/consola.ttf')
@@ -820,6 +822,29 @@ function draw() {
             AoE.update()
             AoE.displayAoE()
         }
+    } if (mechanic === "Fleeting Lai-Giri") {
+        if (millis() - mechanicStarted > 2000 && !circleResolved) {
+            circleResolved = true
+            AoEs.push(
+                new CircleAOE(bossPosX, bossPosY, 160, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 5
+            AoEs.push(
+                new LineAOE(400, 120, 1000, 120, 130, 4000),
+                new LineAOE(400, 480, 1000, 480, 130, 4000),
+                new LineAOE(400, 0, 1000, 600, 130, 4000),
+                new LineAOE(400, 600, 1000, 0, 130, 4000)
+            )
+        }
+
+        for (let AoE of AoEs) {
+            AoE.update()
+            AoE.displayAoE()
+        }
+
+        fill(234, 34, 24)
+        noStroke()
+        rect(300, 0, 100, height)
     }
 
 
@@ -1041,6 +1066,8 @@ function mousePressed() {
             }
         }
         print(areThereTriples, triplesGivenTo, triplesNotGivenTo, majorityRed)
+
+        AoEs = []
     } if (mouseX > 0 && mouseX < 175 &&
         mouseY > 454 && mouseY < 478) {
         mechanic = "Triple Kazumi-Giri"
@@ -1084,6 +1111,10 @@ function mousePressed() {
         warPosY = 200
         bossPosX = 700
         bossPosY = 300
+
+        circleResolved = false
+
+        AoEs = []
     }
 }
 
