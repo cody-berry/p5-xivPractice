@@ -188,6 +188,10 @@ function draw() {
         mouseY > 454 && mouseY < 478) fill(0, 0, 15)
     rect(-10, 454, 185, 24)
     fill(0, 0, 25)
+    if (mouseX > 0 && mouseX < 155 &&
+        mouseY > 478 && mouseY < 502) fill(0, 0, 15)
+    rect(-10, 478, 165, 24)
+    fill(0, 0, 25)
 
     fill(0, 0, 100)
     noStroke()
@@ -196,6 +200,7 @@ function draw() {
     text("Fighting Spirits", 0, 428)
     text("Malformed Reincarnation", 0, 452)
     text("Triple Kazumi-Giri", 0, 472)
+    text("Fleeting Lai-Giri", 0, 496)
 
     stroke(0, 0, 0)
 
@@ -228,7 +233,7 @@ function draw() {
         strokeWeight(1)
         line(980, 20, 980, 580) // total bottom x line
         line(420, 580, 980, 580) // total right y line
-    } if (mechanic === "Triple Kazumi-Giri") { // Moko
+    } if (mechanic === "Triple Kazumi-Giri" || mechanic === "Fleeting Lai-Giri") { // Moko
         // start with the background
         let rowHeight = 600/19
         let columnWidth = 30
@@ -277,120 +282,6 @@ function draw() {
         vertex(400 + columnWidth*2, 600 - rowHeight*2 + 3)
         endContour()
         endShape()
-
-        // add ring that represents facing
-        stroke(0, 0, 100)
-        noFill()
-        circle(bossPosX, bossPosY, 160) // note: this is 320 diameter, not 320 radius
-        fill(0, 0, 100)
-        noStroke()
-        if (bossFacing === 1) { // up
-            triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10, bossPosY - 80, bossPosX, bossPosY - 96)
-        } if (bossFacing === 2) { // right
-            triangle(bossPosX + 80, bossPosY - 10, bossPosX + 80, bossPosY + 10, bossPosX + 96, bossPosY)
-        } if (bossFacing === 3) { // down
-            triangle(bossPosX - 10, bossPosY + 80, bossPosX + 10, bossPosY + 80, bossPosX, bossPosY + 96)
-        } if (bossFacing === 4) { // left
-            triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80, bossPosY + 10, bossPosX - 96, bossPosY)
-        }
-
-        // display the symbols for each cleave
-        if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 1800) { // cleave #1
-            fill(0, 0, 0)
-            rect(bossPosX - 15, bossPosY - 45, 30, 30)
-            if (cleaveOneColor === "orange") {
-                fill(15, 100, 100)
-            } else {
-                fill(180, 100, 100)
-            }
-            angleMode(DEGREES)
-            // display an arc with the cleaveOneSafeDirection not included (this is filled as a pie segment)
-            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
-            angleMode(RADIANS)
-        } if (millis() - mechanicStarted > 2000 && millis() - mechanicStarted < 3800) { // cleave #2
-            fill(0, 0, 0)
-            rect(bossPosX - 15, bossPosY - 45, 30, 30)
-            if (cleaveTwoColor === "orange") {
-                fill(15, 100, 100)
-            } else {
-                fill(180, 100, 100)
-            }
-            angleMode(DEGREES)
-            // display an arc with the cleaveTwoSafeDirection not included (this is filled as a pie segment)
-            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90, 135 + cleaveTwoSafeDirection*90)
-            angleMode(RADIANS)
-        } if (millis() - mechanicStarted > 4000 && millis() - mechanicStarted < 5800) { // cleave #2
-            fill(0, 0, 0)
-            rect(bossPosX - 15, bossPosY - 45, 30, 30)
-            if (cleaveThreeColor === "orange") {
-                fill(15, 100, 100)
-            } else {
-                fill(180, 100, 100)
-            }
-            angleMode(DEGREES)
-            // display an arc with the cleaveThreeSafeDirection not included (this is filled as a pie segment)
-            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90, 135 + cleaveThreeSafeDirection*90)
-            angleMode(RADIANS)
-        }
-
-        if (millis() - mechanicStarted > 6000 && !firstAoEResolved) {
-            firstAoEResolved = true
-            AoEs.push( // make these resolve immediately!
-                (cleaveOneColor === "orange") ? // orange = circle, blue = donut
-                new CircleAOE(bossPosX, bossPosY, 160, 0) :
-                new DonutAOE(bossPosX, bossPosY, 80, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 5
-            AoEs.push(
-                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 5
-
-            // face away from the cleave. Always plus 2 or minus 2
-            bossFacing = (cleaveOneSafeDirection + 2) % 4
-            if (bossFacing === 0) bossFacing = 4
-        }
-
-        if (millis() - mechanicStarted > 8000 && !secondAoEResolved) {
-            secondAoEResolved = true
-            AoEs.push( // make these resolve immediately!
-                (cleaveTwoColor === "orange") ? // orange = circle, blue = donut
-                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
-                    new DonutAOE(bossPosX, bossPosY, 80, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 5
-            AoEs.push(
-                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 5
-
-            // face away from the cleave. Always plus 2 or minus 2
-            bossFacing = (cleaveTwoSafeDirection + bossFacing - 1 + 2) % 4
-            if (bossFacing === 0) bossFacing = 4
-        }
-
-        if (millis() - mechanicStarted > 10000 && !thirdAoEResolved) {
-            thirdAoEResolved = true
-            AoEs.push( // make these resolve immediately!
-                (cleaveThreeColor === "orange") ? // orange = circle, blue = donut
-                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
-                    new DonutAOE(bossPosX, bossPosY, 80, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 5
-            AoEs.push(
-                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 5
-
-            // face away from the cleave. Always plus 2 or minus 2
-            bossFacing = (cleaveThreeSafeDirection + bossFacing - 1 + 2) % 4
-            if (bossFacing === 0) bossFacing = 4
-        }
-
-        for (let AoE of AoEs) {
-            AoE.update()
-            AoE.displayAoE()
-        }
     }
 
     // red dot at the top for boss
@@ -814,6 +705,121 @@ function draw() {
                 drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
             }
         }
+    } if (mechanic === "Triple Kazumi-Giri") {
+        // add ring that represents facing
+        stroke(0, 0, 100)
+        strokeWeight(1)
+        noFill()
+        circle(bossPosX, bossPosY, 160) // note: this is 320 diameter, not 320 radius
+        fill(0, 0, 100)
+        noStroke()
+        if (bossFacing === 1) { // up
+            triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10, bossPosY - 80, bossPosX, bossPosY - 96)
+        } if (bossFacing === 2) { // right
+            triangle(bossPosX + 80, bossPosY - 10, bossPosX + 80, bossPosY + 10, bossPosX + 96, bossPosY)
+        } if (bossFacing === 3) { // down
+            triangle(bossPosX - 10, bossPosY + 80, bossPosX + 10, bossPosY + 80, bossPosX, bossPosY + 96)
+        } if (bossFacing === 4) { // left
+            triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80, bossPosY + 10, bossPosX - 96, bossPosY)
+        }
+
+        // display the symbols for each cleave
+        if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 1800) { // cleave #1
+            fill(0, 0, 0)
+            rect(bossPosX - 15, bossPosY - 45, 30, 30)
+            if (cleaveOneColor === "orange") {
+                fill(15, 100, 100)
+            } else {
+                fill(180, 100, 100)
+            }
+            angleMode(DEGREES)
+            // display an arc with the cleaveOneSafeDirection not included (this is filled as a pie segment)
+            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
+            angleMode(RADIANS)
+        } if (millis() - mechanicStarted > 2000 && millis() - mechanicStarted < 3800) { // cleave #2
+            fill(0, 0, 0)
+            rect(bossPosX - 15, bossPosY - 45, 30, 30)
+            if (cleaveTwoColor === "orange") {
+                fill(15, 100, 100)
+            } else {
+                fill(180, 100, 100)
+            }
+            angleMode(DEGREES)
+            // display an arc with the cleaveTwoSafeDirection not included (this is filled as a pie segment)
+            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90, 135 + cleaveTwoSafeDirection*90)
+            angleMode(RADIANS)
+        } if (millis() - mechanicStarted > 4000 && millis() - mechanicStarted < 5800) { // cleave #2
+            fill(0, 0, 0)
+            rect(bossPosX - 15, bossPosY - 45, 30, 30)
+            if (cleaveThreeColor === "orange") {
+                fill(15, 100, 100)
+            } else {
+                fill(180, 100, 100)
+            }
+            angleMode(DEGREES)
+            // display an arc with the cleaveThreeSafeDirection not included (this is filled as a pie segment)
+            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90, 135 + cleaveThreeSafeDirection*90)
+            angleMode(RADIANS)
+        }
+
+        if (millis() - mechanicStarted > 6000 && !firstAoEResolved) {
+            firstAoEResolved = true
+            AoEs.push( // make these resolve immediately!
+                (cleaveOneColor === "orange") ? // orange = circle, blue = donut
+                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                    new DonutAOE(bossPosX, bossPosY, 80, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 10
+            AoEs.push(
+                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 10
+
+            // face away from the cleave. Always plus 2 or minus 2
+            bossFacing = (cleaveOneSafeDirection + 2) % 4
+            if (bossFacing === 0) bossFacing = 4
+        }
+
+        if (millis() - mechanicStarted > 8700 && !secondAoEResolved) {
+            secondAoEResolved = true
+            AoEs.push( // make these resolve immediately!
+                (cleaveTwoColor === "orange") ? // orange = circle, blue = donut
+                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                    new DonutAOE(bossPosX, bossPosY, 80, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 10
+            AoEs.push(
+                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 10
+
+            // face away from the cleave. Always plus 2 or minus 2
+            bossFacing = (cleaveTwoSafeDirection + bossFacing - 1 + 2) % 4
+            if (bossFacing === 0) bossFacing = 4
+        }
+
+        if (millis() - mechanicStarted > 11400 && !thirdAoEResolved) {
+            thirdAoEResolved = true
+            AoEs.push( // make these resolve immediately!
+                (cleaveThreeColor === "orange") ? // orange = circle, blue = donut
+                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                    new DonutAOE(bossPosX, bossPosY, 80, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 10
+            AoEs.push(
+                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 0)
+            )
+            AoEs[AoEs.length - 1].opacity = 10
+
+            // face away from the cleave. Always plus 2 or minus 2
+            bossFacing = (cleaveThreeSafeDirection + bossFacing - 1 + 2) % 4
+            if (bossFacing === 0) bossFacing = 4
+        }
+
+        for (let AoE of AoEs) {
+            AoE.update()
+            AoE.displayAoE()
+        }
     }
 
 
@@ -1063,6 +1069,21 @@ function mousePressed() {
         thirdAoEResolved = false
 
         AoEs = []
+    } if (mouseX > 0 && mouseX < 155 &&
+        mouseY > 478 && mouseY < 502) {
+        mechanic = "Fleeting Lai-Giri"
+        mechanicStarted = millis()
+
+        posX = 700
+        posY = 410
+        drgPosX = 610
+        drgPosY = 360
+        sgePosX = 790
+        sgePosY = 360
+        warPosX = 700
+        warPosY = 200
+        bossPosX = 700
+        bossPosY = 300
     }
 }
 

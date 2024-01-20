@@ -3,7 +3,7 @@ class CircleAOE {
     constructor(posX, posY, size, goesOffInMillis) {
         this.x = posX
         this.y = posY
-        this.radius = size
+        this.diameter = size
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
         this.stopAccumulatingOpacity = false
@@ -18,15 +18,21 @@ class CircleAOE {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
+            if (this.opacity === 5) {
+                if (sqrt((posX - this.x)**2 + (posY - this.y)**2) < this.diameter/2) {
+                    partyWiped = true
+                    causeOfWipe = "You got hit by a circle."
+                }
+            }
             this.opacity -= 0.2
             fill(0, 100, 50, min(this.opacity*20, 100)/2)
-            circle(this.x, this.y, this.radius)
+            circle(this.x, this.y, this.diameter)
         }
     }
 
     displayAoE() {
         fill(20, 100, 100, this.opacity)
-        circle(this.x, this.y, this.radius)
+        circle(this.x, this.y, this.diameter)
     }
 }
 
@@ -50,6 +56,13 @@ class RectAOE {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
+            if (this.opacity === 5) {
+                if (posX > this.x || posX < this.x + this.width ||
+                    posY > this.y || posY < this.y + this.height) {
+                    partyWiped = true
+                    causeOfWipe = "You got hit by a rectangle."
+                }
+            }
             this.opacity -= 0.2
             fill(0, 100, 50, min(this.opacity*20, 100)/2)
             rect(this.x, this.y, this.width, this.height)
@@ -59,6 +72,43 @@ class RectAOE {
     displayAoE() {
         fill(20, 100, 100, this.opacity)
         rect(this.x, this.y, this.width, this.height)
+    }
+}
+
+class LineAOE {
+    constructor(x1, y1, x2, y2, thickness, goesOffInMillis) {
+        this.x1 = x1
+        this.y1 = y1
+        this.x2 = x2
+        this.y2 = y2
+        this.angleOfLine = atan2(this.y2 - this.y1, this.x2 - this.x1)
+        print(degrees(this.angleOfLine))
+        this.thickness = thickness
+        this.goesOffAt = millis() + goesOffInMillis
+        this.opacity = 0
+        this.stopAccumulatingOpacity = false
+    }
+
+    // this is the same every time
+    update() {
+        if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
+            this.opacity += 1
+            if (this.opacity >= 20) this.stopAccumulatingOpacity = true
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
+            this.opacity -= 0.2
+        } if (this.goesOffAt < millis()) {
+            if (this.opacity > 5) this.opacity = 5
+            this.opacity -= 0.2
+            stroke(0, 100, 50, min(this.opacity*20, 100)/2)
+            strokeWeight(this.thickness)
+            line(this.x1, this.y1, this.x2, this.y2)
+        }
+    }
+
+    displayAoE() {
+        stroke(20, 100, 100, this.opacity)
+        strokeWeight(this.thickness)
+        line(this.x1, this.y1, this.x2, this.y2)
     }
 }
 
@@ -72,7 +122,7 @@ class DonutAOE {
         this.stopAccumulatingOpacity = false
     }
 
-    // update the AoEs opacity
+    // update the AoEs opacity TODO consider encapsulation
     update() {
         if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
             this.opacity += 1
@@ -81,6 +131,12 @@ class DonutAOE {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
+            if (this.opacity === 5) {
+                if (sqrt((posX - this.x)**2 + (posY - this.y)**2) > this.size) {
+                    partyWiped = true
+                    causeOfWipe = "You got hit by a donut."
+                }
+            }
             this.opacity -= 0.2
             fill(0, 100, 100, min(this.opacity*20, 100)/2)
             beginShape()
@@ -138,6 +194,14 @@ class ConeAOE {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
+            if (this.opacity === 5) {
+                if (sqrt((posX - this.x)**2 + (posY - this.y)**2) < this.size/2 &&
+                    this.startAngle % TWO_PI < degrees(atan2(posY - this.y, posX - this.x) % TWO_PI) &&
+                    atan2(posY - this.y, posX - this.x) % TWO_PI < this.endAngle % TWO_PI) {
+                    partyWiped = true
+                    causeOfWipe = "You got hit by a cone."
+                }
+            }
             this.opacity -= 0.2
             fill(0, 100, 100, min(this.opacity*20, 100)/2)
             arc(this.x, this.y, this.size, this.size, radians(this.startAngle), radians(this.endAngle))
