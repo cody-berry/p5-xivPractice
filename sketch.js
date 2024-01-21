@@ -835,6 +835,26 @@ function draw() {
                 new LineAOE(400, 0, 1000, 600, 130, 4000),
                 new LineAOE(400, 600, 1000, 0, 130, 4000)
             )
+        } if (millis() - mechanicStarted > 6000) {
+            stroke(30, 100, 100)
+            strokeWeight(5 + max((millis() - mechanicStarted - 10000)/1000, 0))
+            line(400, 120, 1000, 120)
+            line(400, 480, 1000, 480)
+            line(400, 0, 1000, 600)
+            line(400, 600, 1000, 0)
+            stroke(30, 50, 100)
+            strokeWeight(5 + max((millis() - mechanicStarted - 20000)/3000, -5))
+            line(400, 120, 1000, 120)
+            line(400, 480, 1000, 480)
+            line(400, 0, 1000, 600)
+            line(400, 600, 1000, 0)
+            stroke(0, 0, 100)
+            strokeWeight(5 + max((millis() - mechanicStarted - 30000)/5000, -5))
+            line(400, 120, 1000, 120)
+            line(400, 480, 1000, 480)
+            line(400, 0, 1000, 600)
+            line(400, 600, 1000, 0)
+            noStroke()
         }
 
         for (let AoE of AoEs) {
