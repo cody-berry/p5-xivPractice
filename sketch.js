@@ -822,33 +822,140 @@ function draw() {
                 )
                 AoEs[AoEs.length - 1].opacity = 5
                 AoEs.push(
-                    new LineAOE(400, 120, 1000, 120, 130, 4000),
-                    new LineAOE(400, 480, 1000, 480, 130, 4000),
+                    new LineAOE(400, 170, 1000, 170, 130, 4000),
+                    new LineAOE(400, 430, 1000, 430, 130, 4000),
                     new LineAOE(400, 0, 1000, 600, 130, 4000),
                     new LineAOE(400, 600, 1000, 0, 130, 4000)
                 )
             } if (millis() - mechanicStarted > 6000) {
                 // display the lines left by the AoEs above
                 // draw 3 rounds each with less strokeWeight and less saturation each time to make it look like flames
-                stroke(30, 100, 100) // orange
-                strokeWeight(5 + max((millis() - mechanicStarted - 10000)/1000, 0))
-                line(400, 120, 1000, 120)
-                line(400, 480, 1000, 480)
-                line(400, 0, 1000, 600)
-                line(400, 600, 1000, 0)
-                stroke(30, 50, 100) // white-ish orange
-                strokeWeight(5 + max((millis() - mechanicStarted - 20000)/1500, -5))
-                line(400, 120, 1000, 120)
-                line(400, 480, 1000, 480)
-                line(400, 0, 1000, 600)
-                line(400, 600, 1000, 0)
-                stroke(0, 0, 100) // pure white
-                strokeWeight(5 + max((millis() - mechanicStarted - 30000)/2000, -5))
-                line(400, 120, 1000, 120)
-                line(400, 480, 1000, 480)
-                line(400, 0, 1000, 600)
-                line(400, 600, 1000, 0)
-                noStroke()
+                if (millis() - mechanicStarted < 12500) { // just red
+                    stroke(0, 100, 100) // red
+                    strokeWeight(1)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                } else if (millis() - mechanicStarted < 17500) { // red, vermillion, orange, yellow, and white
+                    stroke(0, 100, 100) // red
+                    strokeWeight(15)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(7, 100, 100) // vermilion
+                    strokeWeight(12)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(25, 100, 100) // orange
+                    strokeWeight(8)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(45, 100, 100) // yellow
+                    strokeWeight(5)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(0, 0, 100) // white
+                    strokeWeight(1)
+                    line(400, 170.5, 1000, 170.5)
+                    line(400, 430.5, 1000, 430.5)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                } else if (millis() - mechanicStarted < 25000) { // red, vermillion, orange, orange-yellow, yellow, yellow-white, white
+                    stroke(0, 100, 100) // red
+                    strokeWeight(25)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(7, 100, 100) // vermilion
+                    strokeWeight(22)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(25, 100, 100) // orange
+                    strokeWeight(18)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(35, 100, 100) // orange-yellow
+                    strokeWeight(13)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(45, 100, 100) // yellow
+                    strokeWeight(10)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(45, 50, 100) // yellow-white
+                    strokeWeight(6)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(0, 0, 100) // white
+                    strokeWeight(3)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                } else if (millis() - mechanicStarted < 32500) { // red, vermillion, orange, orange-yellow, yellow, yellow-white, white
+                    stroke(0, 100, 100) // red
+                    strokeWeight(35)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(7, 100, 100) // vermilion
+                    strokeWeight(31)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(25, 100, 100) // orange
+                    strokeWeight(27)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(35, 100, 100) // orange-yellow
+                    strokeWeight(23)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(45, 100, 100) // yellow
+                    strokeWeight(19)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(45, 50, 100) // yellow-white
+                    strokeWeight(13)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                    stroke(0, 0, 100) // white
+                    strokeWeight(7)
+                    line(400, 170, 1000, 170)
+                    line(400, 430, 1000, 430)
+                    line(400, 0, 1000, 600)
+                    line(400, 600, 1000, 0)
+                }
+            noStroke()
             }
 
             for (let AoE of AoEs) {
@@ -861,8 +968,11 @@ function draw() {
             rect(300, 0, 100, height)
     }
 
-    if (posX < 432 || posY < 32 ||
-        posX > 978 || posY > 578) {
+    if ((posX < 432 || posY < 32 ||
+        posX > 978 || posY > 578) ||
+        ((posX < 42 || posY < 42 ||
+        posX > 968 || posY > 568)) &&
+        (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri")) {
         partyWiped = true
         causeOfWipe = "You entered the edge \nof the arena."
     }
