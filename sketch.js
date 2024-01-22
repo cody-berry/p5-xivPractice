@@ -73,6 +73,8 @@ let secondAoEResolved
 let thirdAoEResolved
 
 let circleResolved
+let topLeftCrossExpandsFirst // whether the top-left to bottom-right cross expands first or the bottom-left to top-right one
+let northLineExpandsFirst // whether the top horizontal line expands first or the bottom horizontal line
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -201,7 +203,7 @@ function draw() {
     text("Exoflares", 0, 408)
     text("Fighting Spirits", 0, 428)
     text("Malformed Reincarnation", 0, 452)
-    text("Triple Kazumi-Giri", 0, 472)
+    text("Triple Kasumi-Giri", 0, 472)
     text("Fleeting Lai-Giri", 0, 496)
 
     stroke(0, 0, 0)
@@ -235,7 +237,7 @@ function draw() {
         strokeWeight(1)
         line(980, 20, 980, 580) // total bottom x line
         line(420, 580, 980, 580) // total right y line
-    } if (mechanic === "Triple Kazumi-Giri" || mechanic === "Fleeting Lai-Giri") { // Moko
+    } if (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri") { // Moko
         // start with the background
         let rowHeight = 600/19
         let columnWidth = 30
@@ -298,33 +300,37 @@ function draw() {
     if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) directions.push(2) // W or ↑ = up/2
     if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) directions.push(3) // D or → = right/3
     if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) directions.push(4) // S or ↓ = down/4
-    if (directions.length === 1) { // move the full 1.3
-        if (directions[0] === 1) posX -= 1.3
-        if (directions[0] === 2) posY -= 1.3
-        if (directions[0] === 3) posX += 1.3
-        if (directions[0] === 4) posY += 1.3
-    } if (directions.length === 2) { // move 0.92 both directions. They still cancel out each other if they're opposite
-        if (directions[0] === 1) posX -= 0.92
-        if (directions[0] === 2) posY -= 0.92
-        if (directions[0] === 3) posX += 0.92
-        if (directions[0] === 4) posY += 0.92
-        if (directions[1] === 1) posX -= 0.92
-        if (directions[1] === 2) posY -= 0.92
-        if (directions[1] === 3) posX += 0.92
-        if (directions[1] === 4) posY += 0.92
-    } if (directions.length === 3) { // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
-        if (directions[0] === 1) posX -= 1.3
-        if (directions[0] === 2) posY -= 1.3
-        if (directions[0] === 3) posX += 1.3
-        if (directions[0] === 4) posY += 1.3
-        if (directions[1] === 1) posX -= 1.3
-        if (directions[1] === 2) posY -= 1.3
-        if (directions[1] === 3) posX += 1.3
-        if (directions[1] === 4) posY += 1.3
-        if (directions[2] === 1) posX -= 1.3
-        if (directions[2] === 2) posY -= 1.3
-        if (directions[2] === 3) posX += 1.3
-        if (directions[2] === 4) posY += 1.3
+    switch (directions.length) {
+        case 1: // move the full 1.3
+            if (directions[0] === 1) posX -= 1.3
+            if (directions[0] === 2) posY -= 1.3
+            if (directions[0] === 3) posX += 1.3
+            if (directions[0] === 4) posY += 1.3
+            break
+        case 2: // move 0.92 both directions. They still cancel out each other if they're opposite
+            if (directions[0] === 1) posX -= 0.92
+            if (directions[0] === 2) posY -= 0.92
+            if (directions[0] === 3) posX += 0.92
+            if (directions[0] === 4) posY += 0.92
+            if (directions[1] === 1) posX -= 0.92
+            if (directions[1] === 2) posY -= 0.92
+            if (directions[1] === 3) posX += 0.92
+            if (directions[1] === 4) posY += 0.92
+            break
+        case 3: // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
+            if (directions[0] === 1) posX -= 1.3
+            if (directions[0] === 2) posY -= 1.3
+            if (directions[0] === 3) posX += 1.3
+            if (directions[0] === 4) posY += 1.3
+            if (directions[1] === 1) posX -= 1.3
+            if (directions[1] === 2) posY -= 1.3
+            if (directions[1] === 3) posX += 1.3
+            if (directions[1] === 4) posY += 1.3
+            if (directions[2] === 1) posX -= 1.3
+            if (directions[2] === 2) posY -= 1.3
+            if (directions[2] === 3) posX += 1.3
+            if (directions[2] === 4) posY += 1.3
+            break
     }
     image(sgeSymbol, sgePosX - 20, sgePosY - 20, 40, 40)
     image(warSymbol, warPosX - 20, warPosY - 20, 40, 40)
@@ -346,538 +352,513 @@ function draw() {
     textSize(30)
     text("YOU", 185, 90)
 
-    if (mechanic === "Exoflares") {
-        // update so that people can dodge exoflares!
-        if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) {
-            sgePosY -= (swap) ? -1.35 : 1.35
-            sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
-        }
-        if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) {
-            sgePosY -= (swap) ? -1.35 : 1.35
-            sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
-        }
-        if (millis() > mechanicStarted + 5500 && millis() < mechanicStarted + 6800 && !stackFirst) {
-            if (rotateExaflares) {
-                sgePosY -= (swap) ? -1.3 : 1.3
-            } else {
-                sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
+    switch (mechanic) {
+        case "Exoflares":
+            // update so that people can dodge exoflares!
+            if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) {
+                sgePosY -= (swap) ? -1.35 : 1.35
+                sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
             }
-        }
-        if (millis() > mechanicStarted + 4900 && millis() < mechanicStarted + 6500) {
-            warPosY -= 1.3
-            warPosX -= (swapMovement) ? -1.3 : 1.3
-            drgPosY += 1.3
-            drgPosX += (swapMovement) ? -1.3 : 1.3
-        }
-        if (millis() > mechanicStarted + 7500 && millis() < mechanicStarted + 8500 && !stackFirst) {
-            if (rotateExaflares) {
-                sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
-            } else {
-                sgePosY -= (swap) ? -1.3 : 1.3
+            if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) {
+                sgePosY -= (swap) ? -1.35 : 1.35
+                sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
             }
-        }
-        if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 9800 && stackFirst) {
-            sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
-            sgePosY -= (swap) ? -1.3 : 1.3
-        }
-        if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 10000) {
-            warPosY -= 1.3
-            warPosX -= (swapMovement) ? -1.3 : 1.3
-            drgPosY += 1.3
-            drgPosX += (swapMovement) ? -1.3 : 1.3
-        }
-        if (millis() > mechanicStarted + 10000 && millis() < mechanicStarted + 13500 && stackFirst) {
-            if (!rotateExaflares) {
-                warPosX += (swapMovement) ? -1.3 : 1.3
-                drgPosX -= (swapMovement) ? -1.3 : 1.3
-            } else {
-                warPosY += 1.3
-                drgPosY -= 1.3
-            }
-        }
-
-        strokeWeight(3)
-
-        // display stacks and spreads (at correct time).
-        // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140.
-        let xPosStack = (stackFirst) ? 105 : 140
-        let xPosSpread = (stackFirst) ? 140 : 105
-        if (millis() < mechanicStarted + 13500) {
-            fill(0, 80, 50)
-            if (!stackFirst || millis() < mechanicStarted + 8500) {
-                rect(xPosStack - 15, 20 + whoGetsStack[0] * 50, 30, 30)
-                rect(xPosStack - 15, 20 + whoGetsStack[1] * 50, 30, 30)
-            }
-            if (stackFirst || millis() < mechanicStarted + 8500) {
-                rect(xPosSpread - 15, 70, 30, 30)
-                rect(xPosSpread - 15, 120, 30, 30)
-                rect(xPosSpread - 15, 170, 30, 30)
-                rect(xPosSpread - 15, 220, 30, 30)
-            }
-
-            fill(0, 0, 100)
-            // display a "2" for stack
-            if (!stackFirst || millis() < mechanicStarted + 8500) {
-                text("2", xPosStack - 10, 45 + whoGetsStack[0] * 50)
-                text("2", xPosStack - 10, 45 + whoGetsStack[1] * 50)
-            }
-
-            // display a circle for spread
-            if (stackFirst || millis() < mechanicStarted + 8500) {
-                stroke(0, 0, 100)
-                noFill()
-                circle(xPosSpread, 85, 20)
-                circle(xPosSpread, 135, 20)
-                circle(xPosSpread, 185, 20)
-                circle(xPosSpread, 235, 20)
-            }
-        }
-
-
-        noStroke()
-
-        // display the ready check
-        // if (!engaged) {
-        //     text("READY CHECK", 10, 300)
-        //     // button for "I'm ready!"
-        //     fill(120, 50, 50)
-        //     if (mouseX > 10 && mouseX < 180 &&
-        //         mouseY > 320 && mouseY < 350) fill(120, 50, 40)
-        //     rect(10, 320, 180, 30)
-        //     fill(0, 0, 100)
-        //     text("I'm ready!", 15, 345)
-        //     // if you drew aggro, the party wipes!
-        //     if (sqrt((posX - bossPosX)**2 + (posY - bossPosY)**2) < 230) {
-        //         partyWiped = true
-        //         causeOfWipe = "You drew aggro to the\nboss prematurely."
-        //         engaged = true
-        //     }
-        // }
-
-        for (let exoflare of exoflares) {
-            exoflare.update()
-            exoflare.displayAoE()
-        }
-
-        for (let AoE of AoEs) {
-            AoE.update()
-            AoE.displayAoE()
-        }
-
-        strokeWeight(1)
-        stroke(0, 0, 0)
-
-
-        // make it so that you can't see the corner exaflare stidcking out
-        fill(234, 34, 24)
-        noStroke()
-        rect(350, 0, 50, height)
-    } if (mechanic === "Malformed Reincarnation") {
-        for (let soakTower of blueSoakTowers) {
-            soakTower.update()
-            soakTower.displayTower()
-        }
-        for (let soakTower of orangeSoakTowers) {
-            soakTower.update()
-            soakTower.displayTower()
-        }
-
-        // display the rodential and odder debuffs
-        for (let player of [1, 2, 3, 4]) {
-            let yPos = 45 + player*50
-            if (triplesGivenTo.includes(player)) {
-                if (majorityRed.includes(player)) { // drop blue, soak red-red-red
-                    stroke(240, 100, 100)
-                    noFill()
-                    strokeWeight(2)
-                    if (millis() - mechanicStarted < 10000) {
-                        circle(70, yPos - 15, 20) // drop blue
-                    } else {
-                        if (!droppedTowers) {
-                            if (player === 4) {
-                                droppedTowers = true
-                            }
-                            let playerPosX = 0
-                            let playerPosY = 0
-                            if (player === 1) {
-                                playerPosX = posX
-                                playerPosY = posY
-                            } if (player === 2) {
-                                playerPosX = drgPosX
-                                playerPosY = drgPosY
-                            } if (player === 3) {
-                                playerPosX = sgePosX
-                                playerPosY = sgePosY
-                            } if (player === 4) {
-                                playerPosX = warPosX
-                                playerPosY = warPosY
-                            }
-                            blueSoakTowers.push(
-                                new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
-                            )
-                            print(playerPosX, playerPosY, player)
-                        }
-                    }
-                    noStroke()
-                    fill(15, 100, 100)
-                    if (millis() - mechanicStarted < 14600) {
-                        text("123", 100, yPos)
-                    } else if (millis() - mechanicStarted < 16000) {
-                        text("23", 117, yPos)
-                    } else if (millis() - mechanicStarted < 17400) {
-                        text("3", 136, yPos)
-                    }
-                } else { // drop red, soak blue-blue-blue
-                    stroke(15, 100, 100)
-                    noFill()
-                    strokeWeight(2)
-                    if (millis() - mechanicStarted < 10000) {
-                        circle(70, yPos - 15, 20) // drop red
-                    } else {
-                        if (!droppedTowers) {
-                            if (player === 4) {
-                                droppedTowers = true
-                            }
-                            let playerPosX = 0
-                            let playerPosY = 0
-                            if (player === 1) {
-                                playerPosX = posX
-                                playerPosY = posY
-                            } if (player === 2) {
-                                playerPosX = drgPosX
-                                playerPosY = drgPosY
-                            } if (player === 3) {
-                                playerPosX = sgePosX
-                                playerPosY = sgePosY
-                            } if (player === 4) {
-                                playerPosX = warPosX
-                                playerPosY = warPosY
-                            }
-                            orangeSoakTowers.push(
-                                new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
-                            )
-                            print(playerPosX, playerPosY, player)
-                        }
-                    }
-                    noStroke()
-                    fill(240, 100, 100)
-                    if (millis() - mechanicStarted < 14600) {
-                        text("123", 100, yPos - 5)
-                    } else if (millis() - mechanicStarted < 16000) {
-                        text("23", 117, yPos - 5)
-                    } else if (millis() - mechanicStarted < 17400) {
-                        text("3", 136, yPos - 5)
-                    }
-                }
-            } else {
-                if (majorityRed.includes(player)) { // drop red, soak red-red-blue
-                    stroke(15, 100, 100)
-                    noFill()
-                    strokeWeight(2)
-                    if (millis() - mechanicStarted < 10000) {
-                        circle(70, yPos - 15, 20) // drop red
-                    } else {
-                        if (!droppedTowers) {
-                            if (player === 4) {
-                                droppedTowers = true
-                            }
-                            let playerPosX = 0
-                            let playerPosY = 0
-                            if (player === 1) {
-                                playerPosX = posX
-                                playerPosY = posY
-                            } if (player === 2) {
-                                playerPosX = drgPosX
-                                playerPosY = drgPosY
-                            } if (player === 3) {
-                                playerPosX = sgePosX
-                                playerPosY = sgePosY
-                            } if (player === 4) {
-                                playerPosX = warPosX
-                                playerPosY = warPosY
-                            }
-                            orangeSoakTowers.push(
-                                new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
-                            )
-                            print(playerPosX, playerPosY, player)
-                        }
-                    }
-                    noStroke()
-                    fill(15, 100, 100)
-                    if (millis() - mechanicStarted < 14600) {
-                        text("12", 100, yPos - 2)
-                    } else if (millis() - mechanicStarted < 16000) {
-                        text("2", 117, yPos - 2)
-                    }
-                    fill(240, 100, 100)
-                    if (millis() - mechanicStarted < 17400) {
-                        text("3", 137, yPos - 4.5)
-                    }
-                } else { // drop blue, soak blue-blue-red
-                    stroke(240, 100, 100)
-                    noFill()
-                    strokeWeight(2)
-                    if (millis() - mechanicStarted < 10000) {
-                        circle(70, yPos - 15, 20) // drop blue
-                    } else {
-                        if (!droppedTowers) {
-                            if (player === 4) {
-                                droppedTowers = true
-                            }
-                            let playerPosX = 0
-                            let playerPosY = 0
-                            if (player === 1) {
-                                playerPosX = posX
-                                playerPosY = posY
-                            } if (player === 2) {
-                                playerPosX = drgPosX
-                                playerPosY = drgPosY
-                            } if (player === 3) {
-                                playerPosX = sgePosX
-                                playerPosY = sgePosY
-                            } if (player === 4) {
-                                playerPosX = warPosX
-                                playerPosY = warPosY
-                            }
-                            blueSoakTowers.push(
-                                new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
-                            )
-                            print(playerPosX, playerPosY, player)
-                        }
-                    }
-                    noStroke()
-                    fill(240, 100, 100)
-                    if (millis() - mechanicStarted < 14600) {
-                        text("12", 100, yPos - 7)
-                    } else if (millis() - mechanicStarted < 16000) {
-                        text("2", 117, yPos - 7)
-                    }
-                    fill(15, 100, 100)
-                    if (millis() - mechanicStarted < 17400) {
-                        text("3", 137, yPos - 4.5)
-                    }
+            if (millis() > mechanicStarted + 5500 && millis() < mechanicStarted + 6800 && !stackFirst) {
+                if (rotateExaflares) {
+                    sgePosY -= (swap) ? -1.3 : 1.3
+                } else {
+                    sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
                 }
             }
-        }
-
-        // automate everyone
-        if (millis() - mechanicStarted < 5500) {
-            if (triplesGivenTo.includes(2)) { // 2 is the dragoon
-                // we want to get north if triples are given here
-                drgPosY -= 1.3
+            if (millis() > mechanicStarted + 4900 && millis() < mechanicStarted + 6500) {
+                warPosY -= 1.3
+                warPosX -= (swapMovement) ? -1.3 : 1.3
+                drgPosY += 1.3
+                drgPosX += (swapMovement) ? -1.3 : 1.3
             }
-        } if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 4000 && rotatePlayers) {
-            if (triplesGivenTo.includes(2)) { // 2 is the dragoon
-                drgPosY += 0.92
-                drgPosX += 0.92
-            } else {
-                drgPosY -= 0.86
-                drgPosX -= 0.92
+            if (millis() > mechanicStarted + 7500 && millis() < mechanicStarted + 8500 && !stackFirst) {
+                if (rotateExaflares) {
+                    sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
+                } else {
+                    sgePosY -= (swap) ? -1.3 : 1.3
+                }
             }
-        } if (millis() - mechanicStarted > 5500 && millis() - mechanicStarted < 6500) {
-            // now we want to drop our tower
-            if (rotatePlayers) {
-                drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -1.3 : 1.3
-            } else {
-                drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
+            if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 9800 && stackFirst) {
+                sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
+                sgePosY -= (swap) ? -1.3 : 1.3
             }
-        }
-        // now we need to soak our towers
-        // start with the first
-        if (millis() - mechanicStarted > 10000 && millis() - mechanicStarted < 13000) {
-            if (rotatePlayers) {
-                drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
-                drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -0.5 : 0.5
-            } else {
-                drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -1 : 1
-                drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.5 : 0.5
+            if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 10000) {
+                warPosY -= 1.3
+                warPosX -= (swapMovement) ? -1.3 : 1.3
+                drgPosY += 1.3
+                drgPosX += (swapMovement) ? -1.3 : 1.3
             }
-        } if (millis() - mechanicStarted > 14600 && millis() - mechanicStarted < 16000) {
-            if (rotatePlayers) {
-                drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
-                drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -0.92 : 0.92
-            } else {
-                drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -0.92 : 0.92
-                drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
+            if (millis() > mechanicStarted + 10000 && millis() < mechanicStarted + 13500 && stackFirst) {
+                if (!rotateExaflares) {
+                    warPosX += (swapMovement) ? -1.3 : 1.3
+                    drgPosX -= (swapMovement) ? -1.3 : 1.3
+                } else {
+                    warPosY += 1.3
+                    drgPosY -= 1.3
+                }
             }
-        } if (millis() - mechanicStarted > 16000 && millis() - mechanicStarted < 17000) {
-            if (rotatePlayers) {
-                drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -1.3 : 1.3
-            } else {
-                drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
+
+            strokeWeight(3)
+
+            // display stacks and spreads (at correct time).
+            // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140.
+            let xPosStack = (stackFirst) ? 105 : 140
+            let xPosSpread = (stackFirst) ? 140 : 105
+            if (millis() < mechanicStarted + 13500) {
+                fill(0, 80, 50)
+                if (!stackFirst || millis() < mechanicStarted + 8500) {
+                    rect(xPosStack - 15, 20 + whoGetsStack[0] * 50, 30, 30)
+                    rect(xPosStack - 15, 20 + whoGetsStack[1] * 50, 30, 30)
+                }
+                if (stackFirst || millis() < mechanicStarted + 8500) {
+                    rect(xPosSpread - 15, 70, 30, 30)
+                    rect(xPosSpread - 15, 120, 30, 30)
+                    rect(xPosSpread - 15, 170, 30, 30)
+                    rect(xPosSpread - 15, 220, 30, 30)
+                }
+
+                fill(0, 0, 100)
+                // display a "2" for stack
+                if (!stackFirst || millis() < mechanicStarted + 8500) {
+                    text("2", xPosStack - 10, 45 + whoGetsStack[0] * 50)
+                    text("2", xPosStack - 10, 45 + whoGetsStack[1] * 50)
+                }
+
+                // display a circle for spread
+                if (stackFirst || millis() < mechanicStarted + 8500) {
+                    stroke(0, 0, 100)
+                    noFill()
+                    circle(xPosSpread, 85, 20)
+                    circle(xPosSpread, 135, 20)
+                    circle(xPosSpread, 185, 20)
+                    circle(xPosSpread, 235, 20)
+                }
             }
-        }
-    } if (mechanic === "Triple Kazumi-Giri") {
-        // add ring that represents facing
-        stroke(0, 0, 100)
-        strokeWeight(1)
-        noFill()
-        circle(bossPosX, bossPosY, 160) // note: this is 320 diameter, not 320 radius
-        fill(0, 0, 100)
-        noStroke()
-        if (bossFacing === 1) { // up
-            triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10, bossPosY - 80, bossPosX, bossPosY - 96)
-        } if (bossFacing === 2) { // right
-            triangle(bossPosX + 80, bossPosY - 10, bossPosX + 80, bossPosY + 10, bossPosX + 96, bossPosY)
-        } if (bossFacing === 3) { // down
-            triangle(bossPosX - 10, bossPosY + 80, bossPosX + 10, bossPosY + 80, bossPosX, bossPosY + 96)
-        } if (bossFacing === 4) { // left
-            triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80, bossPosY + 10, bossPosX - 96, bossPosY)
-        }
 
-        // display the symbols for each cleave
-        if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 1800) { // cleave #1
-            fill(0, 0, 0)
-            rect(bossPosX - 15, bossPosY - 45, 30, 30)
-            if (cleaveOneColor === "orange") {
-                fill(15, 100, 100)
-            } else {
-                fill(180, 100, 100)
-            }
-            angleMode(DEGREES)
-            // display an arc with the cleaveOneSafeDirection not included (this is filled as a pie segment)
-            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
-            angleMode(RADIANS)
-        } if (millis() - mechanicStarted > 2000 && millis() - mechanicStarted < 3800) { // cleave #2
-            fill(0, 0, 0)
-            rect(bossPosX - 15, bossPosY - 45, 30, 30)
-            if (cleaveTwoColor === "orange") {
-                fill(15, 100, 100)
-            } else {
-                fill(180, 100, 100)
-            }
-            angleMode(DEGREES)
-            // display an arc with the cleaveTwoSafeDirection not included (this is filled as a pie segment)
-            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90, 135 + cleaveTwoSafeDirection*90)
-            angleMode(RADIANS)
-        } if (millis() - mechanicStarted > 4000 && millis() - mechanicStarted < 5800) { // cleave #2
-            fill(0, 0, 0)
-            rect(bossPosX - 15, bossPosY - 45, 30, 30)
-            if (cleaveThreeColor === "orange") {
-                fill(15, 100, 100)
-            } else {
-                fill(180, 100, 100)
-            }
-            angleMode(DEGREES)
-            // display an arc with the cleaveThreeSafeDirection not included (this is filled as a pie segment)
-            arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90, 135 + cleaveThreeSafeDirection*90)
-            angleMode(RADIANS)
-        }
 
-        if (millis() - mechanicStarted > 6000 && !firstAoEResolved) {
-            firstAoEResolved = true
-            AoEs.push( // make these resolve immediately!
-                (cleaveOneColor === "orange") ? // orange = circle, blue = donut
-                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
-                    new DonutAOE(bossPosX, bossPosY, 80, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 10
-            AoEs.push(
-                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 10
-
-            // face away from the cleave. Always plus 2 or minus 2
-            bossFacing = (cleaveOneSafeDirection + 2) % 4
-            if (bossFacing === 0) bossFacing = 4
-        }
-
-        if (millis() - mechanicStarted > 8700 && !secondAoEResolved) {
-            secondAoEResolved = true
-            AoEs.push( // make these resolve immediately!
-                (cleaveTwoColor === "orange") ? // orange = circle, blue = donut
-                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
-                    new DonutAOE(bossPosX, bossPosY, 80, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 10
-            AoEs.push(
-                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 10
-
-            // face away from the cleave. Always plus 2 or minus 2
-            bossFacing = (cleaveTwoSafeDirection + bossFacing - 1 + 2) % 4
-            if (bossFacing === 0) bossFacing = 4
-        }
-
-        if (millis() - mechanicStarted > 11400 && !thirdAoEResolved) {
-            thirdAoEResolved = true
-            AoEs.push( // make these resolve immediately!
-                (cleaveThreeColor === "orange") ? // orange = circle, blue = donut
-                    new CircleAOE(bossPosX, bossPosY, 160, 0) :
-                    new DonutAOE(bossPosX, bossPosY, 80, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 10
-            AoEs.push(
-                new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 10
-
-            // face away from the cleave. Always plus 2 or minus 2
-            bossFacing = (cleaveThreeSafeDirection + bossFacing - 1 + 2) % 4
-            if (bossFacing === 0) bossFacing = 4
-        }
-
-        for (let AoE of AoEs) {
-            AoE.update()
-            AoE.displayAoE()
-        }
-    } if (mechanic === "Fleeting Lai-Giri") {
-        if (millis() - mechanicStarted > 2000 && !circleResolved) {
-            circleResolved = true
-            AoEs.push(
-                new CircleAOE(bossPosX, bossPosY, 160, 0)
-            )
-            AoEs[AoEs.length - 1].opacity = 5
-            AoEs.push(
-                new LineAOE(400, 120, 1000, 120, 130, 4000),
-                new LineAOE(400, 480, 1000, 480, 130, 4000),
-                new LineAOE(400, 0, 1000, 600, 130, 4000),
-                new LineAOE(400, 600, 1000, 0, 130, 4000)
-            )
-        } if (millis() - mechanicStarted > 6000) {
-            stroke(30, 100, 100)
-            strokeWeight(5 + max((millis() - mechanicStarted - 10000)/1000, 0))
-            line(400, 120, 1000, 120)
-            line(400, 480, 1000, 480)
-            line(400, 0, 1000, 600)
-            line(400, 600, 1000, 0)
-            stroke(30, 50, 100)
-            strokeWeight(5 + max((millis() - mechanicStarted - 20000)/3000, -5))
-            line(400, 120, 1000, 120)
-            line(400, 480, 1000, 480)
-            line(400, 0, 1000, 600)
-            line(400, 600, 1000, 0)
-            stroke(0, 0, 100)
-            strokeWeight(5 + max((millis() - mechanicStarted - 30000)/5000, -5))
-            line(400, 120, 1000, 120)
-            line(400, 480, 1000, 480)
-            line(400, 0, 1000, 600)
-            line(400, 600, 1000, 0)
             noStroke()
-        }
 
-        for (let AoE of AoEs) {
-            AoE.update()
-            AoE.displayAoE()
-        }
+            for (let exoflare of exoflares) {
+                exoflare.update()
+                exoflare.displayAoE()
+            }
 
-        fill(234, 34, 24)
-        noStroke()
-        rect(300, 0, 100, height)
-    }
+            for (let AoE of AoEs) {
+                AoE.update()
+                AoE.displayAoE()
+            }
+
+            strokeWeight(1)
+            stroke(0, 0, 0)
 
 
+            // make it so that you can't see the corner exaflare stidcking out
+            fill(234, 34, 24)
+            noStroke()
+            rect(350, 0, 50, height)
+            break
+        case "Malformed Reincarnation":
+            for (let soakTower of blueSoakTowers) {
+                soakTower.update()
+                soakTower.displayTower()
+            }
+            for (let soakTower of orangeSoakTowers) {
+                soakTower.update()
+                soakTower.displayTower()
+            }
 
+            // display the rodential and odder debuffs
+            for (let player of [1, 2, 3, 4]) {
+                let yPos = 45 + player*50
+                if (triplesGivenTo.includes(player)) {
+                    if (majorityRed.includes(player)) { // drop blue, soak red-red-red
+                        stroke(240, 100, 100)
+                        noFill()
+                        strokeWeight(2)
+                        if (millis() - mechanicStarted < 10000) {
+                            circle(70, yPos - 15, 20) // drop blue
+                        } else {
+                            if (!droppedTowers) {
+                                if (player === 4) {
+                                    droppedTowers = true
+                                }
+                                let playerPosX = 0
+                                let playerPosY = 0
+                                if (player === 1) {
+                                    playerPosX = posX
+                                    playerPosY = posY
+                                } if (player === 2) {
+                                    playerPosX = drgPosX
+                                    playerPosY = drgPosY
+                                } if (player === 3) {
+                                    playerPosX = sgePosX
+                                    playerPosY = sgePosY
+                                } if (player === 4) {
+                                    playerPosX = warPosX
+                                    playerPosY = warPosY
+                                }
+                                blueSoakTowers.push(
+                                    new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
+                                )
+                                print(playerPosX, playerPosY, player)
+                            }
+                        }
+                        noStroke()
+                        fill(15, 100, 100)
+                        if (millis() - mechanicStarted < 14600) {
+                            text("123", 100, yPos)
+                        } else if (millis() - mechanicStarted < 16000) {
+                            text("23", 117, yPos)
+                        } else if (millis() - mechanicStarted < 17400) {
+                            text("3", 136, yPos)
+                        }
+                    } else { // drop red, soak blue-blue-blue
+                        stroke(15, 100, 100)
+                        noFill()
+                        strokeWeight(2)
+                        if (millis() - mechanicStarted < 10000) {
+                            circle(70, yPos - 15, 20) // drop red
+                        } else {
+                            if (!droppedTowers) {
+                                if (player === 4) {
+                                    droppedTowers = true
+                                }
+                                let playerPosX = 0
+                                let playerPosY = 0
+                                if (player === 1) {
+                                    playerPosX = posX
+                                    playerPosY = posY
+                                } if (player === 2) {
+                                    playerPosX = drgPosX
+                                    playerPosY = drgPosY
+                                } if (player === 3) {
+                                    playerPosX = sgePosX
+                                    playerPosY = sgePosY
+                                } if (player === 4) {
+                                    playerPosX = warPosX
+                                    playerPosY = warPosY
+                                }
+                                orangeSoakTowers.push(
+                                    new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
+                                )
+                                print(playerPosX, playerPosY, player)
+                            }
+                        }
+                        noStroke()
+                        fill(240, 100, 100)
+                        if (millis() - mechanicStarted < 14600) {
+                            text("123", 100, yPos - 5)
+                        } else if (millis() - mechanicStarted < 16000) {
+                            text("23", 117, yPos - 5)
+                        } else if (millis() - mechanicStarted < 17400) {
+                            text("3", 136, yPos - 5)
+                        }
+                    }
+                } else {
+                    if (majorityRed.includes(player)) { // drop red, soak red-red-blue
+                        stroke(15, 100, 100)
+                        noFill()
+                        strokeWeight(2)
+                        if (millis() - mechanicStarted < 10000) {
+                            circle(70, yPos - 15, 20) // drop red
+                        } else {
+                            if (!droppedTowers) {
+                                if (player === 4) {
+                                    droppedTowers = true
+                                }
+                                let playerPosX = 0
+                                let playerPosY = 0
+                                if (player === 1) {
+                                    playerPosX = posX
+                                    playerPosY = posY
+                                } if (player === 2) {
+                                    playerPosX = drgPosX
+                                    playerPosY = drgPosY
+                                } if (player === 3) {
+                                    playerPosX = sgePosX
+                                    playerPosY = sgePosY
+                                } if (player === 4) {
+                                    playerPosX = warPosX
+                                    playerPosY = warPosY
+                                }
+                                orangeSoakTowers.push(
+                                    new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
+                                )
+                                print(playerPosX, playerPosY, player)
+                            }
+                        }
+                        noStroke()
+                        fill(15, 100, 100)
+                        if (millis() - mechanicStarted < 14600) {
+                            text("12", 100, yPos - 2)
+                        } else if (millis() - mechanicStarted < 16000) {
+                            text("2", 117, yPos - 2)
+                        }
+                        fill(240, 100, 100)
+                        if (millis() - mechanicStarted < 17400) {
+                            text("3", 137, yPos - 4.5)
+                        }
+                    } else { // drop blue, soak blue-blue-red
+                        stroke(240, 100, 100)
+                        noFill()
+                        strokeWeight(2)
+                        if (millis() - mechanicStarted < 10000) {
+                            circle(70, yPos - 15, 20) // drop blue
+                        } else {
+                            if (!droppedTowers) {
+                                if (player === 4) {
+                                    droppedTowers = true
+                                }
+                                let playerPosX = 0
+                                let playerPosY = 0
+                                if (player === 1) {
+                                    playerPosX = posX
+                                    playerPosY = posY
+                                } if (player === 2) {
+                                    playerPosX = drgPosX
+                                    playerPosY = drgPosY
+                                } if (player === 3) {
+                                    playerPosX = sgePosX
+                                    playerPosY = sgePosY
+                                } if (player === 4) {
+                                    playerPosX = warPosX
+                                    playerPosY = warPosY
+                                }
+                                blueSoakTowers.push(
+                                    new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
+                                )
+                                print(playerPosX, playerPosY, player)
+                            }
+                        }
+                        noStroke()
+                        fill(240, 100, 100)
+                        if (millis() - mechanicStarted < 14600) {
+                            text("12", 100, yPos - 7)
+                        } else if (millis() - mechanicStarted < 16000) {
+                            text("2", 117, yPos - 7)
+                        }
+                        fill(15, 100, 100)
+                        if (millis() - mechanicStarted < 17400) {
+                            text("3", 137, yPos - 4.5)
+                        }
+                    }
+                }
+            }
 
+            // automate everyone
+            if (millis() - mechanicStarted < 5500) {
+                if (triplesGivenTo.includes(2)) { // 2 is the dragoon
+                    // we want to get north if triples are given here
+                    drgPosY -= 1.3
+                }
+            } if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 4000 && rotatePlayers) {
+                if (triplesGivenTo.includes(2)) { // 2 is the dragoon
+                    drgPosY += 0.92
+                    drgPosX += 0.92
+                } else {
+                    drgPosY -= 0.86
+                    drgPosX -= 0.92
+                }
+            } if (millis() - mechanicStarted > 5500 && millis() - mechanicStarted < 6500) {
+                // now we want to drop our tower
+                if (rotatePlayers) {
+                    drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -1.3 : 1.3
+                } else {
+                    drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
+                }
+            }
+            // now we need to soak our towers
+            // start with the first
+            if (millis() - mechanicStarted > 10000 && millis() - mechanicStarted < 13000) {
+                if (rotatePlayers) {
+                    drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
+                    drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -0.5 : 0.5
+                } else {
+                    drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -1 : 1
+                    drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.5 : 0.5
+                }
+            } if (millis() - mechanicStarted > 14600 && millis() - mechanicStarted < 16000) {
+                if (rotatePlayers) {
+                    drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
+                    drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -0.92 : 0.92
+                } else {
+                    drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -0.92 : 0.92
+                    drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
+                }
+            } if (millis() - mechanicStarted > 16000 && millis() - mechanicStarted < 17000) {
+                if (rotatePlayers) {
+                    drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -1.3 : 1.3
+                } else {
+                    drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
+                }
+            }
+            break
+        case "Triple Kasumi-Giri":
+            // add ring that represents facing
+            stroke(0, 0, 100)
+            strokeWeight(1)
+            noFill()
+            circle(bossPosX, bossPosY, 160) // note: this is 320 diameter, not 320 radius
+            fill(0, 0, 100)
+            noStroke()
+            if (bossFacing === 1) { // up
+                triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10, bossPosY - 80, bossPosX, bossPosY - 96)
+            } if (bossFacing === 2) { // right
+                triangle(bossPosX + 80, bossPosY - 10, bossPosX + 80, bossPosY + 10, bossPosX + 96, bossPosY)
+            } if (bossFacing === 3) { // down
+                triangle(bossPosX - 10, bossPosY + 80, bossPosX + 10, bossPosY + 80, bossPosX, bossPosY + 96)
+            } if (bossFacing === 4) { // left
+                triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80, bossPosY + 10, bossPosX - 96, bossPosY)
+            }
 
-    // display the donut of not being able to see anything
-    noStroke()
-    let size = (exoflareHelper) ? 320 : 200
-    for (let opacity = 0; opacity < 18; opacity += 0.5) {
-        fill(0, 0, 0, opacity)
-        displayDonut(posX, posY, size)
-        size += (exoflareHelper) ? opacity / 2 : opacity / 3
+            // display the symbols for each cleave
+            if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 1800) { // cleave #1
+                fill(0, 0, 0)
+                rect(bossPosX - 15, bossPosY - 45, 30, 30)
+                if (cleaveOneColor === "orange") {
+                    fill(15, 100, 100)
+                } else {
+                    fill(180, 100, 100)
+                }
+                angleMode(DEGREES)
+                // display an arc with the cleaveOneSafeDirection not included (this is filled as a pie segment)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
+                angleMode(RADIANS)
+            } if (millis() - mechanicStarted > 2000 && millis() - mechanicStarted < 3800) { // cleave #2
+                fill(0, 0, 0)
+                rect(bossPosX - 15, bossPosY - 45, 30, 30)
+                if (cleaveTwoColor === "orange") {
+                    fill(15, 100, 100)
+                } else {
+                    fill(180, 100, 100)
+                }
+                angleMode(DEGREES)
+                // display an arc with the cleaveTwoSafeDirection not included (this is filled as a pie segment)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90, 135 + cleaveTwoSafeDirection*90)
+                angleMode(RADIANS)
+            } if (millis() - mechanicStarted > 4000 && millis() - mechanicStarted < 5800) { // cleave #2
+                fill(0, 0, 0)
+                rect(bossPosX - 15, bossPosY - 45, 30, 30)
+                if (cleaveThreeColor === "orange") {
+                    fill(15, 100, 100)
+                } else {
+                    fill(180, 100, 100)
+                }
+                angleMode(DEGREES)
+                // display an arc with the cleaveThreeSafeDirection not included (this is filled as a pie segment)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90, 135 + cleaveThreeSafeDirection*90)
+                angleMode(RADIANS)
+            }
+
+            if (millis() - mechanicStarted > 6000 && !firstAoEResolved) {
+                firstAoEResolved = true
+                AoEs.push( // make these resolve immediately!
+                    (cleaveOneColor === "orange") ? // orange = circle, blue = donut
+                        new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                        new DonutAOE(bossPosX, bossPosY, 80, 0)
+                )
+                AoEs[AoEs.length - 1].opacity = 10
+                AoEs.push(
+                    new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 0)
+                )
+                AoEs[AoEs.length - 1].opacity = 10
+
+                // face away from the cleave. Always plus 2 or minus 2
+                bossFacing = (cleaveOneSafeDirection + 2) % 4
+                if (bossFacing === 0) bossFacing = 4
+            }
+
+            if (millis() - mechanicStarted > 8700 && !secondAoEResolved) {
+                secondAoEResolved = true
+                AoEs.push( // make these resolve immediately!
+                    (cleaveTwoColor === "orange") ? // orange = circle, blue = donut
+                        new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                        new DonutAOE(bossPosX, bossPosY, 80, 0)
+                )
+                AoEs[AoEs.length - 1].opacity = 10
+                AoEs.push(
+                    new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 0)
+                )
+                AoEs[AoEs.length - 1].opacity = 10
+
+                // face away from the cleave. Always plus 2 or minus 2
+                bossFacing = (cleaveTwoSafeDirection + bossFacing - 1 + 2) % 4
+                if (bossFacing === 0) bossFacing = 4
+            }
+
+            if (millis() - mechanicStarted > 11400 && !thirdAoEResolved) {
+                thirdAoEResolved = true
+                AoEs.push( // make these resolve immediately!
+                    (cleaveThreeColor === "orange") ? // orange = circle, blue = donut
+                        new CircleAOE(bossPosX, bossPosY, 160, 0) :
+                        new DonutAOE(bossPosX, bossPosY, 80, 0)
+                )
+                AoEs[AoEs.length - 1].opacity = 10
+                AoEs.push(
+                    new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 0)
+                )
+                AoEs[AoEs.length - 1].opacity = 10
+
+                // face away from the cleave. Always plus 2 or minus 2
+                bossFacing = (cleaveThreeSafeDirection + bossFacing - 1 + 2) % 4
+                if (bossFacing === 0) bossFacing = 4
+            }
+
+            for (let AoE of AoEs) {
+                AoE.update()
+                AoE.displayAoE()
+            }
+            break
+        case "Fleeting Lai-Giri":
+            if (millis() - mechanicStarted > 2000 && !circleResolved) {
+                circleResolved = true
+                AoEs.push(
+                    new CircleAOE(bossPosX, bossPosY, 160, 0)
+                )
+                AoEs[AoEs.length - 1].opacity = 5
+                AoEs.push(
+                    new LineAOE(400, 120, 1000, 120, 130, 4000),
+                    new LineAOE(400, 480, 1000, 480, 130, 4000),
+                    new LineAOE(400, 0, 1000, 600, 130, 4000),
+                    new LineAOE(400, 600, 1000, 0, 130, 4000)
+                )
+            } if (millis() - mechanicStarted > 6000) {
+                // display the lines left by the AoEs above
+                // draw 3 rounds each with less strokeWeight and less saturation each time to make it look like flames
+                stroke(30, 100, 100) // orange
+                strokeWeight(5 + max((millis() - mechanicStarted - 10000)/1000, 0))
+                line(400, 120, 1000, 120)
+                line(400, 480, 1000, 480)
+                line(400, 0, 1000, 600)
+                line(400, 600, 1000, 0)
+                stroke(30, 50, 100) // white-ish orange
+                strokeWeight(5 + max((millis() - mechanicStarted - 20000)/1500, -5))
+                line(400, 120, 1000, 120)
+                line(400, 480, 1000, 480)
+                line(400, 0, 1000, 600)
+                line(400, 600, 1000, 0)
+                stroke(0, 0, 100) // pure white
+                strokeWeight(5 + max((millis() - mechanicStarted - 30000)/2000, -5))
+                line(400, 120, 1000, 120)
+                line(400, 480, 1000, 480)
+                line(400, 0, 1000, 600)
+                line(400, 600, 1000, 0)
+                noStroke()
+            }
+
+            for (let AoE of AoEs) {
+                AoE.update()
+                AoE.displayAoE()
+            }
+
+            fill(234, 34, 24)
+            noStroke()
+            rect(300, 0, 100, height)
     }
 
     if (posX < 432 || posY < 32 ||
@@ -1090,7 +1071,7 @@ function mousePressed() {
         AoEs = []
     } if (mouseX > 0 && mouseX < 175 &&
         mouseY > 454 && mouseY < 478) {
-        mechanic = "Triple Kazumi-Giri"
+        mechanic = "Triple Kasumi-Giri"
         mechanicStarted = millis()
         posX = 700
         posY = 400
@@ -1133,6 +1114,9 @@ function mousePressed() {
         bossPosY = 300
 
         circleResolved = false
+
+        topLeftCrossExpandsFirst = random([false, true])
+        northLineExpandsFirst = random([false, true])
 
         AoEs = []
     }
