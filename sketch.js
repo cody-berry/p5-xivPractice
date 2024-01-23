@@ -33,7 +33,7 @@ let partyWiped = false
 let causeOfWipe = ""
 
 let exoflares
-let exoflareHelper
+let helper
 let AoEs
 
 let blueSoakTowers
@@ -124,7 +124,7 @@ function setup() {
     swap = (whoGetsStack[0] === 1 && whoGetsStack[1] === 2) || (whoGetsStack[0] === 3 && whoGetsStack[1] === 4)
     print(swap)
 
-    exoflareHelper = false
+    helper = false
     exoflares = [
         // Add exoflares on the east and west. They go to the top-left and
         // bottom-right if swapMovement is false, and the top-right and
@@ -162,7 +162,7 @@ function draw() {
     background(234, 34, 24)
 
     // add exoflare helper toggle
-    if (!exoflareHelper) {
+    if (!helper) {
         fill(0, 0, 25)
         if (mouseX > 0 && mouseX < 230 &&
             mouseY > height - 30 && mouseY < height) fill(0, 0, 20)
@@ -827,135 +827,6 @@ function draw() {
                     new LineAOE(400, 0, 1000, 600, 130, 4000),
                     new LineAOE(400, 600, 1000, 0, 130, 4000)
                 )
-            } if (millis() - mechanicStarted > 6000) {
-                // display the lines left by the AoEs above
-                // draw 3 rounds each with less strokeWeight and less saturation each time to make it look like flames
-                if (millis() - mechanicStarted < 12500) { // just red
-                    stroke(0, 100, 100) // red
-                    strokeWeight(1)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                } else if (millis() - mechanicStarted < 17500) { // red, vermillion, orange, yellow, and white
-                    stroke(0, 100, 100) // red
-                    strokeWeight(15)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(7, 100, 100) // vermilion
-                    strokeWeight(12)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(25, 100, 100) // orange
-                    strokeWeight(8)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(45, 100, 100) // yellow
-                    strokeWeight(5)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(0, 0, 100) // white
-                    strokeWeight(1)
-                    line(400, 170.5, 1000, 170.5)
-                    line(400, 430.5, 1000, 430.5)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                } else if (millis() - mechanicStarted < 25000) { // red, vermillion, orange, orange-yellow, yellow, yellow-white, white
-                    stroke(0, 100, 100) // red
-                    strokeWeight(25)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(7, 100, 100) // vermilion
-                    strokeWeight(22)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(25, 100, 100) // orange
-                    strokeWeight(18)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(35, 100, 100) // orange-yellow
-                    strokeWeight(13)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(45, 100, 100) // yellow
-                    strokeWeight(10)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(45, 50, 100) // yellow-white
-                    strokeWeight(6)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(0, 0, 100) // white
-                    strokeWeight(3)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                } else if (millis() - mechanicStarted < 32500) { // red, vermillion, orange, orange-yellow, yellow, yellow-white, white
-                    stroke(0, 100, 100) // red
-                    strokeWeight(35)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(7, 100, 100) // vermilion
-                    strokeWeight(31)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(25, 100, 100) // orange
-                    strokeWeight(27)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(35, 100, 100) // orange-yellow
-                    strokeWeight(23)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(45, 100, 100) // yellow
-                    strokeWeight(19)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(45, 50, 100) // yellow-white
-                    strokeWeight(13)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                    stroke(0, 0, 100) // white
-                    strokeWeight(7)
-                    line(400, 170, 1000, 170)
-                    line(400, 430, 1000, 430)
-                    line(400, 0, 1000, 600)
-                    line(400, 600, 1000, 0)
-                }
-            noStroke()
             }
 
             for (let AoE of AoEs) {
@@ -1010,7 +881,7 @@ function displayDonut(posX, posY, size) {
 function mousePressed() {
     if (mouseX > 0 && mouseX < 230 &&
         mouseY > height - 30 && mouseY < height) {
-        exoflareHelper = true
+        helper = true
     }
 
     if (mouseX > 0 && mouseX < 90 &&
@@ -1228,8 +1099,43 @@ function mousePressed() {
         topLeftCrossExpandsFirst = random([false, true])
         northLineExpandsFirst = random([false, true])
 
-        AoEs = []
+        AoEs = [
+            new FlameLine(400, 170, 1000, 170, [
+                (northLineExpandsFirst) ? 6000 : 6000,
+                (northLineExpandsFirst) ? 10000 : 17500,
+                (northLineExpandsFirst) ? 17500 : 25000,
+                (northLineExpandsFirst) ? 25000 : 32500,
+                (northLineExpandsFirst) ? 32500 : 40000
+            ]),
+            new FlameLine(400, 430, 1000, 430, [
+                (northLineExpandsFirst) ? 6000 : 6000,
+                (northLineExpandsFirst) ? 17500 : 10000,
+                (northLineExpandsFirst) ? 25000 : 17500,
+                (northLineExpandsFirst) ? 32500 : 25000,
+                (northLineExpandsFirst) ? 40000 : 32500
+            ]),
+            new FlameLine(400, 0, 1000, 600, [
+                (topLeftCrossExpandsFirst) ? 6000 : 6000,
+                (topLeftCrossExpandsFirst) ? 10000 : 17500,
+                (topLeftCrossExpandsFirst) ? 17500 : 25000,
+                (topLeftCrossExpandsFirst) ? 25000 : 32500,
+                (topLeftCrossExpandsFirst) ? 32500 : 40000
+            ]),
+            new FlameLine(400, 600, 1000, 0, [
+                (topLeftCrossExpandsFirst) ? 6000 : 6000,
+                (topLeftCrossExpandsFirst) ? 17500 : 10000,
+                (topLeftCrossExpandsFirst) ? 25000 : 17500,
+                (topLeftCrossExpandsFirst) ? 32500 : 25000,
+                (topLeftCrossExpandsFirst) ? 40000 : 32500
+            ]),
+        ]
+
+        AoEs.sort(sortByGrowingTime)
     }
+}
+
+function sortByGrowingTime(a, b) {
+    return b.growingTimes[1] - a.growingTimes[1]
 }
 
 function keyPressed() {

@@ -14,7 +14,7 @@ class CircleAOE {
         if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
             this.opacity += 1
             if (this.opacity >= 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
@@ -52,7 +52,7 @@ class RectAOE {
         if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
             this.opacity += 1
             if (this.opacity >= 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
@@ -82,7 +82,6 @@ class LineAOE {
         this.x2 = x2
         this.y2 = y2
         this.angleOfLine = atan2(this.y2 - this.y1, this.x2 - this.x1)
-        print(degrees(this.angleOfLine))
         this.thickness = thickness
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
@@ -94,8 +93,8 @@ class LineAOE {
         if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
             this.opacity += 1
             if (this.opacity >= 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
-            this.opacity -= 0.2
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
+            this.opacity -= 0.05
         } if (this.goesOffAt < millis()) {
             if (this.opacity > 5) this.opacity = 5
             this.opacity -= 0.2
@@ -106,9 +105,11 @@ class LineAOE {
     }
 
     displayAoE() {
-        stroke(20, 100, 100, this.opacity)
-        strokeWeight(this.thickness)
-        line(this.x1, this.y1, this.x2, this.y2)
+        if (this.goesOffAt > millis()) {
+            stroke(20, 100, 100, this.opacity)
+            strokeWeight(this.thickness)
+            line(this.x1, this.y1, this.x2, this.y2)
+        }
     }
 }
 
@@ -127,7 +128,7 @@ class DonutAOE {
         if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
             this.opacity += 1
             if (this.opacity >= 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
@@ -190,7 +191,7 @@ class ConeAOE {
         if (this.opacity < 20 && this.goesOffAt - millis() > 100) {
             this.opacity += 1
             if (this.opacity > 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && exoflareHelper) {
+        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
             this.opacity -= 0.2
         }
         if (this.goesOffAt < millis()) {
@@ -234,7 +235,7 @@ class Exaflare {
 
     update() {
         this.opacity -= 1
-        if (exoflareHelper) {
+        if (helper) {
             this.opacity = max(this.opacity, 10)
         }
         this.prevCircleOpacity -= 0.2
@@ -274,7 +275,7 @@ class Exaflare {
             stroke(0, 100, 100, 20)
             fill(0, 100, 100, 20)
             circle(this.x, this.y, this.size)
-            if (exoflareHelper) {
+            if (helper) {
                 stroke(0, 100, 100, 50)
                 noFill()
                 circle(this.x + this.xDiff, this.y + this.yDiff, this.size + this.sizeDiff)
@@ -301,7 +302,7 @@ class Exaflare {
             circle(this.x, this.y, this.size - 50)
             fill(200, 100, 50, this.opacity)
             circle(this.x, this.y, this.size - 100)
-            if (exoflareHelper) {
+            if (helper) {
                 fill(200, 80, 80, this.prevCircleOpacity)
                 circle(this.prevX, this.prevY, this.size)
             }
@@ -500,5 +501,110 @@ class SoakTower {
             circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 1600, 0))
             circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 2000, 0))
         }
+    }
+}
+
+class FlameLine {
+    constructor(x1, y1, x2, y2, growingTimes) {
+        this.x1 = x1
+        this.y1 = y1
+        this.x2 = x2
+        this.y2 = y2
+        this.growingTimes = growingTimes
+        this.initiatedAt = millis()
+        this.stage = 0 // not displayed
+        this.wentOff = false
+    }
+
+    update() {
+        if (millis() - this.initiatedAt > this.growingTimes[0]) {
+            this.stage = 1 // displayed as red line
+        } if (millis() - this.initiatedAt > this.growingTimes[1]) {
+            this.stage = 2 // slightly glowing
+        } if (millis() - this.initiatedAt > this.growingTimes[2]) {
+            this.stage = 3 // moderately glowing
+        } if (millis() - this.initiatedAt > this.growingTimes[3]) {
+            this.stage = 4 // heavily glowing
+        } if (millis() - this.initiatedAt > this.growingTimes[4]) {
+            this.stage = 0
+            if (!this.wentOff) {
+                AoEs.push(new LineAOE(this.x1, this.y1, this.x2, this.y2, 300, 1000))
+                this.wentOff = true
+            }
+        }
+    }
+
+    displayAoE() {
+        switch (this.stage) {
+            case 1:
+                stroke(0, 100, 100) // red
+                strokeWeight(1)
+                line(this.x1, this.y1, this.x2, this.y2)
+                break
+            case 2:
+                stroke(0, 100, 100) // red
+                strokeWeight(15)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(7, 100, 100) // vermilion
+                strokeWeight(12)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(25, 100, 100) // orange
+                strokeWeight(8)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 100, 100) // yellow
+                strokeWeight(5)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(0, 0, 100) // white
+                strokeWeight(1)
+                line(this.x1, this.y1, this.x2, this.y2)
+                break
+            case 3:
+                stroke(0, 100, 100) // red
+                strokeWeight(25)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(7, 100, 100) // vermilion
+                strokeWeight(22)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(25, 100, 100) // orange
+                strokeWeight(18)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(35, 100, 100) // orange-yellow
+                strokeWeight(13)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 100, 100) // yellow
+                strokeWeight(10)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 50, 100) // yellow-white
+                strokeWeight(6)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(0, 0, 100) // white
+                strokeWeight(3)
+                line(this.x1, this.y1, this.x2, this.y2)
+                break
+            case 4:
+                stroke(0, 100, 100) // red
+                strokeWeight(35)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(7, 100, 100) // vermilion
+                strokeWeight(31)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(25, 100, 100) // orange
+                strokeWeight(27)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(35, 100, 100) // orange-yellow
+                strokeWeight(23)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 100, 100) // yellow
+                strokeWeight(19)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 50, 100) // yellow-white
+                strokeWeight(13)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(0, 0, 100) // white
+                strokeWeight(7)
+                line(this.x1, this.y1, this.x2, this.y2)
+                break
+        }
+        noStroke()
     }
 }
