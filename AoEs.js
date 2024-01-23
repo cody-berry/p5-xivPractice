@@ -528,7 +528,7 @@ class FlameLine {
         } if (millis() - this.initiatedAt > this.growingTimes[4]) {
             this.stage = 0
             if (!this.wentOff) {
-                AoEs.push(new LineAOE(this.x1, this.y1, this.x2, this.y2, 300, 1000))
+                AoEs.push(new LineAOE(this.x1, this.y1, this.x2, this.y2, 310, 1000))
                 this.wentOff = true
             }
         }

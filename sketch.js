@@ -829,6 +829,46 @@ function draw() {
                 )
             }
 
+            // display stacks and spreads (at correct time).
+            // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140
+            if ((10000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 40000)) {
+                if (frameCount % 2 === 0) {
+                    print((10000 < millis() - mechanicStarted) || (millis() - mechanicStarted < 40000))
+                }
+                let xPosStackDisplay = (stackFirst) ? 105 : 140
+                let xPosSpreadDisplay = (stackFirst) ? 140 : 105
+                fill(0, 80, 50)
+                if (!stackFirst || millis() - mechanicStarted < 32500) {
+                    rect(xPosStackDisplay - 15, 20 + whoGetsStack[0] * 50, 30, 30)
+                    rect(xPosStackDisplay - 15, 20 + whoGetsStack[1] * 50, 30, 30)
+                }
+                if (stackFirst || millis() - mechanicStarted < 32500) {
+                    rect(xPosSpreadDisplay - 15, 70, 30, 30)
+                    rect(xPosSpreadDisplay - 15, 120, 30, 30)
+                    rect(xPosSpreadDisplay - 15, 170, 30, 30)
+                    rect(xPosSpreadDisplay - 15, 220, 30, 30)
+                }
+
+                fill(0, 0, 100)
+                // display a "2" for stack
+                if (!stackFirst || millis() - mechanicStarted < 32500) {
+                    text("2", xPosStackDisplay - 10, 45 + whoGetsStack[0] * 50)
+                    text("2", xPosStackDisplay - 10, 45 + whoGetsStack[1] * 50)
+                }
+
+                // display a circle for spread
+                if (stackFirst || millis() - mechanicStarted < 32500) {
+                    stroke(0, 0, 100)
+                    strokeWeight(3)
+                    noFill()
+                    circle(xPosSpreadDisplay, 85, 20)
+                    circle(xPosSpreadDisplay, 135, 20)
+                    circle(xPosSpreadDisplay, 185, 20)
+                    circle(xPosSpreadDisplay, 235, 20)
+                }
+            }
+
+
             for (let AoE of AoEs) {
                 AoE.update()
                 AoE.displayAoE()
@@ -1099,15 +1139,21 @@ function mousePressed() {
         topLeftCrossExpandsFirst = random([false, true])
         northLineExpandsFirst = random([false, true])
 
+        stackFirst = random([false, true])
+        whoGetsStack = [
+            random([1, 2]), // both DPS
+            random([3, 4]), // both supports
+        ]
+
         AoEs = [
-            new FlameLine(400, 170, 1000, 170, [
+            new FlameLine(400, 175, 1000, 175, [
                 (northLineExpandsFirst) ? 6000 : 6000,
                 (northLineExpandsFirst) ? 10000 : 17500,
                 (northLineExpandsFirst) ? 17500 : 25000,
                 (northLineExpandsFirst) ? 25000 : 32500,
                 (northLineExpandsFirst) ? 32500 : 40000
             ]),
-            new FlameLine(400, 430, 1000, 430, [
+            new FlameLine(400, 425, 1000, 425, [
                 (northLineExpandsFirst) ? 6000 : 6000,
                 (northLineExpandsFirst) ? 17500 : 10000,
                 (northLineExpandsFirst) ? 25000 : 17500,
@@ -1128,6 +1174,12 @@ function mousePressed() {
                 (topLeftCrossExpandsFirst) ? 32500 : 25000,
                 (topLeftCrossExpandsFirst) ? 40000 : 32500
             ]),
+            new SpreadCircle(1, 50, (stackFirst) ? 40500 : 33000),
+            new SpreadCircle(2, 50, (stackFirst) ? 40500 : 33000),
+            new SpreadCircle(3, 50, (stackFirst) ? 40500 : 33000),
+            new SpreadCircle(4, 50, (stackFirst) ? 40500 : 33000),
+            new StackCircle(whoGetsStack[1], 50, (stackFirst) ? 33000 : 40500),
+            new StackCircle(whoGetsStack[2], 50, (stackFirst) ? 33000 : 40500),
         ]
 
         AoEs.sort(sortByGrowingTime)
