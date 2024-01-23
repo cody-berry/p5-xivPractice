@@ -832,9 +832,6 @@ function draw() {
             // display stacks and spreads (at correct time).
             // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140
             if ((10000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 40000)) {
-                if (frameCount % 2 === 0) {
-                    print((10000 < millis() - mechanicStarted) || (millis() - mechanicStarted < 40000))
-                }
                 let xPosStackDisplay = (stackFirst) ? 105 : 140
                 let xPosSpreadDisplay = (stackFirst) ? 140 : 105
                 fill(0, 80, 50)
@@ -866,6 +863,16 @@ function draw() {
                     circle(xPosSpreadDisplay, 185, 20)
                     circle(xPosSpreadDisplay, 235, 20)
                 }
+            }
+
+            if ((12500 < millis() - mechanicStarted) && (millis() - mechanicStarted < 30000)) {
+                noStroke()
+                fill(0, 0, 0)
+                rect(bossPosX - 20, bossPosY - 60, 40, 40)
+                fill(300, 100, 50) // purple-ish color for shadow cleave
+                angleMode(DEGREES)
+                arc(bossPosX, bossPosY - 40, 30, 30, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
+                angleMode(RADIANS)
             }
 
 
@@ -1145,6 +1152,8 @@ function mousePressed() {
             random([3, 4]), // both supports
         ]
 
+        cleaveOneSafeDirection = random([1, 2, 3, 4])
+
         AoEs = [
             new FlameLine(400, 175, 1000, 175, [
                 (northLineExpandsFirst) ? 6000 : 6000,
@@ -1174,12 +1183,12 @@ function mousePressed() {
                 (topLeftCrossExpandsFirst) ? 32500 : 25000,
                 (topLeftCrossExpandsFirst) ? 40000 : 32500
             ]),
-            new SpreadCircle(1, 50, (stackFirst) ? 40500 : 33000),
-            new SpreadCircle(2, 50, (stackFirst) ? 40500 : 33000),
-            new SpreadCircle(3, 50, (stackFirst) ? 40500 : 33000),
-            new SpreadCircle(4, 50, (stackFirst) ? 40500 : 33000),
-            new StackCircle(whoGetsStack[1], 50, (stackFirst) ? 33000 : 40500),
-            new StackCircle(whoGetsStack[2], 50, (stackFirst) ? 33000 : 40500),
+            new SpreadCircle(1, 50, (stackFirst) ? 40470 : 33270),
+            new SpreadCircle(2, 50, (stackFirst) ? 40490 : 33290),
+            new SpreadCircle(3, 50, (stackFirst) ? 40510 : 33310),
+            new SpreadCircle(4, 50, (stackFirst) ? 40530 : 33330),
+            new StackCircle(whoGetsStack[0], 50, (stackFirst) ? 33290 : 40490, 2),
+            new StackCircle(whoGetsStack[1], 50, (stackFirst) ? 33310 : 40510, 2),
         ]
 
         AoEs.sort(sortByGrowingTime)
