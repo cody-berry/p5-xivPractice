@@ -75,6 +75,7 @@ let thirdAoEResolved
 let circleResolved
 let topLeftCrossExpandsFirst // whether the top-left to bottom-right cross expands first or the bottom-left to top-right one
 let northLineExpandsFirst // whether the top horizontal line expands first or the bottom horizontal line
+let tetheredPlayer
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -176,35 +177,35 @@ function draw() {
     fill(0, 0, 25)
     stroke(0, 0, 100)
     strokeWeight(1)
-    if (mouseX > 0 && mouseX < 90 &&
+    if (mouseX > 0 && mouseX < 77 &&
         mouseY > 390 && mouseY < 410) fill(0, 0, 15)
-    rect(-10, 390, 100, 20)
+    rect(-10, 390, 87, 20)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 148 &&
-        mouseY > 410 && mouseY < 434) fill(0, 0, 15)
-    rect(-10, 410, 158, 24)
+    if (mouseX > 0 && mouseX < 127 &&
+        mouseY > 410 && mouseY < 433) fill(0, 0, 15)
+    rect(-10, 410, 137, 23)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 245 &&
-        mouseY > 434 && mouseY < 454) fill(0, 0, 15)
-    rect(-10, 434, 255, 20)
+    if (mouseX > 0 && mouseX < 210 &&
+        mouseY > 433 && mouseY < 453) fill(0, 0, 15)
+    rect(-10, 433, 220, 20)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 175 &&
-        mouseY > 454 && mouseY < 478) fill(0, 0, 15)
-    rect(-10, 454, 185, 24)
+    if (mouseX > 0 && mouseX < 151 &&
+        mouseY > 453 && mouseY < 476) fill(0, 0, 15)
+    rect(-10, 453, 161, 23)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 155 &&
-        mouseY > 478 && mouseY < 502) fill(0, 0, 15)
-    rect(-10, 478, 165, 24)
+    if (mouseX > 0 && mouseX < 133 &&
+        mouseY > 476 && mouseY < 499) fill(0, 0, 15)
+    rect(-10, 476, 143, 23)
     fill(0, 0, 25)
 
     fill(0, 0, 100)
     noStroke()
-    textSize(20)
-    text("Exoflares", 0, 408)
+    textSize(17)
+    text("Exoflares", 0, 405)
     text("Fighting Spirits", 0, 428)
-    text("Malformed Reincarnation", 0, 452)
-    text("Triple Kasumi-Giri", 0, 472)
-    text("Fleeting Lai-Giri", 0, 496)
+    text("Malformed Reincarnation", 0, 448)
+    text("Triple Kasumi-Giri", 0, 471)
+    text("Fleeting Lai-Giri", 0, 494)
 
     stroke(0, 0, 0)
 
@@ -288,70 +289,9 @@ function draw() {
         endShape()
     }
 
-    // red dot at the top for boss
-    strokeWeight(30)
-    stroke(0, 100, 100)
-    point(bossPosX, bossPosY)
 
-    // display you and your party members in your and their respective position
-    // after checking for moving
-    let directions = []
-    if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) directions.push(1) // A or ← = left/1
-    if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) directions.push(2) // W or ↑ = up/2
-    if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) directions.push(3) // D or → = right/3
-    if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) directions.push(4) // S or ↓ = down/4
-    switch (directions.length) {
-        case 1: // move the full 1.3
-            if (directions[0] === 1) posX -= 1.3
-            if (directions[0] === 2) posY -= 1.3
-            if (directions[0] === 3) posX += 1.3
-            if (directions[0] === 4) posY += 1.3
-            break
-        case 2: // move 0.92 both directions. They still cancel out each other if they're opposite
-            if (directions[0] === 1) posX -= 0.92
-            if (directions[0] === 2) posY -= 0.92
-            if (directions[0] === 3) posX += 0.92
-            if (directions[0] === 4) posY += 0.92
-            if (directions[1] === 1) posX -= 0.92
-            if (directions[1] === 2) posY -= 0.92
-            if (directions[1] === 3) posX += 0.92
-            if (directions[1] === 4) posY += 0.92
-            break
-        case 3: // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
-            if (directions[0] === 1) posX -= 1.3
-            if (directions[0] === 2) posY -= 1.3
-            if (directions[0] === 3) posX += 1.3
-            if (directions[0] === 4) posY += 1.3
-            if (directions[1] === 1) posX -= 1.3
-            if (directions[1] === 2) posY -= 1.3
-            if (directions[1] === 3) posX += 1.3
-            if (directions[1] === 4) posY += 1.3
-            if (directions[2] === 1) posX -= 1.3
-            if (directions[2] === 2) posY -= 1.3
-            if (directions[2] === 3) posX += 1.3
-            if (directions[2] === 4) posY += 1.3
-            break
-    }
-    image(sgeSymbol, sgePosX - 20, sgePosY - 20, 40, 40)
-    image(warSymbol, warPosX - 20, warPosY - 20, 40, 40)
-    image(drgSymbol, drgPosX - 20, drgPosY - 20, 40, 40)
-    image(rdmSymbol, posX - 20, posY - 20, 40, 40)
-
-    // now display the party
-    image(rdmSymbol, 10, 60, 40, 40)
-    image(drgSymbol, 10, 110, 40, 40)
-    image(sgeSymbol, 10, 160, 40, 40)
-    image(warSymbol, 10, 210, 40, 40)
-
-    fill(0, 0, 100)
     textSize(30)
     noStroke()
-    text("Party composition:", 5, 25)
-    textSize(20)
-    textSize(25)
-    textSize(30)
-    text("YOU", 185, 90)
-
     switch (mechanic) {
         case "Exoflares":
             // update so that people can dodge exoflares!
@@ -865,6 +805,7 @@ function draw() {
                 }
             }
 
+            // display the shadow cleave safe idrection
             if ((12500 < millis() - mechanicStarted) && (millis() - mechanicStarted < 30000)) {
                 noStroke()
                 fill(0, 0, 0)
@@ -875,16 +816,109 @@ function draw() {
                 angleMode(RADIANS)
             }
 
-
             for (let AoE of AoEs) {
                 AoE.update()
                 AoE.displayAoE()
+            }
+
+            // display the tether
+            if ((12000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 31000)) {
+                let x1 = bossPosX
+                let y1 = bossPosY
+                let x2
+                let y2
+                switch (tetheredPlayer) {
+                    case 1:
+                        x2 = posX
+                        y2 = posY
+                        break
+                    case 2:
+                        x2 = drgPosX
+                        y2 = drgPosY
+                        break
+                    case 3:
+                        x2 = sgePosX
+                        y2 = sgePosY
+                        break
+                    case 4:
+                        x2 = warPosX
+                        y2 = warPosY
+                        break
+                }
+                stroke(45, 100, 100)
+                strokeWeight(1)
+                noFill()
+                line(x1, y1, x2, y2)
             }
 
             fill(234, 34, 24)
             noStroke()
             rect(300, 0, 100, height)
     }
+
+    // red dot at the top for boss
+    strokeWeight(30)
+    stroke(0, 100, 100)
+    point(bossPosX, bossPosY)
+
+    // display you and your party members in your and their respective position
+    // after checking for moving
+    let directions = []
+    if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) directions.push(1) // A or ← = left/1
+    if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) directions.push(2) // W or ↑ = up/2
+    if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) directions.push(3) // D or → = right/3
+    if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) directions.push(4) // S or ↓ = down/4
+    switch (directions.length) {
+        case 1: // move the full 1.3
+            if (directions[0] === 1) posX -= 1.3
+            if (directions[0] === 2) posY -= 1.3
+            if (directions[0] === 3) posX += 1.3
+            if (directions[0] === 4) posY += 1.3
+            break
+        case 2: // move 0.92 both directions. They still cancel out each other if they're opposite
+            if (directions[0] === 1) posX -= 0.92
+            if (directions[0] === 2) posY -= 0.92
+            if (directions[0] === 3) posX += 0.92
+            if (directions[0] === 4) posY += 0.92
+            if (directions[1] === 1) posX -= 0.92
+            if (directions[1] === 2) posY -= 0.92
+            if (directions[1] === 3) posX += 0.92
+            if (directions[1] === 4) posY += 0.92
+            break
+        case 3: // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
+            if (directions[0] === 1) posX -= 1.3
+            if (directions[0] === 2) posY -= 1.3
+            if (directions[0] === 3) posX += 1.3
+            if (directions[0] === 4) posY += 1.3
+            if (directions[1] === 1) posX -= 1.3
+            if (directions[1] === 2) posY -= 1.3
+            if (directions[1] === 3) posX += 1.3
+            if (directions[1] === 4) posY += 1.3
+            if (directions[2] === 1) posX -= 1.3
+            if (directions[2] === 2) posY -= 1.3
+            if (directions[2] === 3) posX += 1.3
+            if (directions[2] === 4) posY += 1.3
+            break
+    }
+    image(sgeSymbol, sgePosX - 20, sgePosY - 20, 40, 40)
+    image(warSymbol, warPosX - 20, warPosY - 20, 40, 40)
+    image(drgSymbol, drgPosX - 20, drgPosY - 20, 40, 40)
+    image(rdmSymbol, posX - 20, posY - 20, 40, 40)
+
+    // now display the party
+    image(rdmSymbol, 10, 60, 40, 40)
+    image(drgSymbol, 10, 110, 40, 40)
+    image(sgeSymbol, 10, 160, 40, 40)
+    image(warSymbol, 10, 210, 40, 40)
+
+    fill(0, 0, 100)
+    textSize(30)
+    noStroke()
+    text("Party composition:", 5, 25)
+    textSize(20)
+    textSize(25)
+    textSize(30)
+    text("YOU", 185, 90)
 
     if ((posX < 432 || posY < 32 ||
         posX > 978 || posY > 578) ||
@@ -1153,6 +1187,8 @@ function mousePressed() {
         ]
 
         cleaveOneSafeDirection = random([1, 2, 3, 4])
+
+        tetheredPlayer = random([1, 2, 3, 4])
 
         AoEs = [
             new FlameLine(400, 175, 1000, 175, [
