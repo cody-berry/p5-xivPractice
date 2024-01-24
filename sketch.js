@@ -350,7 +350,7 @@ function draw() {
                 drgPosX += (swapMovement) ? -1.3 : 1.3
                 drgFacing = (swapMovement) ? 4.5 : 3.5
             }
-            if (millis() > mechanicStarted + 10000 && millis() < mechanicStarted + 13500 && stackFirst) {
+            if (millis() > mechanicStarted + 9000 && millis() < mechanicStarted + 12500 && stackFirst) {
                 if (!rotateExaflares) {
                     warPosX += (swapMovement) ? -1.3 : 1.3
                     warFacing = (swapMovement) ? 1 : 3
@@ -359,8 +359,8 @@ function draw() {
                 } else {
                     warPosY += 1.3
                     warFacing = 4
-                    drgPosY -= 1.3
-                    drgFacing = 2
+                    drgPosX -= (swapMovement) ? -1.3 : 1.3
+                    drgFacing = (swapMovement) ? 3 : 1
                 }
             }
 
@@ -616,46 +616,61 @@ function draw() {
                 if (triplesGivenTo.includes(2)) { // 2 is the dragoon
                     // we want to get north if triples are given here
                     drgPosY -= 1.3
+                    drgFacing = 2
                 }
             } if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 4000 && rotatePlayers) {
                 if (triplesGivenTo.includes(2)) { // 2 is the dragoon
                     drgPosY += 0.92
                     drgPosX += 0.92
+                    drgFacing = 3.5
                 } else {
                     drgPosY -= 0.86
                     drgPosX -= 0.92
+                    drgFacing = 1.4
                 }
             } if (millis() - mechanicStarted > 5500 && millis() - mechanicStarted < 6500) {
                 // now we want to drop our tower
                 if (rotatePlayers) {
-                    drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -1.3 : 1.3
+                    drgPosY += (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1.3 : 1.3
+                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 2 : 4
                 } else {
-                    drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
+                    drgPosX += (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -1.3 : 1.3
+                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2)) ? 1 : 3
                 }
             }
             // now we need to soak our towers
             // start with the first
             if (millis() - mechanicStarted > 10000 && millis() - mechanicStarted < 13000) {
                 if (rotatePlayers) {
-                    drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
-                    drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -0.5 : 0.5
+                    drgPosY -= (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -0.92 : 0.92
+                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 3.5 : 2.5
+                    drgPosX += (directionOfBlue === 2 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? -0.5 : 0.5
+                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? drgFacing : drgFacing + ((directionOfBlue === 3 ^ majorityRed.includes(2)) ? 1 : -1)
                 } else {
-                    drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -1 : 1
-                    drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.5 : 0.5
+                    drgPosY -= (directionOfBlue === 3 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? -0.5 : 0.5
+                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? 4.5 : 1.5
+                    drgPosX -= (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -1 : 1
+                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2)) ? drgFacing : drgFacing + ((directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1 : 1)
                 }
             } if (millis() - mechanicStarted > 14600 && millis() - mechanicStarted < 16000) {
                 if (rotatePlayers) {
-                    drgPosY -= (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
-                    drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -0.92 : 0.92
+                    drgPosY -= (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -0.92 : 0.92
+                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 4.5 : 1.5
+                    drgPosX -= (directionOfBlue === 2 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? -0.92 : 0.92
+                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? drgFacing : drgFacing + ((directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1 : 1)
                 } else {
-                    drgPosX -= (directionOfBlue === 2 ^ majorityRed) ? -0.92 : 0.92
-                    drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -0.92 : 0.92
+                    drgPosY += (directionOfBlue === 3 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? -0.92 : 0.92
+                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? 3.5 : 2.5
+                    drgPosX -= (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -0.92 : 0.92
+                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2)) ? drgFacing : drgFacing + ((directionOfBlue === 3 ^ majorityRed.includes(2)) ? 1 : -1)
                 }
             } if (millis() - mechanicStarted > 16000 && millis() - mechanicStarted < 17000) {
                 if (rotatePlayers) {
-                    drgPosY += (directionOfBlue === 3 ^ majorityRed) ? -1.3 : 1.3
+                    drgPosY += (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1.3 : 1.3
+                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 2 : 4
                 } else {
-                    drgPosX += (directionOfBlue === 2 ^ majorityRed) ? -1.3 : 1.3
+                    drgPosX += (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -1.3 : 1.3
+                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 1 : 3
                 }
             }
             break
