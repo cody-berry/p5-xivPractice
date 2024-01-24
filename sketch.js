@@ -11,6 +11,9 @@ let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
 let yourFacing
+let drgFacing
+let sgeFacing
+let warFacing
 
 let posX = 700
 let posY = 300
@@ -298,51 +301,66 @@ function draw() {
     switch (mechanic) {
         case "Exoflares":
             // update so that people can dodge exoflares!
-            if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) {
+            if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) { // preposition stack
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
+                sgeFacing = (swap) ? ((swapMovement) ? 4.6 : 3.4) : ((swapMovement) ? 2.4 : 1.6)
             }
-            if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) {
+            if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) { // go to corner if spread is first
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
+                sgeFacing = (swap) ? ((swapMovement) ? 4.6 : 3.4) : ((swapMovement) ? 2.4 : 1.6)
             }
             if (millis() > mechanicStarted + 5500 && millis() < mechanicStarted + 6800 && !stackFirst) {
                 if (rotateExaflares) {
                     sgePosY -= (swap) ? -1.3 : 1.3
+                    sgeFacing = (swap) ? 4 : 2
                 } else {
                     sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
+                    sgeFacing = (swapMovement ^ swap) ? 3 : 1
                 }
             }
-            if (millis() > mechanicStarted + 4900 && millis() < mechanicStarted + 6500) {
+            if (millis() > mechanicStarted + 4900 && millis() < mechanicStarted + 6500) { // preposition stack
                 warPosY -= 1.3
                 warPosX -= (swapMovement) ? -1.3 : 1.3
+                warFacing = (swapMovement) ? 2.5 : 1.5
                 drgPosY += 1.3
                 drgPosX += (swapMovement) ? -1.3 : 1.3
+                drgFacing = (swapMovement) ? 4.5 : 3.5
             }
             if (millis() > mechanicStarted + 7500 && millis() < mechanicStarted + 8500 && !stackFirst) {
                 if (rotateExaflares) {
                     sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
+                    sgeFacing = (swap) ? 3 : 1
                 } else {
                     sgePosY -= (swap) ? -1.3 : 1.3
+                    sgeFacing = (swap) ? 4 : 2
                 }
             }
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 9800 && stackFirst) {
-                sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
                 sgePosY -= (swap) ? -1.3 : 1.3
+                sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
+                sgeFacing = (swap) ? ((swapMovement) ? 4.5 : 3.5) : ((swapMovement) ? 2.5 : 1.5)
             }
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 10000) {
                 warPosY -= 1.3
                 warPosX -= (swapMovement) ? -1.3 : 1.3
+                warFacing = (swapMovement) ? 2.5 : 1.5
                 drgPosY += 1.3
                 drgPosX += (swapMovement) ? -1.3 : 1.3
+                drgFacing = (swapMovement) ? 4.5 : 3.5
             }
             if (millis() > mechanicStarted + 10000 && millis() < mechanicStarted + 13500 && stackFirst) {
                 if (!rotateExaflares) {
                     warPosX += (swapMovement) ? -1.3 : 1.3
+                    warFacing = (swapMovement) ? 1 : 3
                     drgPosX -= (swapMovement) ? -1.3 : 1.3
+                    drgFacing = (swapMovement) ? 3 : 1
                 } else {
                     warPosY += 1.3
+                    warFacing = 4
                     drgPosY -= 1.3
+                    drgFacing = 2
                 }
             }
 
@@ -981,7 +999,53 @@ function draw() {
     angleMode(RADIANS)
     fill(45, 100, 100)
     noStroke()
-    triangle(-10, 20, 10, 20, 0, 40)
+    if (floor(yourFacing) === yourFacing) {
+        triangle(-10, 20, 10, 20, 0, 40)
+    } else { // Display farther away for diagonal facings
+        triangle(-10, 25, 10, 25, 0, 45)
+    }
+    pop()
+
+    push()
+    translate(drgPosX, drgPosY)
+    angleMode(DEGREES)
+    rotate(drgFacing*90)
+    angleMode(RADIANS)
+    fill(45, 100, 100)
+    noStroke()
+    if (floor(drgFacing) === drgFacing) {
+        triangle(-10, 20, 10, 20, 0, 40)
+    } else { // Display farther away for diagonal facings
+        triangle(-10, 25, 10, 25, 0, 45)
+    }
+    pop()
+
+    push()
+    translate(sgePosX, sgePosY)
+    angleMode(DEGREES)
+    rotate(sgeFacing*90)
+    angleMode(RADIANS)
+    fill(45, 100, 100)
+    noStroke()
+    if (floor(sgeFacing) === sgeFacing) {
+        triangle(-10, 20, 10, 20, 0, 40)
+    } else { // Display farther away for diagonal facings
+        triangle(-10, 25, 10, 25, 0, 45)
+    }
+    pop()
+
+    push()
+    translate(warPosX, warPosY)
+    angleMode(DEGREES)
+    rotate(warFacing*90)
+    angleMode(RADIANS)
+    fill(45, 100, 100)
+    noStroke()
+    if (floor(warFacing) === warFacing) {
+        triangle(-10, 20, 10, 20, 0, 40)
+    } else { // Display farther away for diagonal facings
+        triangle(-10, 25, 10, 25, 0, 45)
+    }
     pop()
 
     /* debugCorner needs to be last so its z-index is highest */
