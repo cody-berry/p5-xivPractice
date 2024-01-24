@@ -10,6 +10,8 @@ let variableWidthFont
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
+let yourFacing
+
 let posX = 700
 let posY = 300
 let drgPosX = 700
@@ -76,6 +78,7 @@ let circleResolved
 let topLeftCrossExpandsFirst // whether the top-left to bottom-right cross expands first or the bottom-left to top-right one
 let northLineExpandsFirst // whether the top horizontal line expands first or the bottom horizontal line
 let tetheredPlayer
+let jumpResolved
 
 function preload() {
     font = loadFont('data/consola.ttf')
@@ -397,7 +400,7 @@ function draw() {
             stroke(0, 0, 0)
 
 
-            // make it so that you can't see the corner exaflare stidcking out
+            // make it so that you can't see the corner exaflare sticking out
             fill(234, 34, 24)
             noStroke()
             rect(350, 0, 50, height)
@@ -805,7 +808,7 @@ function draw() {
                 }
             }
 
-            // display the shadow cleave safe idrection
+            // display the shadow cleave safe direction
             if ((12500 < millis() - mechanicStarted) && (millis() - mechanicStarted < 30000)) {
                 noStroke()
                 fill(0, 0, 0)
@@ -822,44 +825,47 @@ function draw() {
             }
 
             // display the tether
+            let x1 = bossPosX
+            let y1 = bossPosY
+            let x2
+            let y2
+            switch (tetheredPlayer) {
+                case 1:
+                    x2 = posX
+                    y2 = posY
+                    break
+                case 2:
+                    x2 = drgPosX
+                    y2 = drgPosY
+                    break
+                case 3:
+                    x2 = sgePosX
+                    y2 = sgePosY
+                    break
+                case 4:
+                    x2 = warPosX
+                    y2 = warPosY
+                    break
+            }
             if ((12000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 31000)) {
-                let x1 = bossPosX
-                let y1 = bossPosY
-                let x2
-                let y2
-                switch (tetheredPlayer) {
-                    case 1:
-                        x2 = posX
-                        y2 = posY
-                        break
-                    case 2:
-                        x2 = drgPosX
-                        y2 = drgPosY
-                        break
-                    case 3:
-                        x2 = sgePosX
-                        y2 = sgePosY
-                        break
-                    case 4:
-                        x2 = warPosX
-                        y2 = warPosY
-                        break
-                }
                 stroke(45, 100, 100)
                 strokeWeight(1)
                 noFill()
                 line(x1, y1, x2, y2)
             }
 
+            // make the boss jump
+            if (millis() - mechanicStarted > 31000 && !jumpResolved) {
+                bossPosX = x2
+                bossPosY = y2
+                jumpResolved = true
+                print(bossPosX, bossPosY)
+            }
+
             fill(234, 34, 24)
             noStroke()
             rect(300, 0, 100, height)
     }
-
-    // red dot at the top for boss
-    strokeWeight(30)
-    stroke(0, 100, 100)
-    point(bossPosX, bossPosY)
 
     // display you and your party members in your and their respective position
     // after checking for moving
@@ -868,36 +874,63 @@ function draw() {
     if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) directions.push(2) // W or ↑ = up/2
     if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) directions.push(3) // D or → = right/3
     if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) directions.push(4) // S or ↓ = down/4
+    let originalFacing = yourFacing
     switch (directions.length) {
         case 1: // move the full 1.3
             if (directions[0] === 1) posX -= 1.3
             if (directions[0] === 2) posY -= 1.3
             if (directions[0] === 3) posX += 1.3
             if (directions[0] === 4) posY += 1.3
+            yourFacing = directions[0] // your new facing is simple: the last direction you moved
+            if (yourFacing !== originalFacing) {
+                print(yourFacing, originalFacing)
+            }
             break
         case 2: // move 0.92 both directions. They still cancel out each other if they're opposite
             if (directions[0] === 1) posX -= 0.92
             if (directions[0] === 2) posY -= 0.92
             if (directions[0] === 3) posX += 0.92
-            if (directions[0] === 4) posY += 0.92
             if (directions[1] === 1) posX -= 0.92
             if (directions[1] === 2) posY -= 0.92
             if (directions[1] === 3) posX += 0.92
             if (directions[1] === 4) posY += 0.92
+            // this time the facing is the average, except that sometimes 1 and 4 outputs 2.5, meaning we have to adjust to 4.5
+            yourFacing = directions[0]/2 + directions[1]/2
+            if (yourFacing === 2.5 && directions[0] === 1) {
+                yourFacing = 4.5
+            }
+            // if the 2 are opposite, don't change your facing
+            if (yourFacing === 1 || yourFacing === 2 || yourFacing === 3 || yourFacing === 4) {
+                yourFacing = originalFacing
+            }
+            if (yourFacing !== originalFacing) {
+                print(yourFacing, originalFacing)
+            }
             break
         case 3: // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
             if (directions[0] === 1) posX -= 1.3
             if (directions[0] === 2) posY -= 1.3
-            if (directions[0] === 3) posX += 1.3
-            if (directions[0] === 4) posY += 1.3
             if (directions[1] === 1) posX -= 1.3
             if (directions[1] === 2) posY -= 1.3
             if (directions[1] === 3) posX += 1.3
-            if (directions[1] === 4) posY += 1.3
             if (directions[2] === 1) posX -= 1.3
             if (directions[2] === 2) posY -= 1.3
             if (directions[2] === 3) posX += 1.3
             if (directions[2] === 4) posY += 1.3
+
+            // There are only 4 possibilities (124 123 234 134).
+            if (directions[0] === 1 && directions[1] === 2 && directions[2] === 4) {
+                yourFacing = 1 // 2 and 4 cancel out
+            } if (directions[0] === 1 && directions[1] === 2 && directions[2] === 3) {
+                yourFacing = 2 // 1 and 3 cancel out
+            } if (directions[0] === 2 && directions[1] === 3 && directions[2] === 4) {
+                yourFacing = 3 // 2 and 4 cancel out
+            } if (directions[0] === 1 && directions[1] === 3 && directions[2] === 4) {
+                yourFacing = 4 // 1 and 3 cancel out
+            }
+            if (yourFacing !== originalFacing) {
+                print(yourFacing, originalFacing)
+            }
             break
     }
     image(sgeSymbol, sgePosX - 20, sgePosY - 20, 40, 40)
@@ -920,6 +953,11 @@ function draw() {
     textSize(30)
     text("YOU", 185, 90)
 
+    // red dot for boss
+    strokeWeight(30)
+    stroke(0, 100, 100)
+    point(bossPosX, bossPosY)
+
     if ((posX < 432 || posY < 32 ||
         posX > 978 || posY > 578) ||
         ((posX < 42 || posY < 42 ||
@@ -931,9 +969,20 @@ function draw() {
 
     if (partyWiped === true) {
         fill(0, 100, 100)
+        noStroke()
         text(causeOfWipe, 10, 300)
     }
     print(engagedAt)
+
+    push()
+    translate(posX, posY)
+    angleMode(DEGREES)
+    rotate(yourFacing*90)
+    angleMode(RADIANS)
+    fill(45, 100, 100)
+    noStroke()
+    triangle(-10, 20, 10, 20, 0, 40)
+    pop()
 
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
@@ -1163,6 +1212,7 @@ function mousePressed() {
         mouseY > 478 && mouseY < 502) {
         mechanic = "Fleeting Lai-Giri"
         mechanicStarted = millis()
+        jumpResolved = false
 
         posX = 700
         posY = 410
