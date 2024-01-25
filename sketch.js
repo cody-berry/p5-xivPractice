@@ -984,24 +984,57 @@ function draw() {
             if (millis() - mechanicStarted > 12000 && millis() - mechanicStarted < 15000) {
                 if (safeCorner === 1.5 || safeCorner === 4.5) { // left
                     sgePosX -= 0.92
-                    drgPosX -= 0.72
+                    drgPosX -= 1.02
                     warPosX -= 0.82
                 } if (safeCorner === 2.5 || safeCorner === 3.5) { // right
                     sgePosX += 0.92
-                    drgPosX += 0.72
+                    drgPosX += 1.02
                     warPosX += 0.82
                 } if (safeCorner === 3.5 || safeCorner === 4.5) { // bottom
                     sgePosY += 0.92
-                    drgPosY += 1.12
+                    drgPosY += 0.82
                     warPosY += 1.02
                 } if (safeCorner === 1.5 || safeCorner === 2.5) { // top
                     sgePosY -= 0.92
-                    drgPosY -= 1.12
+                    drgPosY -= 0.82
                     warPosY -= 1.02
                 }
                 sgeFacing = safeCorner
-                drgFacing = safeCorner + 0.2
-                warFacing = safeCorner + 0.1
+                drgFacing = safeCorner + 0.1
+                warFacing = safeCorner - 0.1
+            }
+            if (millis() - mechanicStarted > 16900 && millis() - mechanicStarted < 17000) {
+                // Adjust everyone
+                drgPosX = sgePosX
+                drgPosY = sgePosY
+                drgFacing = sgeFacing
+                warPosX = sgePosX
+                warPosY = sgePosY
+                warFacing = sgeFacing
+            }
+            // now put everyone in their correct positions
+            if (millis() - mechanicStarted > 20000 && millis() - mechanicStarted < 20800) {
+                if (safeCorner === 1.5) { // top-left
+                    drgPosX += 0.92
+                    drgPosY -= 0.92
+                    sgePosX -= 0.92
+                    sgePosY += 0.92
+                } if (safeCorner === 2.5) { // top-right
+                    drgPosX -= 0.92
+                    drgPosY -= 0.92
+                    sgePosX += 0.92
+                    sgePosY += 0.92
+                } if (safeCorner === 3.5) { // bottom-right
+                    drgPosX -= 0.92
+                    drgPosY += 0.92
+                    sgePosX += 0.92
+                    sgePosY -= 0.92
+                } if (safeCorner === 4.5) { // bottom-left
+                    drgPosX += 0.92
+                    drgPosY += 0.92
+                    sgePosX -= 0.92
+                    sgePosY -= 0.92
+                }
             }
     }
 
