@@ -10,10 +10,10 @@ let variableWidthFont
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
-let yourFacing
-let drgFacing
-let sgeFacing
-let warFacing
+let yourFacing = 2
+let drgFacing = 2
+let sgeFacing = 2
+let warFacing = 2
 
 let posX = 700
 let posY = 300
@@ -101,6 +101,8 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
     textFont(variableWidthFont, 14)
 
+    frameRate(65)
+
     lastHitBy = {
         1: ["None", 0],
         2: ["None", 0],
@@ -162,11 +164,13 @@ function setup() {
         new StackCircle(whoGetsStack[0], 300, (stackFirst) ? 8490 : 13490, 2),
         new StackCircle(whoGetsStack[1], 300, (stackFirst) ? 8510 : 13510, 2),
     ]
+    angleMode(RADIANS)
 }
 
 
 function draw() {
     background(234, 34, 24)
+
 
     // add exoflare helper toggle
     if (!helper) {
@@ -862,22 +866,27 @@ function draw() {
             let y1 = bossPosY
             let x2
             let y2
+            let direction
             switch (tetheredPlayer) {
                 case 1:
                     x2 = posX
                     y2 = posY
+                    direction = yourFacing
                     break
                 case 2:
                     x2 = drgPosX
                     y2 = drgPosY
+                    direction = drgFacing
                     break
                 case 3:
                     x2 = sgePosX
                     y2 = sgePosY
+                    direction = sgeFacing
                     break
                 case 4:
                     x2 = warPosX
                     y2 = warPosY
+                    direction = warFacing
                     break
             }
             if ((12000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 31000)) {
@@ -889,8 +898,11 @@ function draw() {
 
             // make the boss jump
             if (millis() - mechanicStarted > 31000 && !jumpResolved) {
-                bossPosX = x2
-                bossPosY = y2
+                angleMode(DEGREES)
+                bossPosX = x2 + 30*cos(-90 + direction*90)
+                bossPosY = y2 + 30*sin(-90 + direction*90)
+                print(direction, tetheredPlayer, cos(-90 + direction*90), sin(-90 + direction*90))
+                angleMode(RADIANS)
                 jumpResolved = true
                 print(bossPosX, bossPosY)
             }
@@ -1325,28 +1337,28 @@ function mousePressed() {
                 (northLineExpandsFirst) ? 10000 : 17500,
                 (northLineExpandsFirst) ? 17500 : 25000,
                 (northLineExpandsFirst) ? 25000 : 32500,
-                (northLineExpandsFirst) ? 32500 : 40000
+                (northLineExpandsFirst) ? 31500 : 39000
             ]),
             new FlameLine(400, 425, 1000, 425, [
                 (northLineExpandsFirst) ? 6000 : 6000,
                 (northLineExpandsFirst) ? 17500 : 10000,
                 (northLineExpandsFirst) ? 25000 : 17500,
                 (northLineExpandsFirst) ? 32500 : 25000,
-                (northLineExpandsFirst) ? 40000 : 32500
+                (northLineExpandsFirst) ? 39000 : 31500
             ]),
             new FlameLine(400, 0, 1000, 600, [
                 (topLeftCrossExpandsFirst) ? 6000 : 6000,
                 (topLeftCrossExpandsFirst) ? 10000 : 17500,
                 (topLeftCrossExpandsFirst) ? 17500 : 25000,
                 (topLeftCrossExpandsFirst) ? 25000 : 32500,
-                (topLeftCrossExpandsFirst) ? 32500 : 40000
+                (topLeftCrossExpandsFirst) ? 31500 : 39000
             ]),
             new FlameLine(400, 600, 1000, 0, [
                 (topLeftCrossExpandsFirst) ? 6000 : 6000,
                 (topLeftCrossExpandsFirst) ? 17500 : 10000,
                 (topLeftCrossExpandsFirst) ? 25000 : 17500,
                 (topLeftCrossExpandsFirst) ? 32500 : 25000,
-                (topLeftCrossExpandsFirst) ? 40000 : 32500
+                (topLeftCrossExpandsFirst) ? 39000 : 31500
             ]),
             new SpreadCircle(1, 50, (stackFirst) ? 40470 : 33270),
             new SpreadCircle(2, 50, (stackFirst) ? 40490 : 33290),
