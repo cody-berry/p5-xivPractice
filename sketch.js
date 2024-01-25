@@ -687,13 +687,17 @@ function draw() {
             fill(0, 0, 100)
             noStroke()
             if (bossFacing === 1) { // up
-                triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10, bossPosY - 80, bossPosX, bossPosY - 96)
+                triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10,
+                         bossPosY - 80, bossPosX, bossPosY - 96)
             } if (bossFacing === 2) { // right
-                triangle(bossPosX + 80, bossPosY - 10, bossPosX + 80, bossPosY + 10, bossPosX + 96, bossPosY)
+                triangle(bossPosX + 80, bossPosY - 10, bossPosX + 80,
+                         bossPosY + 10, bossPosX + 96, bossPosY)
             } if (bossFacing === 3) { // down
-                triangle(bossPosX - 10, bossPosY + 80, bossPosX + 10, bossPosY + 80, bossPosX, bossPosY + 96)
+                triangle(bossPosX - 10, bossPosY + 80, bossPosX + 10,
+                         bossPosY + 80, bossPosX, bossPosY + 96)
             } if (bossFacing === 4) { // left
-                triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80, bossPosY + 10, bossPosX - 96, bossPosY)
+                triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80,
+                         bossPosY + 10, bossPosX - 96, bossPosY)
             }
 
             // display the symbols for each cleave
@@ -706,8 +710,10 @@ function draw() {
                     fill(180, 100, 100)
                 }
                 angleMode(DEGREES)
-                // display an arc with the cleaveOneSafeDirection not included (this is filled as a pie segment)
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
+                // display an arc with the cleaveOneSafeDirection not included
+                // (this is filled as a pie segment)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90,
+                    135 + cleaveOneSafeDirection*90)
                 angleMode(RADIANS)
             } if (millis() - mechanicStarted > 2000 && millis() - mechanicStarted < 3800) { // cleave #2
                 fill(0, 0, 0)
@@ -718,8 +724,10 @@ function draw() {
                     fill(180, 100, 100)
                 }
                 angleMode(DEGREES)
-                // display an arc with the cleaveTwoSafeDirection not included (this is filled as a pie segment)
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90, 135 + cleaveTwoSafeDirection*90)
+                // display an arc with the cleaveTwoSafeDirection not included
+                // (this is filled as a pie segment)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90,
+                    135 + cleaveTwoSafeDirection*90)
                 angleMode(RADIANS)
             } if (millis() - mechanicStarted > 4000 && millis() - mechanicStarted < 5800) { // cleave #2
                 fill(0, 0, 0)
@@ -730,8 +738,10 @@ function draw() {
                     fill(180, 100, 100)
                 }
                 angleMode(DEGREES)
-                // display an arc with the cleaveThreeSafeDirection not included (this is filled as a pie segment)
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90, 135 + cleaveThreeSafeDirection*90)
+                // display an arc with the cleaveThreeSafeDirection not included
+                // (this is filled as a pie segment)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90,
+                    135 + cleaveThreeSafeDirection*90)
                 angleMode(RADIANS)
             }
 
@@ -744,7 +754,9 @@ function draw() {
                 )
                 AoEs[AoEs.length - 1].opacity = 10
                 AoEs.push(
-                    new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 0)
+                    new ConeAOE(bossPosX, bossPosY, 848,
+                        225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90,
+                        135 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
@@ -762,7 +774,9 @@ function draw() {
                 )
                 AoEs[AoEs.length - 1].opacity = 10
                 AoEs.push(
-                    new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 0)
+                    new ConeAOE(bossPosX, bossPosY, 848,
+                        225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90,
+                        135 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
@@ -780,7 +794,9 @@ function draw() {
                 )
                 AoEs[AoEs.length - 1].opacity = 10
                 AoEs.push(
-                    new ConeAOE(bossPosX, bossPosY, 848, 225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 135 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 0)
+                    new ConeAOE(bossPosX, bossPosY, 848,
+                        225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90,
+                        135 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
@@ -905,7 +921,8 @@ function draw() {
                 angleMode(RADIANS)
                 jumpResolved = true
                 AoEs.push(
-                    new ConeAOE(bossPosX, bossPosY, 200, 405 + direction*90 + cleaveOneSafeDirection*90, 315 + direction*90 + cleaveOneSafeDirection*90, 1500)
+                    new ConeAOE(bossPosX, bossPosY, 400, 405 + direction*90 + cleaveOneSafeDirection*90,
+                                315 + direction*90 + cleaveOneSafeDirection*90, 1500)
                 )
                 print(bossPosX, bossPosY)
             }
@@ -913,6 +930,79 @@ function draw() {
             fill(234, 34, 24)
             noStroke()
             rect(300, 0, 100, height)
+
+            // now automate
+            // start with moving players east and west
+            if (millis() - mechanicStarted < 1040) {
+                // sage needs to go right and up
+                sgePosX += 0.92
+                sgePosY -= 0.92
+                sgeFacing = 2.5
+
+                // dragoon needs to go left and up
+                drgPosX -= 0.92
+                drgPosY -= 0.92
+                drgFacing = 1.5
+            } if (millis() - mechanicStarted < 1700) {
+                // warrior needs to go left and down
+                warPosX -= 0.92
+                warPosY += 0.92
+                warFacing = 4.5
+            } if (millis() - mechanicStarted > 1700 && millis() - mechanicStarted < 2320) {
+                // the warrior needs to go a little left
+                warPosX -= 1.3
+                warFacing = 1
+            } if (millis() - mechanicStarted > 6000 && millis() - mechanicStarted < 7900) {
+                // move back in center
+                sgePosX -= 1.3
+                sgeFacing = 1
+                drgPosX += 1.3
+                drgFacing = 3
+                warPosX += 1.3
+                warFacing = 3
+            }
+            if (millis() - mechanicStarted > 11900 && millis() - mechanicStarted < 12000) {
+                // just correct everyone
+                sgePosX = 700
+                sgePosY = 300
+                drgPosX = 700
+                drgPosY = 300
+                warPosX = 700
+                warPosY = 300
+            }
+            // now move players to correct corner.
+            // determine which corner.
+            // 1.5 is top-left, 2.5 is top-right, 3.5 is bottom-right, and 4.5 is
+            // bottom-left. Same as system for facing
+            let safeCorner = (northLineExpandsFirst) ?
+                (topLeftCrossExpandsFirst) ?
+                    4.5 : // top-left and top means only bottom-left is safe
+                    3.5 : // top-right and top means only bottom-right is safe
+                (topLeftCrossExpandsFirst) ?
+                    2.5 : // top-left and bottom means only top-right is safe
+                    1.5 // top-right and bottom means only top-left is safe
+            if (millis() - mechanicStarted > 12000 && millis() - mechanicStarted < 15000) {
+                if (safeCorner === 1.5 || safeCorner === 4.5) { // left
+                    sgePosX -= 0.92
+                    drgPosX -= 0.72
+                    warPosX -= 0.82
+                } if (safeCorner === 2.5 || safeCorner === 3.5) { // right
+                    sgePosX += 0.92
+                    drgPosX += 0.72
+                    warPosX += 0.82
+                } if (safeCorner === 3.5 || safeCorner === 4.5) { // bottom
+                    sgePosY += 0.92
+                    drgPosY += 1.12
+                    warPosY += 1.02
+                } if (safeCorner === 1.5 || safeCorner === 2.5) { // top
+                    sgePosY -= 0.92
+                    drgPosY -= 1.12
+                    warPosY -= 1.02
+                }
+                sgeFacing = safeCorner
+                drgFacing = safeCorner + 0.2
+                warFacing = safeCorner + 0.1
+            }
     }
 
     // display you and your party members in your and their respective position
@@ -942,7 +1032,8 @@ function draw() {
             if (directions[1] === 2) posY -= 0.92
             if (directions[1] === 3) posX += 0.92
             if (directions[1] === 4) posY += 0.92
-            // this time the facing is the average, except that sometimes 1 and 4 outputs 2.5, meaning we have to adjust to 4.5
+            // this time the facing is the average, except that sometimes 1 and
+            // 4 outputs 2.5, meaning we have to adjust to 4.5
             yourFacing = directions[0]/2 + directions[1]/2
             if (yourFacing === 2.5 && directions[0] === 1) {
                 yourFacing = 4.5
@@ -1130,13 +1221,17 @@ function mousePressed() {
             // bottom-left if swapMovement is true.
             // Or on north and south!
             new Exaflare((!rotateExaflares) ? 450 : ((swapMovement) ? 620 : 440),
-                (rotateExaflares) ? 50 : ((swapMovement) ? 220 : 40), 180, 6500, (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
+                (rotateExaflares) ? 50 : ((swapMovement) ? 220 : 40), 180, 6500,
+                (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
             new Exaflare((!rotateExaflares) ? 950 : ((swapMovement) ? 440 : 620),
-                (rotateExaflares) ? 550 : ((swapMovement) ? 40 : 220), 180, 6500, (rotateExaflares) ? 0 : -79, (!rotateExaflares) ? 0 : -79, 0, 1000),
+                (rotateExaflares) ? 550 : ((swapMovement) ? 40 : 220), 180, 6500,
+                (rotateExaflares) ? 0 : -79, (!rotateExaflares) ? 0 : -79, 0, 1000),
             new Exaflare((!rotateExaflares) ? 450 : ((swapMovement) ? 960 : 780),
-                (rotateExaflares) ? 50 : ((swapMovement) ? 560 : 380), 180, 6500, (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
+                (rotateExaflares) ? 50 : ((swapMovement) ? 560 : 380), 180, 6500,
+                (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
             new Exaflare((!rotateExaflares) ? 950 : ((swapMovement) ? 780 : 960),
-                (rotateExaflares) ? 550 : ((swapMovement) ? 380 : 560), 180, 6500, (rotateExaflares) ? 0 : -79, (!rotateExaflares) ? 0 : -79, 0, 1000),
+                (rotateExaflares) ? 550 : ((swapMovement) ? 380 : 560), 180, 6500,
+                (rotateExaflares) ? 0 : -79, (!rotateExaflares) ? 0 : -79, 0, 1000),
             // These are the cardinal exoflares. They're always in the same
             // orientation.
             new Exaflare(620, 300, 200, 6500, -79, 0, 0, 1000),
@@ -1257,8 +1352,8 @@ function mousePressed() {
                     triplesNotGivenTo.push(player)
                 }
             }
-            majorityRed = [
-                random([triplesGivenTo[0], triplesGivenTo[1]]), // 1 triple and 1 standard are majority red
+            majorityRed = [ // 1 triple and 1 standard are majority red
+                random([triplesGivenTo[0], triplesGivenTo[1]]),
                 random([triplesNotGivenTo[0], triplesNotGivenTo[1]])
             ]
         } else {
