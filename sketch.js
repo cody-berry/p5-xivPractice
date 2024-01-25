@@ -904,6 +904,9 @@ function draw() {
                 print(direction, tetheredPlayer, cos(-90 + direction*90), sin(-90 + direction*90))
                 angleMode(RADIANS)
                 jumpResolved = true
+                AoEs.push(
+                    new ConeAOE(bossPosX, bossPosY, 200, 405 + direction*90 + cleaveOneSafeDirection*90, 315 + direction*90 + cleaveOneSafeDirection*90, 1500)
+                )
                 print(bossPosX, bossPosY)
             }
 
