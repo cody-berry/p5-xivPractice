@@ -4,16 +4,43 @@
  *
  */
 
+// an enum for facing and general direction in degrees
+class Direction {
+    static Right = new Direction(0)
+    static RightTiltedDown = new Direction(22)
+    static BottomRight = new Direction(45)
+    static DownTiltedRight = new Direction(68)
+    static Down = new Direction(90)
+    static DownTiltedLeft = new Direction(112)
+    static BottomLeft = new Direction(135)
+    static LeftTiltedDown = new Direction(158)
+    static Left = new Direction(180)
+    static LeftTiltedUp = new Direction(202)
+    static TopLeft = new Direction(225)
+    static UpTiltedLeft = new Direction(248)
+    static Up = new Direction(270)
+    static UpTiltedRight = new Direction(292)
+    static TopRight = new Direction(315)
+    static RightTiltedUp = new Direction(338)
+
+    constructor(angle) {
+        this.angle = angle
+        this.onDiagonal = !((this.angle === 0) || (this.angle === 90) || (this.angle === 180) || (this.angle === 270))
+    } rotateToDirection() {
+        rotate(radians(this.angle))
+    }
+}
+
 let font
 let fixedWidthFont
 let variableWidthFont
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
-let yourFacing = 2
-let drgFacing = 2
-let sgeFacing = 2
-let warFacing = 2
+let yourFacing = Direction.Up
+let drgFacing = Direction.Up
+let sgeFacing = Direction.Up
+let warFacing = Direction.Up
 
 let posX = 700
 let posY = 300
@@ -83,6 +110,36 @@ let northLineExpandsFirst // whether the top horizontal line expands first or th
 let tetheredPlayer
 let jumpResolved
 
+// there's some noise from cos() and sin(). this only matters for 0.
+function normalize(value, threshold) {
+    if (Math.abs(value) < threshold) return 0;
+    return value;
+}
+
+// mixes Left, Up, Right, and Down
+function mixDirections(directions) {
+    if (directions.length === 1) { // this is simple. return the same direction!
+        return directions[0]
+    } else {
+        // otherwise, sum up all the directions
+        angleMode(DEGREES)
+        // calculate the cosine and sine of every direction
+        let xDiff = 0
+        let yDiff = 0
+        for (let i = 0; i < directions.length; i++) {
+            let cosForDirection = cos(directions[i].angle)
+            let sinForDirection = sin(directions[i].angle)
+            xDiff += normalize(cosForDirection, 0.001)
+            yDiff += normalize(sinForDirection, 0.001)
+        }
+        let result = new Direction(
+            round((atan2(yDiff, xDiff) < 0) ? atan2(yDiff, xDiff) + 360 : atan2(yDiff, xDiff))
+        ) // not returning allows us to reset the angle mode
+        angleMode(RADIANS)
+        return result
+    }
+}
+
 function preload() {
     font = loadFont('data/consola.ttf')
     fixedWidthFont = loadFont('data/consola.ttf')
@@ -102,6 +159,26 @@ function setup() {
     textFont(variableWidthFont, 14)
 
     frameRate(65)
+
+    print("Test outputs:")
+    print(mixDirections([Direction.Left]))
+    print(mixDirections([]))
+    print(mixDirections([Direction.Left, Direction.Right]))
+    print(mixDirections([Direction.Left, Direction.Up]))
+    print(mixDirections([Direction.Down, Direction.Right]))
+    print(mixDirections([Direction.Down, Direction.Up]))
+    print(mixDirections([Direction.Down, Direction.Up, Direction.Left]))
+    print(mixDirections([Direction.Down, Direction.TopRight, Direction.TopLeft]))
+    print("")
+    print("Expected:")
+    print(Direction.Left)
+    print(Direction.Right)
+    print(Direction.Right)
+    print(Direction.TopLeft)
+    print(Direction.BottomRight)
+    print(Direction.Right)
+    print(Direction.Left)
+    print(Direction.Up)
 
     lastHitBy = {
         1: ["None", 0],
@@ -308,63 +385,63 @@ function draw() {
             if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) { // preposition stack
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
-                sgeFacing = (swap) ? ((swapMovement) ? 4.6 : 3.4) : ((swapMovement) ? 2.4 : 1.6)
+                sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedLeft : Direction.UpTiltedRight)
             }
             if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) { // go to corner if spread is first
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
-                sgeFacing = (swap) ? ((swapMovement) ? 4.6 : 3.4) : ((swapMovement) ? 2.4 : 1.6)
+                sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedLeft : Direction.UpTiltedRight)
             }
             if (millis() > mechanicStarted + 5500 && millis() < mechanicStarted + 6800 && !stackFirst) {
                 if (rotateExaflares) {
                     sgePosY -= (swap) ? -1.3 : 1.3
-                    sgeFacing = (swap) ? 4 : 2
+                    sgeFacing = (swap) ? Direction.Down : Direction.Up
                 } else {
                     sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
-                    sgeFacing = (swapMovement ^ swap) ? 3 : 1
+                    sgeFacing = (swapMovement ^ swap) ? Direction.Right : Direction.Left
                 }
             }
             if (millis() > mechanicStarted + 4900 && millis() < mechanicStarted + 6500) { // preposition stack
                 warPosY -= 1.3
                 warPosX -= (swapMovement) ? -1.3 : 1.3
-                warFacing = (swapMovement) ? 2.5 : 1.5
+                warFacing = (swapMovement) ? Direction.BottomRight : Direction.BottomLeft
                 drgPosY += 1.3
                 drgPosX += (swapMovement) ? -1.3 : 1.3
-                drgFacing = (swapMovement) ? 4.5 : 3.5
+                drgFacing = (swapMovement) ? Direction.TopLeft : Direction.TopRight
             }
             if (millis() > mechanicStarted + 7500 && millis() < mechanicStarted + 8500 && !stackFirst) {
                 if (rotateExaflares) {
                     sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
-                    sgeFacing = (swap) ? 3 : 1
+                    sgeFacing = (swapMovement ^ swap) ? Direction.Right : Direction.Left
                 } else {
                     sgePosY -= (swap) ? -1.3 : 1.3
-                    sgeFacing = (swap) ? 4 : 2
+                    sgeFacing = (swap) ? Direction.Down : Direction.Up
                 }
             }
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 9800 && stackFirst) {
                 sgePosY -= (swap) ? -1.3 : 1.3
                 sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
-                sgeFacing = (swap) ? ((swapMovement) ? 4.5 : 3.5) : ((swapMovement) ? 2.5 : 1.5)
+                sgeFacing = (swap) ? ((swapMovement) ? Direction.BottomLeft : Direction.BottomRight) : ((swapMovement) ? Direction.TopLeft : Direction.TopRight)
             }
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 10000) {
                 warPosY -= 1.3
                 warPosX -= (swapMovement) ? -1.3 : 1.3
-                warFacing = (swapMovement) ? 2.5 : 1.5
+                warFacing = (swapMovement) ? Direction.BottomRight : Direction.BottomLeft
                 drgPosY += 1.3
                 drgPosX += (swapMovement) ? -1.3 : 1.3
-                drgFacing = (swapMovement) ? 4.5 : 3.5
+                drgFacing = (swapMovement) ? Direction.TopLeft : Direction.TopRight
             }
             if (millis() > mechanicStarted + 9000 && millis() < mechanicStarted + 12500 && stackFirst) {
                 if (!rotateExaflares) {
                     warPosX += (swapMovement) ? -1.3 : 1.3
-                    warFacing = (swapMovement) ? 1 : 3
+                    warFacing = (swapMovement) ? Direction.Left : Direction.Right
                     drgPosX -= (swapMovement) ? -1.3 : 1.3
-                    drgFacing = (swapMovement) ? 3 : 1
+                    drgFacing = (swapMovement) ? Direction.Right : Direction.Left
                 } else {
                     warPosY += 1.3
-                    warFacing = 4
+                    warFacing = Direction.Down
                     drgPosX -= (swapMovement) ? -1.3 : 1.3
-                    drgFacing = (swapMovement) ? 3 : 1
+                    drgFacing = (swapMovement) ? Direction.Right : Direction.Left
                 }
             }
 
@@ -971,7 +1048,7 @@ function draw() {
                 warPosY = 300
             }
             // now move players to correct corner.
-            // determine which corner.
+            // determine which corner is safe.
             // 1.5 is top-left, 2.5 is top-right, 3.5 is bottom-right, and 4.5 is
             // bottom-left. Same as system for facing
             let safeCorner = (northLineExpandsFirst) ?
@@ -1019,21 +1096,130 @@ function draw() {
                     drgPosY -= 0.92
                     sgePosX -= 0.92
                     sgePosY += 0.92
+                    warPosX += 0.92
+                    warPosY += 0.92
+                    warFacing = 3.5
                 } if (safeCorner === 2.5) { // top-right
                     drgPosX -= 0.92
                     drgPosY -= 0.92
                     sgePosX += 0.92
                     sgePosY += 0.92
+                    warPosX -= 0.92
+                    warPosY += 0.92
+                    warFacing = 4.5
                 } if (safeCorner === 3.5) { // bottom-right
                     drgPosX -= 0.92
                     drgPosY += 0.92
                     sgePosX += 0.92
                     sgePosY -= 0.92
+                    warPosX -= 0.92
+                    warPosY -= 0.92
+                    warFacing = 1.5
                 } if (safeCorner === 4.5) { // bottom-left
                     drgPosX += 0.92
                     drgPosY += 0.92
                     sgePosX -= 0.92
                     sgePosY -= 0.92
+                    warPosX += 0.92
+                    warPosY -= 0.92
+                    warFacing = 2.5
+                }
+            }
+
+            // put the tethered person in their correct position
+            if (millis() - mechanicStarted > 21000 && millis() - mechanicStarted < 22500) {
+                switch (tetheredPlayer) {
+                    case 1: // you
+                        if (safeCorner === 1.5) { // top-left
+                            warPosX -= 0.92
+                            warPosY -= 0.92
+                            warFacing = 1.5
+                        } if (safeCorner === 2.5) { // top-right
+                            warPosX += 0.92
+                            warPosY -= 0.92
+                            warFacing = 2.5
+                        } if (safeCorner === 3.5) { // bottom-right
+                            warPosX += 0.92
+                            warPosY += 0.92
+                            warFacing = 3.5
+                        } if (safeCorner === 4.5) { // bottom-left
+                            warPosX -= 0.92
+                            warPosY += 0.92
+                            warFacing = 4.5
+                        }
+                        break
+                    case 2: // dragoon
+                        if (safeCorner === 1.5) { // top-left
+                            drgPosY += 0.92
+                            drgFacing = 4
+                            warPosY -= 0.92
+                            warFacing = 2
+                        } if (safeCorner === 2.5) { // top-right
+                            drgPosY += 0.92
+                            drgFacing = 4
+                            warPosY -= 0.92
+                            warFacing = 2
+                        } if (safeCorner === 3.5) { // bottom-right
+                            drgPosY -= 0.92
+                            drgFacing = 2
+                            warPosY += 0.92
+                            warFacing = 4
+                        } if (safeCorner === 4.5) { // bottom-left
+                            drgPosY -= 0.92
+                            drgFacing = 2
+                            warPosY += 0.92
+                            warFacing = 4
+                        }
+                        break
+                    case 3: // sage
+                        if (safeCorner === 1.5) { // top-left
+                            sgePosX += 0.92
+                            sgeFacing = 3
+                            warPosX -= 0.92
+                            warFacing = 1
+                        } if (safeCorner === 2.5) { // top-right
+                            sgePosX -= 0.92
+                            sgeFacing = 1
+                            warPosX += 0.92
+                            warFacing = 3
+                        } if (safeCorner === 3.5) { // bottom-right
+                            sgePosX -= 0.92
+                            sgeFacing = 1
+                            warPosX += 0.92
+                            warFacing = 3
+                        } if (safeCorner === 4.5) { // bottom-left
+                            sgePosX += 0.92
+                            sgeFacing = 3
+                            warPosX -= 0.92
+                            warFacing = 1
+                        }
+                        break
+                }
+            }
+
+            // put the tethered player in their correct position.
+            // move to the intersection
+            if (millis() - mechanicStarted > 22500 && millis() - mechanicStarted < 23000) {
+                print(safeCorner)
+                switch (tetheredPlayer) {
+                    case 2: // dragoon
+                        if (safeCorner === 1.5) drgPosX = 575; drgPosY = 175
+                        if (safeCorner === 2.5) drgPosX = 825; drgPosY = 175
+                        if (safeCorner === 3.5) drgPosX = 825; drgPosY = 425
+                        if (safeCorner === 4.5) drgPosX = 575; drgPosY = 425
+                        break
+                    case 3: // sage
+                        if (safeCorner === 1.5) sgePosX = 575; sgePosY = 175
+                        if (safeCorner === 2.5) sgePosX = 825; sgePosY = 175
+                        if (safeCorner === 3.5) sgePosX = 825; sgePosY = 425
+                        if (safeCorner === 4.5) sgePosX = 575; sgePosY = 425
+                        break
+                    case 4: // warrior
+                        if (safeCorner === 1.5) warPosX = 575; warPosY = 175
+                        if (safeCorner === 2.5) warPosX = 825; warPosY = 175
+                        if (safeCorner === 3.5) warPosX = 825; warPosY = 425
+                        if (safeCorner === 4.5) warPosX = 575; warPosY = 425
+                        break
                 }
             }
     }
@@ -1041,69 +1227,39 @@ function draw() {
     // display you and your party members in your and their respective position
     // after checking for moving
     let directions = []
-    if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) directions.push(1) // A or ← = left/1
-    if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) directions.push(2) // W or ↑ = up/2
-    if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) directions.push(3) // D or → = right/3
-    if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) directions.push(4) // S or ↓ = down/4
-    let originalFacing = yourFacing
+    if ((keyIsDown(65) || keyIsDown(37)) && posX > 416) directions.push(Direction.Left) // A or ← = left
+    if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) directions.push(Direction.Up) // W or ↑ = up
+    if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) directions.push(Direction.Right) // D or → = right
+    if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) directions.push(Direction.Down) // S or ↓ = down
     switch (directions.length) {
         case 1: // move the full 1.3
-            if (directions[0] === 1) posX -= 1.3
-            if (directions[0] === 2) posY -= 1.3
-            if (directions[0] === 3) posX += 1.3
-            if (directions[0] === 4) posY += 1.3
-            yourFacing = directions[0] // your new facing is simple: the last direction you moved
-            if (yourFacing !== originalFacing) {
-                print(yourFacing, originalFacing)
-            }
+            if (directions[0] === Direction.Left) posX -= 1.3
+            if (directions[0] === Direction.Up) posY -= 1.3
+            if (directions[0] === Direction.Right) posX += 1.3
+            if (directions[0] === Direction.Down) posY += 1.3
             break
         case 2: // move 0.92 both directions. They still cancel out each other if they're opposite
-            if (directions[0] === 1) posX -= 0.92
-            if (directions[0] === 2) posY -= 0.92
-            if (directions[0] === 3) posX += 0.92
-            if (directions[1] === 1) posX -= 0.92
-            if (directions[1] === 2) posY -= 0.92
-            if (directions[1] === 3) posX += 0.92
-            if (directions[1] === 4) posY += 0.92
-            // this time the facing is the average, except that sometimes 1 and
-            // 4 outputs 2.5, meaning we have to adjust to 4.5
-            yourFacing = directions[0]/2 + directions[1]/2
-            if (yourFacing === 2.5 && directions[0] === 1) {
-                yourFacing = 4.5
-            }
-            // if the 2 are opposite, don't change your facing
-            if (yourFacing === 1 || yourFacing === 2 || yourFacing === 3 || yourFacing === 4) {
-                yourFacing = originalFacing
-            }
-            if (yourFacing !== originalFacing) {
-                print(yourFacing, originalFacing)
-            }
+            if (directions[0] === Direction.Left) posX -= 0.92
+            if (directions[0] === Direction.Up) posY -= 0.92
+            if (directions[0] === Direction.Right) posX += 0.92
+            if (directions[0] === Direction.Down) posX -= 0.92
+            if (directions[1] === Direction.Up) posY -= 0.92
+            if (directions[1] === Direction.Right) posX += 0.92
+            if (directions[1] === Direction.Down) posY += 0.92
             break
         case 3: // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
-            if (directions[0] === 1) posX -= 1.3
-            if (directions[0] === 2) posY -= 1.3
-            if (directions[1] === 1) posX -= 1.3
-            if (directions[1] === 2) posY -= 1.3
-            if (directions[1] === 3) posX += 1.3
-            if (directions[2] === 1) posX -= 1.3
-            if (directions[2] === 2) posY -= 1.3
-            if (directions[2] === 3) posX += 1.3
-            if (directions[2] === 4) posY += 1.3
-
-            // There are only 4 possibilities (124 123 234 134).
-            if (directions[0] === 1 && directions[1] === 2 && directions[2] === 4) {
-                yourFacing = 1 // 2 and 4 cancel out
-            } if (directions[0] === 1 && directions[1] === 2 && directions[2] === 3) {
-                yourFacing = 2 // 1 and 3 cancel out
-            } if (directions[0] === 2 && directions[1] === 3 && directions[2] === 4) {
-                yourFacing = 3 // 2 and 4 cancel out
-            } if (directions[0] === 1 && directions[1] === 3 && directions[2] === 4) {
-                yourFacing = 4 // 1 and 3 cancel out
-            }
-            if (yourFacing !== originalFacing) {
-                print(yourFacing, originalFacing)
-            }
+            if (directions[0] === Direction.Left) posX -= 1.3
+            if (directions[0] === Direction.Up) posY -= 1.3
+            if (directions[0] === Direction.Right) posX += 1.3
+            if (directions[0] === Direction.Down) posY += 1.3
+            if (directions[1] === Direction.Up) posX -= 1.3
+            if (directions[1] === Direction.Right) posX += 1.3
+            if (directions[1] === Direction.Down) posY += 1.3
+            if (directions[2] === Direction.Right) posX += 1.3
+            if (directions[2] === Direction.Down) posY += 1.3
             break
+    } if (directions.length > 0) {
+        yourFacing = mixDirections(directions)
     }
     image(sgeSymbol, sgePosX - 20, sgePosY - 20, 40, 40)
     image(warSymbol, warPosX - 20, warPosY - 20, 40, 40)
@@ -1148,57 +1304,49 @@ function draw() {
 
     push()
     translate(posX, posY)
-    angleMode(DEGREES)
-    rotate(yourFacing*90)
-    angleMode(RADIANS)
+    yourFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
-    if (floor(yourFacing) === yourFacing) {
-        triangle(-10, 20, 10, 20, 0, 40)
+    if (!yourFacing.onDiagonal) {
+        triangle(20, -10, 20, 10, 40, 0)
     } else { // Display farther away for diagonal facings
-        triangle(-10, 25, 10, 25, 0, 45)
+        triangle(25, -10, 25, 10, 45, 0)
     }
     pop()
 
     push()
     translate(drgPosX, drgPosY)
-    angleMode(DEGREES)
-    rotate(drgFacing*90)
-    angleMode(RADIANS)
+    drgFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
-    if (floor(drgFacing) === drgFacing) {
-        triangle(-10, 20, 10, 20, 0, 40)
+    if (!yourFacing.onDiagonal) {
+        triangle(20, -10, 20, 10, 40, 0)
     } else { // Display farther away for diagonal facings
-        triangle(-10, 25, 10, 25, 0, 45)
+        triangle(25, -10, 25, 10, 45, 0)
     }
     pop()
 
     push()
     translate(sgePosX, sgePosY)
-    angleMode(DEGREES)
-    rotate(sgeFacing*90)
-    angleMode(RADIANS)
+    sgeFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
-    if (floor(sgeFacing) === sgeFacing) {
-        triangle(-10, 20, 10, 20, 0, 40)
+    if (!yourFacing.onDiagonal) {
+        triangle(20, -10, 20, 10, 40, 0)
     } else { // Display farther away for diagonal facings
-        triangle(-10, 25, 10, 25, 0, 45)
+        triangle(25, -10, 25, 10, 45, 0)
     }
     pop()
 
     push()
     translate(warPosX, warPosY)
-    angleMode(DEGREES)
-    rotate(warFacing*90)
-    angleMode(RADIANS)
+    warFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
-    if (floor(warFacing) === warFacing) {
-        triangle(-10, 20, 10, 20, 0, 40)
+    if (!yourFacing.onDiagonal) {
+        triangle(20, -10, 20, 10, 40, 0)
     } else { // Display farther away for diagonal facings
-        triangle(-10, 25, 10, 25, 0, 45)
+        triangle(25, -10, 25, 10, 45, 0)
     }
     pop()
 
