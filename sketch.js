@@ -385,12 +385,12 @@ function draw() {
             if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) { // preposition stack
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
-                sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedLeft : Direction.UpTiltedRight)
+                sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedRight : Direction.UpTiltedLeft)
             }
             if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) { // go to corner if spread is first
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
-                sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedLeft : Direction.UpTiltedRight)
+                sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedRight : Direction.UpTiltedLeft)
             }
             if (millis() > mechanicStarted + 5500 && millis() < mechanicStarted + 6800 && !stackFirst) {
                 if (rotateExaflares) {
@@ -421,7 +421,7 @@ function draw() {
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 9800 && stackFirst) {
                 sgePosY -= (swap) ? -1.3 : 1.3
                 sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
-                sgeFacing = (swap) ? ((swapMovement) ? Direction.BottomLeft : Direction.BottomRight) : ((swapMovement) ? Direction.TopLeft : Direction.TopRight)
+                sgeFacing = (swap) ? ((swapMovement) ? Direction.BottomRight : Direction.BottomLeft) : ((swapMovement) ? Direction.TopLeft : Direction.TopRight)
             }
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 10000) {
                 warPosY -= 1.3
@@ -697,62 +697,38 @@ function draw() {
                 if (triplesGivenTo.includes(2)) { // 2 is the dragoon
                     // we want to get north if triples are given here
                     drgPosY -= 1.3
-                    drgFacing = 2
+                    drgFacing = Direction.Up
                 }
             } if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 4000 && rotatePlayers) {
                 if (triplesGivenTo.includes(2)) { // 2 is the dragoon
                     drgPosY += 0.92
                     drgPosX += 0.92
-                    drgFacing = 3.5
+                    drgFacing = Direction.BottomRight
                 } else {
                     drgPosY -= 0.86
                     drgPosX -= 0.92
-                    drgFacing = 1.4
+                    drgFacing = Direction.TopLeft
                 }
             } if (millis() - mechanicStarted > 5500 && millis() - mechanicStarted < 6500) {
                 // now we want to drop our tower
                 if (rotatePlayers) {
                     drgPosY += (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1.3 : 1.3
-                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 2 : 4
+                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2))
+                        ? Direction.Up : Direction.Down
                 } else {
                     drgPosX += (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -1.3 : 1.3
-                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2)) ? 1 : 3
+                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2))
+                        ? Direction.Left : Direction.Right
                 }
             }
             // now we need to soak our towers
             // start with the first
             if (millis() - mechanicStarted > 10000 && millis() - mechanicStarted < 13000) {
-                if (rotatePlayers) {
-                    drgPosY -= (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -0.92 : 0.92
-                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 3.5 : 2.5
-                    drgPosX += (directionOfBlue === 2 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? -0.5 : 0.5
-                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? drgFacing : drgFacing + ((directionOfBlue === 3 ^ majorityRed.includes(2)) ? 1 : -1)
-                } else {
-                    drgPosY -= (directionOfBlue === 3 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? -0.5 : 0.5
-                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? 4.5 : 1.5
-                    drgPosX -= (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -1 : 1
-                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2)) ? drgFacing : drgFacing + ((directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1 : 1)
-                }
+                // Have yet to implement
             } if (millis() - mechanicStarted > 14600 && millis() - mechanicStarted < 16000) {
-                if (rotatePlayers) {
-                    drgPosY -= (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -0.92 : 0.92
-                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 4.5 : 1.5
-                    drgPosX -= (directionOfBlue === 2 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? -0.92 : 0.92
-                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? drgFacing : drgFacing + ((directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1 : 1)
-                } else {
-                    drgPosY += (directionOfBlue === 3 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? -0.92 : 0.92
-                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2) ^ triplesGivenTo.includes(2)) ? 3.5 : 2.5
-                    drgPosX -= (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -0.92 : 0.92
-                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2)) ? drgFacing : drgFacing + ((directionOfBlue === 3 ^ majorityRed.includes(2)) ? 1 : -1)
-                }
+                // Have yet to implement
             } if (millis() - mechanicStarted > 16000 && millis() - mechanicStarted < 17000) {
-                if (rotatePlayers) {
-                    drgPosY += (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1.3 : 1.3
-                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 2 : 4
-                } else {
-                    drgPosX += (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -1.3 : 1.3
-                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2)) ? 1 : 3
-                }
+                // Have yet to implement
             }
             break
         case "Triple Kasumi-Giri":
@@ -1014,29 +990,29 @@ function draw() {
                 // sage needs to go right and up
                 sgePosX += 0.92
                 sgePosY -= 0.92
-                sgeFacing = 2.5
+                sgeFacing = Direction.TopRight
 
                 // dragoon needs to go left and up
                 drgPosX -= 0.92
                 drgPosY -= 0.92
-                drgFacing = 1.5
+                drgFacing = Direction.TopLeft
             } if (millis() - mechanicStarted < 1700) {
                 // warrior needs to go left and down
                 warPosX -= 0.92
                 warPosY += 0.92
-                warFacing = 4.5
+                warFacing = Direction.BottomLeft
             } if (millis() - mechanicStarted > 1700 && millis() - mechanicStarted < 2320) {
                 // the warrior needs to go a little left
                 warPosX -= 1.3
-                warFacing = 1
+                warFacing = Direction.Left
             } if (millis() - mechanicStarted > 6000 && millis() - mechanicStarted < 7900) {
                 // move back in center
                 sgePosX -= 1.3
-                sgeFacing = 1
+                sgeFacing = Direction.Left
                 drgPosX += 1.3
-                drgFacing = 3
+                drgFacing = Direction.Right
                 warPosX += 1.3
-                warFacing = 3
+                warFacing = Direction.Right
             }
             if (millis() - mechanicStarted > 11900 && millis() - mechanicStarted < 12000) {
                 // just correct everyone
@@ -1053,76 +1029,78 @@ function draw() {
             // bottom-left. Same as system for facing
             let safeCorner = (northLineExpandsFirst) ?
                 (topLeftCrossExpandsFirst) ?
-                    4.5 : // top-left and top means only bottom-left is safe
-                    3.5 : // top-right and top means only bottom-right is safe
+                    Direction.BottomLeft : // top-left and top means only bottom-left is safe
+                    Direction.BottomRight : // top-right and top means only bottom-right is safe
                 (topLeftCrossExpandsFirst) ?
-                    2.5 : // top-left and bottom means only top-right is safe
-                    1.5 // top-right and bottom means only top-left is safe
+                    Direction.TopRight : // top-left and bottom means only top-right is safe
+                    Direction.TopLeft // top-right and bottom means only top-left is safe
             if (millis() - mechanicStarted > 12000 && millis() - mechanicStarted < 15000) {
-                if (safeCorner === 1.5 || safeCorner === 4.5) { // left
+                if (safeCorner === Direction.BottomLeft || safeCorner ===
+                    Direction.TopLeft) { // left
                     sgePosX -= 0.92
                     drgPosX -= 1.02
                     warPosX -= 0.82
-                } if (safeCorner === 2.5 || safeCorner === 3.5) { // right
+                } if (safeCorner === Direction.BottomRight || safeCorner ===
+                    Direction.TopRight) { // right
                     sgePosX += 0.92
                     drgPosX += 1.02
                     warPosX += 0.82
-                } if (safeCorner === 3.5 || safeCorner === 4.5) { // bottom
+                } if (safeCorner === Direction.BottomLeft || safeCorner ===
+                    Direction.BottomRight) { // bottom
                     sgePosY += 0.92
                     drgPosY += 0.82
                     warPosY += 1.02
-                } if (safeCorner === 1.5 || safeCorner === 2.5) { // top
+                } if (safeCorner === Direction.TopLeft || safeCorner ===
+                    Direction.TopRight) { // top
                     sgePosY -= 0.92
                     drgPosY -= 0.82
                     warPosY -= 1.02
                 }
                 sgeFacing = safeCorner
-                drgFacing = safeCorner + 0.1
-                warFacing = safeCorner - 0.1
+                drgFacing = safeCorner
+                warFacing = safeCorner
             }
             if (millis() - mechanicStarted > 16900 && millis() - mechanicStarted < 17000) {
                 // Adjust everyone
                 drgPosX = sgePosX
                 drgPosY = sgePosY
-                drgFacing = sgeFacing
                 warPosX = sgePosX
                 warPosY = sgePosY
-                warFacing = sgeFacing
             }
             // now put everyone in their correct positions
             if (millis() - mechanicStarted > 20000 && millis() - mechanicStarted < 20800) {
-                if (safeCorner === 1.5) { // top-left
+                if (safeCorner === Direction.TopLeft) { // top-left
                     drgPosX += 0.92
                     drgPosY -= 0.92
                     sgePosX -= 0.92
                     sgePosY += 0.92
                     warPosX += 0.92
                     warPosY += 0.92
-                    warFacing = 3.5
-                } if (safeCorner === 2.5) { // top-right
+                    warFacing = Direction.BottomRight
+                } if (safeCorner === Direction.TopRight) { // top-right
                     drgPosX -= 0.92
                     drgPosY -= 0.92
                     sgePosX += 0.92
                     sgePosY += 0.92
                     warPosX -= 0.92
                     warPosY += 0.92
-                    warFacing = 4.5
-                } if (safeCorner === 3.5) { // bottom-right
+                    warFacing = Direction.BottomLeft
+                } if (safeCorner === Direction.BottomRight) { // bottom-right
                     drgPosX -= 0.92
                     drgPosY += 0.92
                     sgePosX += 0.92
                     sgePosY -= 0.92
                     warPosX -= 0.92
                     warPosY -= 0.92
-                    warFacing = 1.5
-                } if (safeCorner === 4.5) { // bottom-left
+                    warFacing = Direction.TopLeft
+                } if (safeCorner === Direction.BottomLeft) { // bottom-left
                     drgPosX += 0.92
                     drgPosY += 0.92
                     sgePosX -= 0.92
                     sgePosY -= 0.92
                     warPosX += 0.92
                     warPosY -= 0.92
-                    warFacing = 2.5
+                    warFacing = Direction.TopRight
                 }
             }
 
@@ -1130,68 +1108,68 @@ function draw() {
             if (millis() - mechanicStarted > 21000 && millis() - mechanicStarted < 22500) {
                 switch (tetheredPlayer) {
                     case 1: // you
-                        if (safeCorner === 1.5) { // top-left
+                        if (safeCorner === Direction.TopLeft) { // top-left
                             warPosX -= 0.92
                             warPosY -= 0.92
-                            warFacing = 1.5
-                        } if (safeCorner === 2.5) { // top-right
+                            warFacing = Direction.TopLeft
+                        } if (safeCorner === Direction.TopRight) { // top-right
                             warPosX += 0.92
                             warPosY -= 0.92
-                            warFacing = 2.5
-                        } if (safeCorner === 3.5) { // bottom-right
+                            warFacing = Direction.TopRight
+                        } if (safeCorner === Direction.BottomRight) { // bottom-right
                             warPosX += 0.92
                             warPosY += 0.92
-                            warFacing = 3.5
-                        } if (safeCorner === 4.5) { // bottom-left
+                            warFacing = Direction.BottomRight
+                        } if (safeCorner === Direction.BottomLeft) { // bottom-left
                             warPosX -= 0.92
                             warPosY += 0.92
-                            warFacing = 4.5
+                            warFacing = Direction.BottomLeft
                         }
                         break
                     case 2: // dragoon
-                        if (safeCorner === 1.5) { // top-left
+                        if (safeCorner === Direction.TopLeft) { // top-left
                             drgPosY += 0.92
-                            drgFacing = 4
+                            drgFacing = Direction.Down
                             warPosY -= 0.92
-                            warFacing = 2
-                        } if (safeCorner === 2.5) { // top-right
+                            warFacing = Direction.Up
+                        } if (safeCorner === Direction.TopRight) { // top-right
                             drgPosY += 0.92
-                            drgFacing = 4
+                            drgFacing = Direction.Down
                             warPosY -= 0.92
-                            warFacing = 2
-                        } if (safeCorner === 3.5) { // bottom-right
+                            warFacing = Direction.Up
+                        } if (safeCorner === Direction.BottomRight) { // bottom-right
                             drgPosY -= 0.92
-                            drgFacing = 2
+                            drgFacing = Direction.Up
                             warPosY += 0.92
-                            warFacing = 4
-                        } if (safeCorner === 4.5) { // bottom-left
+                            warFacing = Direction.Down
+                        } if (safeCorner === Direction.BottomLeft) { // bottom-left
                             drgPosY -= 0.92
-                            drgFacing = 2
+                            drgFacing = Direction.Up
                             warPosY += 0.92
-                            warFacing = 4
+                            warFacing = Direction.Down
                         }
                         break
                     case 3: // sage
-                        if (safeCorner === 1.5) { // top-left
+                        if (safeCorner === Direction.TopLeft) { // top-left
                             sgePosX += 0.92
-                            sgeFacing = 3
+                            sgeFacing = Direction.Right
                             warPosX -= 0.92
-                            warFacing = 1
-                        } if (safeCorner === 2.5) { // top-right
+                            warFacing = Direction.Left
+                        } if (safeCorner === Direction.TopRight) { // top-right
                             sgePosX -= 0.92
-                            sgeFacing = 1
+                            sgeFacing = Direction.Left
                             warPosX += 0.92
-                            warFacing = 3
-                        } if (safeCorner === 3.5) { // bottom-right
+                            warFacing = Direction.Right
+                        } if (safeCorner === Direction.BottomRight) { // bottom-right
                             sgePosX -= 0.92
-                            sgeFacing = 1
+                            sgeFacing = Direction.Left
                             warPosX += 0.92
-                            warFacing = 3
-                        } if (safeCorner === 4.5) { // bottom-left
+                            warFacing = Direction.Right
+                        } if (safeCorner === Direction.BottomLeft) { // bottom-left
                             sgePosX += 0.92
-                            sgeFacing = 3
+                            sgeFacing = Direction.Right
                             warPosX -= 0.92
-                            warFacing = 1
+                            warFacing = Direction.Left
                         }
                         break
                 }
@@ -1203,22 +1181,22 @@ function draw() {
                 print(safeCorner)
                 switch (tetheredPlayer) {
                     case 2: // dragoon
-                        if (safeCorner === 1.5) drgPosX = 575; drgPosY = 175
-                        if (safeCorner === 2.5) drgPosX = 825; drgPosY = 175
-                        if (safeCorner === 3.5) drgPosX = 825; drgPosY = 425
-                        if (safeCorner === 4.5) drgPosX = 575; drgPosY = 425
+                        if (safeCorner === Direction.TopRight) drgPosX = 575; drgPosY = 175
+                        if (safeCorner === Direction.TopLeft) drgPosX = 825; drgPosY = 175
+                        if (safeCorner === Direction.BottomLeft) drgPosX = 825; drgPosY = 425
+                        if (safeCorner === Direction.BottomRight) drgPosX = 575; drgPosY = 425
                         break
                     case 3: // sage
-                        if (safeCorner === 1.5) sgePosX = 575; sgePosY = 175
-                        if (safeCorner === 2.5) sgePosX = 825; sgePosY = 175
-                        if (safeCorner === 3.5) sgePosX = 825; sgePosY = 425
-                        if (safeCorner === 4.5) sgePosX = 575; sgePosY = 425
+                        if (safeCorner === Direction.TopRight) sgePosX = 575; sgePosY = 175
+                        if (safeCorner === Direction.TopLeft) sgePosX = 825; sgePosY = 175
+                        if (safeCorner === Direction.BottomLeft) sgePosX = 825; sgePosY = 425
+                        if (safeCorner === Direction.BottomRight) sgePosX = 575; sgePosY = 425
                         break
                     case 4: // warrior
-                        if (safeCorner === 1.5) warPosX = 575; warPosY = 175
-                        if (safeCorner === 2.5) warPosX = 825; warPosY = 175
-                        if (safeCorner === 3.5) warPosX = 825; warPosY = 425
-                        if (safeCorner === 4.5) warPosX = 575; warPosY = 425
+                        if (safeCorner === Direction.TopRight) warPosX = 575; warPosY = 175
+                        if (safeCorner === Direction.TopLeft) warPosX = 825; warPosY = 175
+                        if (safeCorner === Direction.BottomLeft) warPosX = 825; warPosY = 425
+                        if (safeCorner === Direction.BottomRight) warPosX = 575; warPosY = 425
                         break
                 }
             }
@@ -1319,7 +1297,7 @@ function draw() {
     drgFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
-    if (!yourFacing.onDiagonal) {
+    if (!drgFacing.onDiagonal) {
         triangle(20, -10, 20, 10, 40, 0)
     } else { // Display farther away for diagonal facings
         triangle(25, -10, 25, 10, 45, 0)
@@ -1331,7 +1309,7 @@ function draw() {
     sgeFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
-    if (!yourFacing.onDiagonal) {
+    if (!sgeFacing.onDiagonal) {
         triangle(20, -10, 20, 10, 40, 0)
     } else { // Display farther away for diagonal facings
         triangle(25, -10, 25, 10, 45, 0)
@@ -1343,7 +1321,7 @@ function draw() {
     warFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
-    if (!yourFacing.onDiagonal) {
+    if (!warFacing.onDiagonal) {
         triangle(20, -10, 20, 10, 40, 0)
     } else { // Display farther away for diagonal facings
         triangle(25, -10, 25, 10, 45, 0)

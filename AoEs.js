@@ -456,7 +456,8 @@ class SoakTower {
                     [sgePosX, sgePosY]
                 ]) {
                     // if the tower wasn't soaked, the party wipes
-                    if (sqrt((position[0] - this.x) ** 2 + (position[1] - this.y) ** 2) < this.size) {
+                    if (sqrt((position[0] - this.x) ** 2 + (position[1] - this.y)
+                        ** 2) < this.size) {
                         this.soaked = true
                     }
                 }
