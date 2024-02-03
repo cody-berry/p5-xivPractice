@@ -284,6 +284,10 @@ function draw() {
         mouseY > 476 && mouseY < 499) fill(0, 0, 15)
     rect(-10, 476, 143, 23)
     fill(0, 0, 25)
+    if (mouseX > 0 && mouseX < 120 &&
+        mouseY > 499 && mouseY < 519) fill(0, 0, 15)
+    rect(-10, 499, 130, 23)
+    fill(0, 0, 25)
 
     fill(0, 0, 100)
     noStroke()
@@ -293,6 +297,7 @@ function draw() {
     text("Malformed Reincarnation", 0, 448)
     text("Triple Kasumi-Giri", 0, 471)
     text("Fleeting Lai-Giri", 0, 494)
+    text("Azure Auspice", 0, 517)
 
     stroke(0, 0, 0)
 
@@ -325,7 +330,7 @@ function draw() {
         strokeWeight(1)
         line(980, 20, 980, 580) // total bottom x line
         line(420, 580, 980, 580) // total right y line
-    } if (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri") { // Moko
+    } if (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri" || mechanic === "Azure Auspice") { // Moko
         // start with the background
         let rowHeight = 600/19
         let columnWidth = 30
@@ -1626,6 +1631,14 @@ function mousePressed() {
         ]
 
         AoEs.sort(sortByGrowingTime)
+    } if (mouseX > 0 && mouseX < 120 &&
+        mouseY > 499 && mouseY < 519) {
+        mechanic = "Azure Auspice"
+        mechanicStarted = millis()
+        drgPosX = -100
+        sgePosX = -100
+        warPosX = -100
+        bossPosX = -100
     }
 }
 
