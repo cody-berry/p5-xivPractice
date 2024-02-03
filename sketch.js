@@ -110,6 +110,8 @@ let northLineExpandsFirst // whether the top horizontal line expands first or th
 let tetheredPlayer
 let jumpResolved
 
+let linesInOrderOfResolvingOrder
+
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
     if (Math.abs(value) < threshold) return 0;
@@ -1205,6 +1207,12 @@ function draw() {
                         break
                 }
             }
+            break
+        case "Azure Auspice":
+            for (let AoE of AoEs) {
+                AoE.update()
+                AoE.displayAoE()
+            }
     }
 
     // display you and your party members in your and their respective position
@@ -1639,6 +1647,60 @@ function mousePressed() {
         sgePosX = -100
         warPosX = -100
         bossPosX = -100
+        linesInOrderOfResolvingOrder = [random(["north", "south", "top-left", "top-right"]),
+                        random(["north", "south", "top-left", "top-right"]),
+                        random(["north", "south", "top-left", "top-right"]),
+                        random(["north", "south", "top-left", "top-right"])]
+        while (linesInOrderOfResolvingOrder[1] === linesInOrderOfResolvingOrder[0]) {
+            linesInOrderOfResolvingOrder[1] = random(["north", "south", "top-left", "top-right"])
+        } while (linesInOrderOfResolvingOrder[2] === linesInOrderOfResolvingOrder[1] ||
+                 linesInOrderOfResolvingOrder[2] === linesInOrderOfResolvingOrder[0]) {
+            linesInOrderOfResolvingOrder[2] = random(["north", "south", "top-left", "top-right"])
+        } while (linesInOrderOfResolvingOrder[3] === linesInOrderOfResolvingOrder[2] ||
+                 linesInOrderOfResolvingOrder[3] === linesInOrderOfResolvingOrder[1] ||
+                 linesInOrderOfResolvingOrder[3] === linesInOrderOfResolvingOrder[0]) {
+            linesInOrderOfResolvingOrder[3] = random(["north", "south", "top-left", "top-right"])
+        }
+        print(linesInOrderOfResolvingOrder)
+        AoEs = []
+        let lineNumber = 1
+        for (let line of linesInOrderOfResolvingOrder) {
+            switch (line) {
+                case "north":
+                    AoEs.push(new WaterLine(
+                        400, 175, 1000, 175, [
+                            0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
+                            6000 + 2800*lineNumber, 8000 + 2800*lineNumber
+                        ]
+                    ))
+                    break
+                case "south":
+                    AoEs.push(new WaterLine(
+                        400, 425, 1000, 425, [
+                            0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
+                            6000 + 2800*lineNumber, 8000 + 2800*lineNumber
+                        ]
+                    ))
+                    break
+                case "top-left":
+                    AoEs.push(new WaterLine(
+                        400, 0, 1000, 600, [
+                            0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
+                            6000 + 2800*lineNumber, 8000 + 2800*lineNumber
+                        ]
+                    ))
+                    break
+                case "top-right":
+                    AoEs.push(new WaterLine(
+                        400, 600, 1000, 0, [
+                            0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
+                            6000 + 2800*lineNumber, 8000 + 2800*lineNumber
+                        ]
+                    ))
+                    break
+            }
+            lineNumber++
+        }
     }
 }
 

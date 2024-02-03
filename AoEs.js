@@ -609,3 +609,107 @@ class FlameLine {
         noStroke()
     }
 }
+class WaterLine {
+    constructor(x1, y1, x2, y2, growingTimes) {
+        this.x1 = x1
+        this.y1 = y1
+        this.x2 = x2
+        this.y2 = y2
+        this.growingTimes = growingTimes
+        this.initiatedAt = millis()
+        this.stage = 0 // not displayed
+        this.wentOff = false
+    }
+
+    update() {
+        if (millis() - this.initiatedAt > this.growingTimes[0]) {
+            this.stage = 1 // displayed as blue line
+        } if (millis() - this.initiatedAt > this.growingTimes[1]) {
+            this.stage = 2 // slightly glowing
+        } if (millis() - this.initiatedAt > this.growingTimes[2]) {
+            this.stage = 3 // moderately glowing
+        } if (millis() - this.initiatedAt > this.growingTimes[3]) {
+            this.stage = 4 // heavily glowing
+        } if (millis() - this.initiatedAt > this.growingTimes[4]) {
+            this.stage = 5
+            if (!this.wentOff) {
+                AoEs.push(new LineAOE(this.x1, this.y1, this.x2, this.y2, 310, 1000))
+                this.wentOff = true
+            }
+        }
+    }
+
+    displayAoE() {
+        switch (this.stage) {
+            case 1:
+                stroke(200, 80, 100) // blue
+                strokeWeight(1)
+                line(this.x1, this.y1, this.x2, this.y2)
+                break
+            case 2:
+                stroke(200, 80, 100) // blue
+                strokeWeight(15)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(150, 80, 100) // teal
+                strokeWeight(9)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(120, 100, 100) // green
+                strokeWeight(8)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 100, 100) // yellow
+                strokeWeight(5)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(0, 0, 100) // white
+                strokeWeight(1)
+                line(this.x1, this.y1, this.x2, this.y2)
+                break
+            case 3:
+                stroke(200, 80, 100) // blue
+                strokeWeight(25)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(150, 80, 100) // teal
+                strokeWeight(15)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(120, 100, 100) // green
+                strokeWeight(14)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(70, 100, 100) // green-yellow
+                strokeWeight(13)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 100, 100) // yellow
+                strokeWeight(10)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 50, 100) // yellow-white
+                strokeWeight(6)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(0, 0, 100) // white
+                strokeWeight(3)
+                line(this.x1, this.y1, this.x2, this.y2)
+                break
+            case 4:
+                stroke(200, 80, 100) // blue
+                strokeWeight(35)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(150, 80, 100) // teal
+                strokeWeight(25)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(120, 100, 100) // green
+                strokeWeight(24)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(70, 100, 100) // green-yellow
+                strokeWeight(23)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 100, 100) // yellow
+                strokeWeight(19)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(45, 50, 100) // yellow-white
+                strokeWeight(13)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(0, 0, 100) // white
+                strokeWeight(7)
+                line(this.x1, this.y1, this.x2, this.y2)
+                break
+        }
+        noStroke()
+    }
+}
