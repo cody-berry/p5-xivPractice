@@ -619,6 +619,10 @@ class WaterLine {
         this.initiatedAt = millis()
         this.stage = 0 // not displayed
         this.wentOff = false
+        this.wentOffAt = -100000
+        this.iterations = 0
+        this.angleOfLine = atan2(this.y2 - this.y1, this.x2 - this.x1)
+        this.opacity = -5
     }
 
     update() {
@@ -633,8 +637,14 @@ class WaterLine {
         } if (millis() - this.initiatedAt > this.growingTimes[4]) {
             this.stage = 5
             if (!this.wentOff) {
-                AoEs.push(new LineAOE(this.x1, this.y1, this.x2, this.y2, 310, 1000))
                 this.wentOff = true
+                this.wentOffAt = millis()
+            } else {
+                this.opacity -= 4
+                if (millis() - this.wentOffAt > 500 + 1500*this.iterations) {
+                    this.opacity = 300
+                    this.iterations++
+                }
             }
         }
     }
@@ -710,6 +720,38 @@ class WaterLine {
                 line(this.x1, this.y1, this.x2, this.y2)
                 break
         }
-        noStroke()
+        if (millis() - this.wentOffAt < 500) { // show telegraph
+            stroke(20, 100, 100, 20)
+            strokeWeight(40)
+            line(this.x1 + (40*this.iterations - 20)*sin(this.angleOfLine),
+                 this.y1 - (40*this.iterations - 20)*cos(this.angleOfLine),
+                 this.x2 + (40*this.iterations - 20)*sin(this.angleOfLine),
+                 this.y2 - (40*this.iterations - 20)*cos(this.angleOfLine))
+            line(this.x1 - (40*this.iterations - 20)*sin(this.angleOfLine),
+                 this.y1 + (40*this.iterations - 20)*cos(this.angleOfLine),
+                 this.x2 - (40*this.iterations - 20)*sin(this.angleOfLine),
+                 this.y2 + (40*this.iterations - 20)*cos(this.angleOfLine))
+
+        }
+        stroke(200, 100, 100, min(this.opacity, 90)) // deep blue: wave color
+        strokeWeight(40)
+        line(this.x1 + (40*this.iterations - 20)*sin(this.angleOfLine),
+             this.y1 - (40*this.iterations - 20)*cos(this.angleOfLine),
+             this.x2 + (40*this.iterations - 20)*sin(this.angleOfLine),
+             this.y2 - (40*this.iterations - 20)*cos(this.angleOfLine))
+        line(this.x1 - (40*this.iterations - 20)*sin(this.angleOfLine),
+             this.y1 + (40*this.iterations - 20)*cos(this.angleOfLine),
+             this.x2 - (40*this.iterations - 20)*sin(this.angleOfLine),
+             this.y2 + (40*this.iterations - 20)*cos(this.angleOfLine))
+        strokeWeight(23)
+        stroke(200, 100, 100, (helper) ? max(30, this.opacity + 10) : this.opacity + 10)
+        line(this.x1 + (millis() - this.wentOffAt - 350)/37.5*sin(this.angleOfLine),
+             this.y1 - (millis() - this.wentOffAt - 350)/37.5*cos(this.angleOfLine),
+             this.x2 + (millis() - this.wentOffAt - 350)/37.5*sin(this.angleOfLine),
+             this.y2 - (millis() - this.wentOffAt - 350)/37.5*cos(this.angleOfLine))
+        line(this.x1 - (millis() - this.wentOffAt - 350)/37.5*sin(this.angleOfLine),
+             this.y1 + (millis() - this.wentOffAt - 350)/37.5*cos(this.angleOfLine),
+             this.x2 - (millis() - this.wentOffAt - 350)/37.5*sin(this.angleOfLine),
+             this.y2 + (millis() - this.wentOffAt - 350)/37.5*cos(this.angleOfLine))
     }
 }

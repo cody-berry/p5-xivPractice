@@ -1668,7 +1668,7 @@ function mousePressed() {
             switch (line) {
                 case "north":
                     AoEs.push(new WaterLine(
-                        400, 175, 1000, 175, [
+                        400, 180, 1000, 180, [
                             0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
                             6000 + 2800*lineNumber, 8000 + 2800*lineNumber
                         ]
@@ -1676,7 +1676,7 @@ function mousePressed() {
                     break
                 case "south":
                     AoEs.push(new WaterLine(
-                        400, 425, 1000, 425, [
+                        400, 420, 1000, 420, [
                             0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
                             6000 + 2800*lineNumber, 8000 + 2800*lineNumber
                         ]
