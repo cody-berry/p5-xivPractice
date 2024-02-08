@@ -389,16 +389,19 @@ function draw() {
     switch (mechanic) {
         case "Exoflares":
             // update so that people can dodge exoflares!
-            if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) { // preposition stack
+            // preposition stack
+            if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) {
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
                 sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedRight : Direction.UpTiltedLeft)
             }
-            if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) { // go to corner if spread is first
+            // go to corner if spread is first
+            if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) {
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
                 sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedRight : Direction.UpTiltedLeft)
             }
+            // go out of the corner exaflare
             if (millis() > mechanicStarted + 5500 && millis() < mechanicStarted + 6800 && !stackFirst) {
                 if (rotateExaflares) {
                     sgePosY -= (swap) ? -1.3 : 1.3
@@ -408,7 +411,8 @@ function draw() {
                     sgeFacing = (swapMovement ^ swap) ? Direction.Right : Direction.Left
                 }
             }
-            if (millis() > mechanicStarted + 4900 && millis() < mechanicStarted + 6500) { // preposition stack
+            // pre-position dragoon and warrior
+            if (millis() > mechanicStarted + 4900 && millis() < mechanicStarted + 6500) {
                 warPosY -= 1.3
                 warPosX -= (swapMovement) ? -1.3 : 1.3
                 warFacing = (swapMovement) ? Direction.BottomRight : Direction.BottomLeft
@@ -416,6 +420,7 @@ function draw() {
                 drgPosX += (swapMovement) ? -1.3 : 1.3
                 drgFacing = (swapMovement) ? Direction.TopLeft : Direction.TopRight
             }
+            // go back to the corner in order to spread
             if (millis() > mechanicStarted + 7500 && millis() < mechanicStarted + 8500 && !stackFirst) {
                 if (rotateExaflares) {
                     sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
@@ -425,11 +430,13 @@ function draw() {
                     sgeFacing = (swap) ? Direction.Down : Direction.Up
                 }
             }
+            // or go to the corner after stack resolves
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 9800 && stackFirst) {
                 sgePosY -= (swap) ? -1.3 : 1.3
                 sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
                 sgeFacing = (swap) ? ((swapMovement) ? Direction.BottomRight : Direction.BottomLeft) : ((swapMovement) ? Direction.TopLeft : Direction.TopRight)
             }
+            // after stack/spread resolves, dragoon and warrior move to corner
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 10000) {
                 warPosY -= 1.3
                 warPosX -= (swapMovement) ? -1.3 : 1.3
@@ -438,15 +445,21 @@ function draw() {
                 drgPosX += (swapMovement) ? -1.3 : 1.3
                 drgFacing = (swapMovement) ? Direction.TopLeft : Direction.TopRight
             }
+            // if spread second, dragoon and warrior follow the exaflares
             if (millis() > mechanicStarted + 9000 && millis() < mechanicStarted + 12500 && stackFirst) {
                 if (!rotateExaflares) {
                     warPosX += (swapMovement) ? -1.3 : 1.3
                     warFacing = (swapMovement) ? Direction.Left : Direction.Right
-                    drgPosX -= (swapMovement) ? -1.3 : 1.3
-                    drgFacing = (swapMovement) ? Direction.Right : Direction.Left
+
+                    // Winry says fancy dodging allows you to dodge the exaflare
+                    // while running the wrong way!
+                    drgPosY -= 1.3
+                    warFacing = Direction.Up
                 } else {
                     warPosY += 1.3
                     warFacing = Direction.Down
+
+                    // Explanation above
                     drgPosX -= (swapMovement) ? -1.3 : 1.3
                     drgFacing = (swapMovement) ? Direction.Right : Direction.Left
                 }
@@ -492,6 +505,7 @@ function draw() {
 
             noStroke()
 
+            // display exaflares and spreads/stacks
             for (let exoflare of exoflares) {
                 exoflare.update()
                 exoflare.displayAoE()
@@ -532,6 +546,7 @@ function draw() {
                         if (millis() - mechanicStarted < 10000) {
                             circle(70, yPos - 15, 20) // drop blue
                         } else {
+                            // drop blue
                             if (!droppedTowers) {
                                 if (player === 4) {
                                     droppedTowers = true
@@ -574,6 +589,7 @@ function draw() {
                             circle(70, yPos - 15, 20) // drop red
                         } else {
                             if (!droppedTowers) {
+                                // drop red
                                 if (player === 4) {
                                     droppedTowers = true
                                 }
@@ -617,6 +633,7 @@ function draw() {
                             circle(70, yPos - 15, 20) // drop red
                         } else {
                             if (!droppedTowers) {
+                                // drop red
                                 if (player === 4) {
                                     droppedTowers = true
                                 }
@@ -660,6 +677,7 @@ function draw() {
                             circle(70, yPos - 15, 20) // drop blue
                         } else {
                             if (!droppedTowers) {
+                                // drop blue
                                 if (player === 4) {
                                     droppedTowers = true
                                 }
@@ -708,10 +726,12 @@ function draw() {
                 }
             } if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 4000 && rotatePlayers) {
                 if (triplesGivenTo.includes(2)) { // 2 is the dragoon
+                    // rotate from top to right
                     drgPosY += 0.92
                     drgPosX += 0.92
                     drgFacing = Direction.BottomRight
                 } else {
+                    // rotate from down to left
                     drgPosY -= 0.86
                     drgPosX -= 0.92
                     drgFacing = Direction.TopLeft
@@ -743,7 +763,7 @@ function draw() {
             stroke(0, 0, 100)
             strokeWeight(1)
             noFill()
-            circle(bossPosX, bossPosY, 160) // note: this is 320 diameter, not 320 radius
+            circle(bossPosX, bossPosY, 160) // note: this is 160 diameter, not 160 radius
             fill(0, 0, 100)
             noStroke()
             if (bossFacing === 1) { // up
@@ -772,6 +792,7 @@ function draw() {
                 angleMode(DEGREES)
                 // display an arc with the cleaveOneSafeDirection not included
                 // (this is filled as a pie segment)
+                // not rotated towards boss facing!
                 arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90,
                     135 + cleaveOneSafeDirection*90)
                 angleMode(RADIANS)
@@ -813,6 +834,8 @@ function draw() {
                         new DonutAOE(bossPosX, bossPosY, 80, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
+
+                // now add the cone
                 AoEs.push(
                     new ConeAOE(bossPosX, bossPosY, 848,
                         225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90,
@@ -833,6 +856,8 @@ function draw() {
                         new DonutAOE(bossPosX, bossPosY, 80, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
+
+                // now add the cone
                 AoEs.push(
                     new ConeAOE(bossPosX, bossPosY, 848,
                         225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90,
@@ -853,6 +878,8 @@ function draw() {
                         new DonutAOE(bossPosX, bossPosY, 80, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
+
+                // now add the cone
                 AoEs.push(
                     new ConeAOE(bossPosX, bossPosY, 848,
                         225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90,
@@ -871,12 +898,14 @@ function draw() {
             }
             break
         case "Fleeting Lai-Giri":
+            // at 2000 milliseconds, there's a hidden circle AoE
             if (millis() - mechanicStarted > 2000 && !circleResolved) {
                 circleResolved = true
                 AoEs.push(
                     new CircleAOE(bossPosX, bossPosY, 160, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 5
+                // now add the Boundless Scarlet lines
                 AoEs.push(
                     new LineAOE(400, 170, 1000, 170, 130, 4000),
                     new LineAOE(400, 430, 1000, 430, 130, 4000),
@@ -887,6 +916,8 @@ function draw() {
 
             // display stacks and spreads (at correct time).
             // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140
+            // the debuffs only appear at 10000. The first debuff resolves at
+            // 32500 millis and the second resolves at 40000 millis.
             if ((10000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 40000)) {
                 let xPosStackDisplay = (stackFirst) ? 105 : 140
                 let xPosSpreadDisplay = (stackFirst) ? 140 : 105
@@ -1243,7 +1274,7 @@ function draw() {
             if (directions[0] === Direction.Up) posY -= 1.3
             if (directions[0] === Direction.Right) posX += 1.3
             if (directions[0] === Direction.Down) posY += 1.3
-            if (directions[1] === Direction.Up) posX -= 1.3
+            if (directions[1] === Direction.Up) posY -= 1.3
             if (directions[1] === Direction.Right) posX += 1.3
             if (directions[1] === Direction.Down) posY += 1.3
             if (directions[2] === Direction.Right) posX += 1.3
@@ -1385,6 +1416,7 @@ function mousePressed() {
             whoGetsStack[1] = random([1, 2, 3, 4])
         }
         whoGetsStack.sort()
+        // if the same role gets stack, then we have to swap you and healer
         swap = (whoGetsStack[0] === 1 && whoGetsStack[1] === 2) || (whoGetsStack[0] === 3 && whoGetsStack[1] === 4)
         print(swap)
         exoflares = [
@@ -1411,6 +1443,11 @@ function mousePressed() {
             new Exaflare(700, 380, 200, 6500, 0, 79, 0, 1000),
             new Exaflare(700, 220, 200, 6500, 0, -79, 0, 1000)
         ]
+
+        // These are the spreads and stacks. The first one goes off at 8500ms
+        // and the second one goes off at 13500. The slight delay is used so
+        // that we can tell whether someone got hit twice with stack or
+        // spread.
         AoEs = [
                 new SpreadCircle(1, 300, (stackFirst) ? 13470 : 8470),
                 new SpreadCircle(2, 300, (stackFirst) ? 13490 : 8490),
@@ -1442,6 +1479,8 @@ function mousePressed() {
         mechanicStarted = millis()
         directionOfBlue = random([1, 2, 3, 4])
         // 1 is top, 2 is right, 3 is bottom, 4 is left
+        // we can't have people that are next to each other dropping towers
+        // behind the same tower
         rotatePlayers = (directionOfBlue === 1 || directionOfBlue === 3)
         topRightIsBlue = (directionOfBlue === 1 || directionOfBlue === 2)
         topLeftIsBlue = (directionOfBlue === 1 || directionOfBlue === 4)
@@ -1462,6 +1501,7 @@ function mousePressed() {
         bossPosX = -100
         bossPosY = -100
 
+        // now add the towers, one for each corner
         if (topRightIsBlue) {
             blueSoakTowers.push(
                 new SoakTower([240, 100, 100], 910, 90, 65, 16000),
@@ -1512,25 +1552,33 @@ function mousePressed() {
         // give out the triples now
         areThereTriples = random([false, true])
         if (areThereTriples) {
+            // give the triples to two random players
             triplesGivenTo = [0, 0]
             triplesGivenTo[0] = random([1, 2, 3, 4])
             triplesGivenTo[1] = triplesGivenTo[0]
             while (triplesGivenTo[0] === triplesGivenTo[1]) {
                 triplesGivenTo[1] = random([1, 2, 3, 4])
             }
+
+            // now figure out who the triples are not given to
             triplesNotGivenTo = []
             for (let player of [1, 2, 3, 4]) {
                 if (!triplesGivenTo.includes(player)) {
                     triplesNotGivenTo.push(player)
                 }
             }
-            majorityRed = [ // 1 triple and 1 standard are majority red
+
+            // give the reds to one triple and one non-triple
+            majorityRed = [
                 random([triplesGivenTo[0], triplesGivenTo[1]]),
                 random([triplesNotGivenTo[0], triplesNotGivenTo[1]])
             ]
         } else {
+            // no people get triples
             triplesGivenTo = []
             triplesNotGivenTo = [1, 2, 3, 4]
+
+            // give the reds to two random players
             majorityRed = [0, 0]
             majorityRed[0] = random([1, 2, 3, 4])
             majorityRed[1] = majorityRed[0]
@@ -1555,8 +1603,10 @@ function mousePressed() {
         warPosY = -100
         bossPosX = 700
         bossPosY = 300
-        bossFacing = 1 // 1 top, 2 right, 3 bottom, 4 left
+        bossFacing = 1 // always start oriented!
 
+        // each cleave has a color and direction. orange means a point-blank
+        // AOE and blue means a donut AOE.
         cleaveOneColor = random(["orange", "blue"])
         cleaveTwoColor = random(["orange", "blue"])
         cleaveThreeColor = random(["orange", "blue"])
@@ -1601,35 +1651,28 @@ function mousePressed() {
 
         tetheredPlayer = random([1, 2, 3, 4])
 
+        // growingTimes[0] is when the line first appears. growingTimes[1-3] is
+        // when the lines grow. growingTimes[4] is when the lines go off.
+        let growingTimesForExpandingFirst = [6000, 10000, 17500, 25000, 31500]
+        let growingTimesForExpandingSecond = [6000, 17500, 25000, 32500, 39000]
+
         AoEs = [
-            new FlameLine(400, 175, 1000, 175, [
-                (northLineExpandsFirst) ? 6000 : 6000,
-                (northLineExpandsFirst) ? 10000 : 17500,
-                (northLineExpandsFirst) ? 17500 : 25000,
-                (northLineExpandsFirst) ? 25000 : 32500,
-                (northLineExpandsFirst) ? 31500 : 39000
-            ]),
-            new FlameLine(400, 425, 1000, 425, [
-                (northLineExpandsFirst) ? 6000 : 6000,
-                (northLineExpandsFirst) ? 17500 : 10000,
-                (northLineExpandsFirst) ? 25000 : 17500,
-                (northLineExpandsFirst) ? 32500 : 25000,
-                (northLineExpandsFirst) ? 39000 : 31500
-            ]),
-            new FlameLine(400, 0, 1000, 600, [
-                (topLeftCrossExpandsFirst) ? 6000 : 6000,
-                (topLeftCrossExpandsFirst) ? 10000 : 17500,
-                (topLeftCrossExpandsFirst) ? 17500 : 25000,
-                (topLeftCrossExpandsFirst) ? 25000 : 32500,
-                (topLeftCrossExpandsFirst) ? 31500 : 39000
-            ]),
-            new FlameLine(400, 600, 1000, 0, [
-                (topLeftCrossExpandsFirst) ? 6000 : 6000,
-                (topLeftCrossExpandsFirst) ? 17500 : 10000,
-                (topLeftCrossExpandsFirst) ? 25000 : 17500,
-                (topLeftCrossExpandsFirst) ? 32500 : 25000,
-                (topLeftCrossExpandsFirst) ? 39000 : 31500
-            ]),
+            new FlameLine(400, 175, 1000, 175,
+                (northLineExpandsFirst) ? growingTimesForExpandingFirst :
+                    growingTimesForExpandingSecond), // north line
+            new FlameLine(400, 425, 1000, 425,
+                (northLineExpandsFirst) ? growingTimesForExpandingSecond :
+                    growingTimesForExpandingFirst), // south line
+            new FlameLine(400, 0, 1000, 600,
+                (topLeftCrossExpandsFirst) ? growingTimesForExpandingFirst :
+                    growingTimesForExpandingSecond), // top-left cross
+            new FlameLine(400, 600, 1000, 0,
+                (topLeftCrossExpandsFirst) ? growingTimesForExpandingSecond :
+                    growingTimesForExpandingFirst), // top-right cross
+
+            // spread and stack circles
+            // as usual, we have a slight delay so that we can detect whether
+            // someone got hit twice
             new SpreadCircle(1, 50, (stackFirst) ? 40470 : 33270),
             new SpreadCircle(2, 50, (stackFirst) ? 40490 : 33290),
             new SpreadCircle(3, 50, (stackFirst) ? 40510 : 33310),
@@ -1638,6 +1681,8 @@ function mousePressed() {
             new StackCircle(whoGetsStack[1], 50, (stackFirst) ? 33310 : 40510, 2),
         ]
 
+        // this won't give away anything: sort the aoEs by their growing time.
+        // the first lines are displayed on top of the second lines
         AoEs.sort(sortByGrowingTime)
     } if (mouseX > 0 && mouseX < 120 &&
         mouseY > 499 && mouseY < 519) {
@@ -1647,10 +1692,14 @@ function mousePressed() {
         sgePosX = -100
         warPosX = -100
         bossPosX = -100
+        // The 4 lines (north, south, top-left-to-bottom-right, and
+        // top-right-to-bottom-left) expand in a random order. We start by
+        // initializing them here.
         linesInOrderOfResolvingOrder = [random(["north", "south", "top-left", "top-right"]),
                         random(["north", "south", "top-left", "top-right"]),
                         random(["north", "south", "top-left", "top-right"]),
                         random(["north", "south", "top-left", "top-right"])]
+        // now we check for overlap.
         while (linesInOrderOfResolvingOrder[1] === linesInOrderOfResolvingOrder[0]) {
             linesInOrderOfResolvingOrder[1] = random(["north", "south", "top-left", "top-right"])
         } while (linesInOrderOfResolvingOrder[2] === linesInOrderOfResolvingOrder[1] ||
@@ -1667,6 +1716,10 @@ function mousePressed() {
         for (let line of linesInOrderOfResolvingOrder) {
             switch (line) {
                 case "north":
+                    // there is a 2.8s or 2800ms delay between each line
+                    // resolving. We implement that by adding 2800*lineNumber.
+                    // Note that we still have to have all the lines appear
+                    // immediately, which is why we have a static 0.
                     AoEs.push(new WaterLine(
                         400, 180, 1000, 180, [
                             0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
@@ -1675,6 +1728,7 @@ function mousePressed() {
                     ))
                     break
                 case "south":
+                    // Explanation can be found above.
                     AoEs.push(new WaterLine(
                         400, 420, 1000, 420, [
                             0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
@@ -1683,6 +1737,7 @@ function mousePressed() {
                     ))
                     break
                 case "top-left":
+                    // Explanation can be found above.
                     AoEs.push(new WaterLine(
                         400, 0, 1000, 600, [
                             0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,
@@ -1691,6 +1746,7 @@ function mousePressed() {
                     ))
                     break
                 case "top-right":
+                    // Explanation can be found above.
                     AoEs.push(new WaterLine(
                         400, 600, 1000, 0, [
                             0, 2000 + 2800*lineNumber, 4000 + 2800*lineNumber,

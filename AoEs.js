@@ -1,3 +1,38 @@
+
+// Each AoE has a utility update function. It updates the opacity and checks if
+// it's went off yet. The thing is, the opacity is always updated the same way.
+// This function's job is to update the opacity in each AoE.
+function updateOpacity(AoE) {
+    // the time left until the AoE resolves and checks if you got hit
+    let timeUntilGoesOff = AoE.goesOffAt - millis()
+
+    // has the AoE already gone off?
+    // based on the way that timeUntilGoesOff is calculated, when millis() >
+    // AoE.goesOffAt, timeUntilGoesOff will be less than 0
+    let wentOff = (timeUntilGoesOff < 0)
+
+    // of course, we only do this if the AoE hasn't resolved already.
+    if (!wentOff) {
+        if (
+            // if the helper is turned on, AoEs will gradually decrease opacity
+            // when this is turned on, meaning that we can't just have this.opacity
+            // < 20 here.
+            !AoE.stopAccumulatingOpacity) {
+            AoE.opacity += 1
+
+            // if the AoE's opacity is 20, we shouldn't accumulate opacity anymore
+            if (AoE.opacity >= 20) AoE.stopAccumulatingOpacity = true
+        }
+        if (AoE.stopAccumulatingOpacity && AoE.opacity > 5 && helper) {
+            // decrease the opacity slightly so that you can tell z-index
+            // only if the helper is enabled, though!
+            AoE.opacity -= 0.1
+        }
+    }
+    // if it did go off, then we leave that to the one that's calling the
+    // function to handle.
+}
+
 // Displays a circle-shaped AoE on the screen
 class CircleAOE {
     constructor(posX, posY, size, goesOffInMillis) {
@@ -9,14 +44,9 @@ class CircleAOE {
         this.stopAccumulatingOpacity = false
     }
 
-    // update the AoEs opacity
+    // update the AoE's opacity and does general utility things
     update() {
-        if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
-            this.opacity += 1
-            if (this.opacity >= 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
-            this.opacity -= 0.2
-        }
+        updateOpacity(this)
         if (this.goesOffAt < millis()) {
             if (this.opacity === 5) {
                 if (sqrt((posX - this.x)**2 + (posY - this.y)**2) < this.diameter/2) {
@@ -49,12 +79,7 @@ class RectAOE {
 
     // this is the same every time
     update() {
-        if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
-            this.opacity += 1
-            if (this.opacity >= 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
-            this.opacity -= 0.2
-        }
+        updateOpacity(this)
         if (this.goesOffAt < millis()) {
             if (this.opacity === 5) {
                 if (posX > this.x || posX < this.x + this.width ||
@@ -90,12 +115,8 @@ class LineAOE {
 
     // this is the same every time
     update() {
-        if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
-            this.opacity += 1
-            if (this.opacity >= 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
-            this.opacity -= 0.05
-        } if (this.goesOffAt < millis()) {
+        updateOpacity(this)
+        if (this.goesOffAt < millis()) {
             if (this.opacity > 5) this.opacity = 5
             this.opacity -= 0.2
             stroke(0, 100, 50, min(this.opacity*20, 100)/2)
@@ -123,14 +144,9 @@ class DonutAOE {
         this.stopAccumulatingOpacity = false
     }
 
-    // update the AoEs opacity TODO consider encapsulation
+    // update the AoEs opacity
     update() {
-        if (!this.stopAccumulatingOpacity && this.goesOffAt - millis() > 100) {
-            this.opacity += 1
-            if (this.opacity >= 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
-            this.opacity -= 0.2
-        }
+        updateOpacity(this)
         if (this.goesOffAt < millis()) {
             if (this.opacity === 5) {
                 if (sqrt((posX - this.x)**2 + (posY - this.y)**2) > this.size) {
@@ -188,12 +204,7 @@ class ConeAOE {
 
     // update the AoE's opacity
     update() {
-        if (this.opacity < 20 && this.goesOffAt - millis() > 100) {
-            this.opacity += 1
-            if (this.opacity > 20) this.stopAccumulatingOpacity = true
-        } if (this.stopAccumulatingOpacity && this.opacity > 5 && helper) {
-            this.opacity -= 0.2
-        }
+        updateOpacity(this)
         if (this.goesOffAt < millis()) {
             if (this.opacity === 5) {
                 if (sqrt((posX - this.x)**2 + (posY - this.y)**2) < this.size/2 &&
@@ -621,10 +632,12 @@ class WaterLine {
         this.wentOff = false
         this.wentOffAt = -100000
         this.iterations = 0
-        this.angleOfLine = atan2(this.y2 - this.y1, this.x2 - this.x1)
+        this.angleOfLine = degrees(atan2(this.y2 - this.y1, this.x2 - this.x1))
         this.opacity = -5
+        print(this.angleOfLine)
     }
 
+    // normally it updates the opacity, but this time it updates
     update() {
         if (millis() - this.initiatedAt > this.growingTimes[0]) {
             this.stage = 1 // displayed as blue line
@@ -650,13 +663,92 @@ class WaterLine {
     }
 
     displayAoE() {
+        // Display the water line. To mimic the effect in the actual mechanic,
+        // I need to display multiple lines, some thinner than the others. Of
+        // course, the thinnest ones are displayed last.
+
+        // Stage one is just a sall blue line soaked in water.
+        let linesForStageOne = [
+            { // Low-opacity line. Mimics a small puddle of water.
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 10,
+                "thickness": 20, // 20 might seem like a lot, but that's not true.
+            }, { // Medium-opacity line. I'm trying to ease into blue.
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 30,
+                "thickness": 13,
+            }, { // Another medium-opacity line. Just easing into blue more.
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 30,
+                "thickness": 7,
+            }, { // Just a small blue line.
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 1,
+            }
+        ]
+
+        // Stage two has to make the line glow a little bit. It also makes
+        // the puddle bigger.
+        let linesForStageTwo = [
+            // The first 4 of these are the same (except thicker) as in stage 1.
+            {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 10,
+                "thickness": 20,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 30,
+                "thickness": 13,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 30,
+                "thickness": 7,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 1,
+            },
+
+            // Then we have a short transition to yellow.
+
+        ]
+
         switch (this.stage) {
             case 1:
-                stroke(200, 80, 100) // blue
-                strokeWeight(1)
-                line(this.x1, this.y1, this.x2, this.y2)
+                for (let lineData of linesForStageOne) {
+                    stroke(lineData.hue, lineData.saturation,
+                        lineData.brightness, lineData.opacity)
+                    strokeWeight(lineData.thickness)
+                    line(this.x1, this.y1, this.x2, this.y2)
+                }
                 break
             case 2:
+                stroke(200, 80, 100, 10)
+                strokeWeight(60)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(200, 80, 100, 30)
+                strokeWeight(40)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(200, 80, 100, 30)
+                strokeWeight(28)
+                line(this.x1, this.y1, this.x2, this.y2)
                 stroke(200, 80, 100) // blue
                 strokeWeight(15)
                 line(this.x1, this.y1, this.x2, this.y2)
@@ -674,6 +766,15 @@ class WaterLine {
                 line(this.x1, this.y1, this.x2, this.y2)
                 break
             case 3:
+                stroke(200, 80, 100, 10)
+                strokeWeight(80)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(200, 80, 100, 30)
+                strokeWeight(50)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(200, 80, 100, 30)
+                strokeWeight(37)
+                line(this.x1, this.y1, this.x2, this.y2)
                 stroke(200, 80, 100) // blue
                 strokeWeight(25)
                 line(this.x1, this.y1, this.x2, this.y2)
@@ -697,6 +798,15 @@ class WaterLine {
                 line(this.x1, this.y1, this.x2, this.y2)
                 break
             case 4:
+                stroke(200, 80, 100, 10)
+                strokeWeight(100)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(200, 80, 100, 30)
+                strokeWeight(70)
+                line(this.x1, this.y1, this.x2, this.y2)
+                stroke(200, 80, 100, 30)
+                strokeWeight(55)
+                line(this.x1, this.y1, this.x2, this.y2)
                 stroke(200, 80, 100) // blue
                 strokeWeight(35)
                 line(this.x1, this.y1, this.x2, this.y2)
@@ -723,6 +833,7 @@ class WaterLine {
         if (millis() - this.wentOffAt < 500) { // show telegraph
             stroke(20, 100, 100, 20)
             strokeWeight(40)
+            // for some reason, you need to rotate the angle of the line
             line(this.x1 + (40*this.iterations - 20)*sin(this.angleOfLine),
                  this.y1 - (40*this.iterations - 20)*cos(this.angleOfLine),
                  this.x2 + (40*this.iterations - 20)*sin(this.angleOfLine),
@@ -735,6 +846,7 @@ class WaterLine {
         }
         stroke(200, 100, 100, min(this.opacity, 90)) // deep blue: wave color
         strokeWeight(40)
+        // same here
         line(this.x1 + (40*this.iterations - 20)*sin(this.angleOfLine),
              this.y1 - (40*this.iterations - 20)*cos(this.angleOfLine),
              this.x2 + (40*this.iterations - 20)*sin(this.angleOfLine),
@@ -744,14 +856,16 @@ class WaterLine {
              this.x2 - (40*this.iterations - 20)*sin(this.angleOfLine),
              this.y2 + (40*this.iterations - 20)*cos(this.angleOfLine))
         strokeWeight(23)
+
+        // now we display the line that helps you figure out which direction it's going
         stroke(200, 100, 100, (helper) ? max(30, this.opacity + 10) : this.opacity + 10)
-        line(this.x1 + (millis() - this.wentOffAt - 350)/37.5*sin(this.angleOfLine),
-             this.y1 - (millis() - this.wentOffAt - 350)/37.5*cos(this.angleOfLine),
-             this.x2 + (millis() - this.wentOffAt - 350)/37.5*sin(this.angleOfLine),
-             this.y2 - (millis() - this.wentOffAt - 350)/37.5*cos(this.angleOfLine))
-        line(this.x1 - (millis() - this.wentOffAt - 350)/37.5*sin(this.angleOfLine),
-             this.y1 + (millis() - this.wentOffAt - 350)/37.5*cos(this.angleOfLine),
-             this.x2 - (millis() - this.wentOffAt - 350)/37.5*sin(this.angleOfLine),
-             this.y2 + (millis() - this.wentOffAt - 350)/37.5*cos(this.angleOfLine))
+        line(this.x1 + (millis() - this.wentOffAt - 100)/37.5*sin(this.angleOfLine),
+             this.y1 - (millis() - this.wentOffAt - 100)/37.5*cos(this.angleOfLine),
+             this.x2 + (millis() - this.wentOffAt - 100)/37.5*sin(this.angleOfLine),
+             this.y2 - (millis() - this.wentOffAt - 100)/37.5*cos(this.angleOfLine))
+        line(this.x1 - (millis() - this.wentOffAt - 100)/37.5*sin(this.angleOfLine),
+             this.y1 + (millis() - this.wentOffAt - 100)/37.5*cos(this.angleOfLine),
+             this.x2 - (millis() - this.wentOffAt - 100)/37.5*sin(this.angleOfLine),
+             this.y2 + (millis() - this.wentOffAt - 100)/37.5*cos(this.angleOfLine))
     }
 }
