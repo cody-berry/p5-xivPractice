@@ -44,11 +44,15 @@ class CircleAOE {
         this.stopAccumulatingOpacity = false
     }
 
-    // update the AoE's opacity and does general utility things
+    // update the AoE by checking whether it's gone off and updating its
+    // opacity.
     update() {
         updateOpacity(this)
         if (this.goesOffAt < millis()) {
             if (this.opacity === 5) {
+                // if your distance from the center of the circle (this.x, this.y)
+                // is less than the radius, or this.diameter/2, then the party
+                // wipes because you got hit by a circle AoE.
                 if (sqrt((posX - this.x)**2 + (posY - this.y)**2) < this.diameter/2) {
                     partyWiped = true
                     causeOfWipe = "You got hit by a circle."
@@ -60,6 +64,7 @@ class CircleAOE {
         }
     }
 
+    // displays the orange version of the AoE.
     displayAoE() {
         fill(20, 100, 100, this.opacity)
         circle(this.x, this.y, this.diameter)
@@ -77,11 +82,14 @@ class RectAOE {
         this.stopAccumulatingOpacity = false
     }
 
-    // this is the same every time
+    // update the AoE by checking whether it's gone off and updating its
+    // opacity.
     update() {
         updateOpacity(this)
         if (this.goesOffAt < millis()) {
             if (this.opacity === 5) {
+                // if you are within the bounds of the rectangle, the party
+                // wipes because you got hit by an AoE!
                 if (posX > this.x || posX < this.x + this.width ||
                     posY > this.y || posY < this.y + this.height) {
                     partyWiped = true
@@ -94,6 +102,7 @@ class RectAOE {
         }
     }
 
+    // displays the orange version of the AoE.
     displayAoE() {
         fill(20, 100, 100, this.opacity)
         rect(this.x, this.y, this.width, this.height)
@@ -113,11 +122,11 @@ class LineAOE {
         this.stopAccumulatingOpacity = false
     }
 
-    // this is the same every time
+    // update the AoE by checking whether it's gone off and updating its
+    // opacity.
     update() {
         updateOpacity(this)
         if (this.goesOffAt < millis()) {
-            if (this.opacity > 5) this.opacity = 5
             this.opacity -= 0.2
             stroke(0, 100, 50, min(this.opacity*20, 100)/2)
             strokeWeight(this.thickness)
@@ -125,6 +134,7 @@ class LineAOE {
         }
     }
 
+    // displays the orange version of the AoE.
     displayAoE() {
         if (this.goesOffAt > millis()) {
             stroke(20, 100, 100, this.opacity)
@@ -144,11 +154,15 @@ class DonutAOE {
         this.stopAccumulatingOpacity = false
     }
 
-    // update the AoEs opacity
+    // update the AoE by checking whether it's gone off and updating its
+    // opacity.
     update() {
         updateOpacity(this)
         if (this.goesOffAt < millis()) {
             if (this.opacity === 5) {
+                // if your distance from the center of the donut is bigger than
+                // the radius of the donut hole, then the party wipes because
+                // you got hit.
                 if (sqrt((posX - this.x)**2 + (posY - this.y)**2) > this.size) {
                     partyWiped = true
                     causeOfWipe = "You got hit by a donut."
@@ -172,6 +186,7 @@ class DonutAOE {
         }
     }
 
+    // displays the orange version of the AoE.
     displayAoE() {
         fill(20, 100, 100, this.opacity)
         beginShape()
@@ -202,7 +217,8 @@ class ConeAOE {
         this.stopAccumulatingOpacity = false
     }
 
-    // update the AoE's opacity
+    // update the AoE by checking whether it's gone off and updating its
+    // opacity.
     update() {
         updateOpacity(this)
         if (this.goesOffAt < millis()) {
@@ -220,6 +236,7 @@ class ConeAOE {
         }
     }
 
+    // displays the orange version of the AoE.
     displayAoE() {
         fill(20, 100, 100, this.opacity)
         arc(this.x, this.y, this.size, this.size, radians(this.startAngle), radians(this.endAngle))
@@ -281,20 +298,25 @@ class Exaflare {
         }
     }
 
+    // displays the AoE, however it should be displayed
     displayAoE() {
         if (!this.wentOff) {
+            // display where the exaflare starts
             stroke(0, 100, 100, 20)
             fill(0, 100, 100, 20)
             circle(this.x, this.y, this.size)
             if (helper) {
-                stroke(0, 100, 100, 50)
+                // if the helper is enabled, outline exactly where it's going to
+                // land next
+                stroke(0, 100, 100, 20)
                 noFill()
                 circle(this.x + this.xDiff, this.y + this.yDiff, this.size + this.sizeDiff)
                 noStroke()
                 fill(0, 0, 100)
             }
 
-            // display arrow (rotate)
+            // display where the exaflare is moving (rotate from the center
+            // of the exaflare)
             push()
             angleMode(RADIANS)
             translate(this.x, this.y)
@@ -307,11 +329,12 @@ class Exaflare {
             line(18, -10, -18, -10)
             pop()
         } else {
+            // now display 3 circles, each smaller than the last
             fill(200, 80, 80, this.opacity)
             circle(this.x, this.y, this.size)
-            fill(200, 90, 70, this.opacity)
+            fill(200, 90, 70, this.opacity - 8)
             circle(this.x, this.y, this.size - 50)
-            fill(200, 100, 50, this.opacity)
+            fill(200, 100, 50, this.opacity - 16)
             circle(this.x, this.y, this.size - 100)
             if (helper) {
                 fill(200, 80, 80, this.prevCircleOpacity)
@@ -322,23 +345,26 @@ class Exaflare {
 }
 
 class SpreadCircle {
-    constructor(playerTargeted, // 1 for you, 2 for the dragoon, 3 for the sage, and 4 for the warrior
+    constructor(playerTargeted,
                 size, goesOffIn) {
+        // 1 for you, 2 for the dragoon, 3 for the sage, and 4 for the warrior
         this.player = playerTargeted
         this.x = 0
         this.y = 0
         this.size = size
         this.goesOffAt = goesOffIn + millis()
-        this.opacity = 102
+        this.opacity = 200 // prematurely set the opacity high
         this.wentOff = false
     }
 
-    // updates for the opacity
+    // checks if the spread circle has gone off, and if it has, it does some
+    // special work
     update() {
         if (millis() > this.goesOffAt) {
             // when it goes off, check if anyone is in the vicinity
             if (!this.wentOff) {
                 this.wentOff = true
+                // set the
                 if (this.player === 1) { // 1 is you
                     this.x = posX
                     this.y = posY
@@ -358,6 +384,7 @@ class SpreadCircle {
                     [sgePosX, sgePosY, 3],
                     [warPosX, warPosY, 4]
                 ]) {
+                    // if anyone clips anyone else with spread, the party wipes
                     if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size/2) {
                         lastHitBy[position[2]] = ["spread", millis()]
                         print(lastHitBy)
@@ -382,12 +409,13 @@ class SpreadCircle {
 
 class StackCircle {
     constructor(playerTargeted, size, goesOffIn, minPlayers) {
+        // 1 for you, 2 for the dragoon, 3 for the sage, and 4 for the warrior
         this.player = playerTargeted
         this.x = 0
         this.y = 0
         this.size = size
         this.goesOffAt = goesOffIn + millis()
-        this.opacity = 102
+        this.opacity = 200 // make the stack circle stay opaque for a little bit
         this.wentOff = false
         this.minPlayers = minPlayers
     }
@@ -397,6 +425,7 @@ class StackCircle {
             // when it goes off, check if anyone is in the vicinity
             if (!this.wentOff) {
                 this.wentOff = true
+                // have the stack circle leap to the player needed
                 if (this.player === 1) { // 1 is you
                     this.x = posX
                     this.y = posY
@@ -417,6 +446,9 @@ class StackCircle {
                     [sgePosX, sgePosY, 3],
                     [warPosX, warPosY, 4]
                 ]) {
+                    // check for anyone in the vicinity
+                    // if someone has been hit in the last second by spread/stack,
+                    // then boom, dead
                     if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size/2) {
                         if (lastHitBy[position[2]][1] > millis() - 1000) {
                             partyWiped = true
@@ -459,7 +491,10 @@ class SoakTower {
     update() {
         if (millis() > this.goesOffAt) {
             this.opacity -= 5
+            // if this is the first time it's been updated since it's been
+            // supposed to go off, check if the tower was soaked
             if (this.wentOff === false) {
+                // iterate through every person to see if they soaked the tower
                 for (let position of [
                     [posX, posY],
                     [drgPosX, drgPosY],
@@ -480,38 +515,41 @@ class SoakTower {
                 }
             }
 
-
-
+            // at the end of the day, just make sure we know that it went off
             this.wentOff = true
         }
     }
 
     displayTower() {
         if (!this.wentOff) {
+            // display a small soak tower
             stroke(this.color[0], this.color[1], this.color[2])
             strokeWeight(1)
             noFill()
             circle(this.x, this.y, this.size*2)
+
+            // display how many seconds left
             fill(this.color[0], this.color[1], this.color[2])
             noStroke()
             text(ceil((this.goesOffAt - millis())/1000), this.x - 10, this.y + 10)
         } if (this.wentOff && this.soaked) {
+            // if it has been soaked, then display it as a thick soak tower to
+            // show that it's been soaked
             stroke(this.color[0], this.color[1], this.color[2], this.opacity)
             strokeWeight(5)
             noFill()
             circle(this.x, this.y, this.size*2)
         } if (this.wentOff && !this.soaked) {
+            // if it hasn't been soaked, then display a thick expanding circle
+            // telling you that it wasn't soaked
             stroke(this.color[0], this.color[1], this.color[2], this.opacity)
             strokeWeight(10)
             noFill()
             circle(this.x, this.y, this.size*2 + (150 - this.opacity)*8)
+
+            // a thin expanding circle as well that expands a little faster
             strokeWeight(1)
             circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10, 0))
-            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 400, 0))
-            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 800, 0))
-            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 1200, 0))
-            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 1600, 0))
-            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10 - 2000, 0))
         }
     }
 }
