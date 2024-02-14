@@ -585,74 +585,211 @@ class FlameLine {
     }
 
     displayAoE() {
+        // each stage is displayed their own way, with multiple lines (thinner
+        // ones displayed on top of the thicker ones, all drawn in the same
+        // place). The following is the stage one data.
+        let flameLineStageOneData = [
+            { // just helps us ease into red
+                "hue": 0,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 10,
+                "thickness": 20
+            }, { // more easing into red
+                "hue": 0,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 40,
+                "thickness": 10
+            }, { // this is the actual red
+                "hue": 0,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 1
+            }
+        ]
+
+        // next we have the stage 2 data
+        let flameLineStageTwoData = [
+            { // same as flameLineStageOneData, except a little bigger
+                "hue": 0,
+                "saturation": 50, // it'll be too dark if we do 100
+                "brightness": 100,
+                "opacity": 10,
+                "thickness": 30
+            }, {
+                "hue": 0,
+                "saturation": 75, // same here
+                "brightness": 100,
+                "opacity": 40,
+                "thickness": 22
+            }, {
+                "hue": 0,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 15
+            }, { // now we add orange to make it more flame-colored
+                "hue": 25,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 12
+            }, { // after that we add yellow, makes it even more flame-colored
+                "hue": 45,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 5
+            }, { // finally we add white to make it glow
+                "hue": 0,
+                "saturation": 0,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 1
+            }
+        ]
+
+        // next we have the stage 3 data
+        let flameLineStageThreeData = [
+            { // same as flameLineStageTwoData, except a little bigger and it
+              // has vermillion and yellow-white
+                "hue": 0,
+                "saturation": 50, // it'll be too dark if we do 100
+                "brightness": 100,
+                "opacity": 10,
+                "thickness": 40
+            }, {
+                "hue": 0,
+                "saturation": 75, // same here
+                "brightness": 100,
+                "opacity": 40,
+                "thickness": 30
+            }, { // red
+                "hue": 0,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 25
+            }, { // vermillion
+                "hue": 11,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 22
+            }, { // orange
+                "hue": 25,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 18
+            }, { // yellow
+                "hue": 45,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 10
+            }, { // yellow-white
+                "hue": 45,
+                "saturation": 50,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 6
+            }, { // white
+                "hue": 0,
+                "saturation": 0,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 3
+            }
+        ]
+
+        // next we have the stage 3 data
+        let flameLineStageFourData = [
+            { // same as flameLineStageThreeData, except a little bigger
+                "hue": 0,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 5,
+                "thickness": 310 // notify players of how thick the line AoE is!
+            }, {
+                "hue": 0,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 10,
+                "thickness": 150
+            }, { // red
+                "hue": 0,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 35
+            }, { // vermillion
+                "hue": 11,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 31
+            }, { // orange
+                "hue": 25,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 25
+            }, { // yellow
+                "hue": 45,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 19
+            }, { // yellow-white
+                "hue": 45,
+                "saturation": 50,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 13
+            }, { // white
+                "hue": 0,
+                "saturation": 0,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 7
+            }
+        ]
+
         switch (this.stage) {
             case 1:
-                stroke(0, 100, 100) // red
-                strokeWeight(1)
-                line(this.x1, this.y1, this.x2, this.y2)
+                for (let lineToDisplay of flameLineStageOneData) {
+                    stroke(lineToDisplay.hue, lineToDisplay.saturation,
+                        lineToDisplay.brightness, lineToDisplay.opacity)
+                    strokeWeight(lineToDisplay.thickness)
+                    line(this.x1, this.y1, this.x2, this.y2)
+                }
                 break
             case 2:
-                stroke(0, 100, 100) // red
-                strokeWeight(15)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(7, 100, 100) // vermilion
-                strokeWeight(12)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(25, 100, 100) // orange
-                strokeWeight(8)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(45, 100, 100) // yellow
-                strokeWeight(5)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(0, 0, 100) // white
-                strokeWeight(1)
-                line(this.x1, this.y1, this.x2, this.y2)
+                for (let lineToDisplay of flameLineStageTwoData) {
+                    stroke(lineToDisplay.hue, lineToDisplay.saturation,
+                        lineToDisplay.brightness, lineToDisplay.opacity)
+                    strokeWeight(lineToDisplay.thickness)
+                    line(this.x1, this.y1, this.x2, this.y2)
+                }
                 break
             case 3:
-                stroke(0, 100, 100) // red
-                strokeWeight(25)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(7, 100, 100) // vermilion
-                strokeWeight(22)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(25, 100, 100) // orange
-                strokeWeight(18)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(35, 100, 100) // orange-yellow
-                strokeWeight(13)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(45, 100, 100) // yellow
-                strokeWeight(10)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(45, 50, 100) // yellow-white
-                strokeWeight(6)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(0, 0, 100) // white
-                strokeWeight(3)
-                line(this.x1, this.y1, this.x2, this.y2)
+                for (let lineToDisplay of flameLineStageThreeData) {
+                    stroke(lineToDisplay.hue, lineToDisplay.saturation,
+                        lineToDisplay.brightness, lineToDisplay.opacity)
+                    strokeWeight(lineToDisplay.thickness)
+                    line(this.x1, this.y1, this.x2, this.y2)
+                }
                 break
             case 4:
-                stroke(0, 100, 100) // red
-                strokeWeight(35)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(7, 100, 100) // vermilion
-                strokeWeight(31)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(25, 100, 100) // orange
-                strokeWeight(27)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(35, 100, 100) // orange-yellow
-                strokeWeight(23)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(45, 100, 100) // yellow
-                strokeWeight(19)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(45, 50, 100) // yellow-white
-                strokeWeight(13)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(0, 0, 100) // white
-                strokeWeight(7)
-                line(this.x1, this.y1, this.x2, this.y2)
+                for (let lineToDisplay of flameLineStageFourData) {
+                    stroke(lineToDisplay.hue, lineToDisplay.saturation,
+                        lineToDisplay.brightness, lineToDisplay.opacity)
+                    strokeWeight(lineToDisplay.thickness)
+                    line(this.x1, this.y1, this.x2, this.y2)
+                }
                 break
         }
         noStroke()
