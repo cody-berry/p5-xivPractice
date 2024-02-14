@@ -880,29 +880,164 @@ class WaterLine {
                 "saturation": 80,
                 "brightness": 100,
                 "opacity": 10,
-                "thickness": 20,
+                "thickness": 60,
             }, {
                 "hue": 200,
                 "saturation": 80,
                 "brightness": 100,
                 "opacity": 30,
-                "thickness": 13,
+                "thickness": 40,
             }, {
                 "hue": 200,
                 "saturation": 80,
                 "brightness": 100,
                 "opacity": 30,
-                "thickness": 7,
+                "thickness": 28,
             }, {
                 "hue": 200,
                 "saturation": 80,
                 "brightness": 100,
                 "opacity": 100,
-                "thickness": 1,
+                "thickness": 15,
             },
 
             // Then we have a short transition to yellow.
+            { // teal
+                "hue": 150,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 9,
+            }, { // green
+                "hue": 120,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 8,
+            }, { // yellow
+                "hue": 45,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 5,
+            },
 
+            // Then white to make it glow.
+            {
+                "hue": 0,
+                "saturation": 0,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 1,
+            },
+        ]
+
+        // A little bigger than stage two.
+        let linesForStageThree = [
+            {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 10,
+                "thickness": 80,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 30,
+                "thickness": 50,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 30,
+                "thickness": 37,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 25,
+            }, {
+                "hue": 150,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 15,
+            }, {
+                "hue": 120,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 13,
+            }, {
+                "hue": 45,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 10,
+            }, {
+                "hue": 0,
+                "saturation": 0,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 3,
+            },
+        ]
+
+
+
+        // A little bigger than stage three.
+        let linesForStageFour = [
+            {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 10,
+                "thickness": 100,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 30,
+                "thickness": 70,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 30,
+                "thickness": 55,
+            }, {
+                "hue": 200,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 35,
+            }, {
+                "hue": 150,
+                "saturation": 80,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 25,
+            }, {
+                "hue": 120,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 23,
+            }, {
+                "hue": 45,
+                "saturation": 100,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 17,
+            }, {
+                "hue": 0,
+                "saturation": 0,
+                "brightness": 100,
+                "opacity": 100,
+                "thickness": 7,
+            },
         ]
 
         switch (this.stage) {
@@ -915,62 +1050,20 @@ class WaterLine {
                 }
                 break
             case 2:
-                stroke(200, 80, 100, 10)
-                strokeWeight(60)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(200, 80, 100, 30)
-                strokeWeight(40)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(200, 80, 100, 30)
-                strokeWeight(28)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(200, 80, 100) // blue
-                strokeWeight(15)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(150, 80, 100) // teal
-                strokeWeight(9)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(120, 100, 100) // green
-                strokeWeight(8)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(45, 100, 100) // yellow
-                strokeWeight(5)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(0, 0, 100) // white
-                strokeWeight(1)
-                line(this.x1, this.y1, this.x2, this.y2)
+                for (let lineData of linesForStageTwo) {
+                    stroke(lineData.hue, lineData.saturation,
+                        lineData.brightness, lineData.opacity)
+                    strokeWeight(lineData.thickness)
+                    line(this.x1, this.y1, this.x2, this.y2)
+                }
                 break
             case 3:
-                stroke(200, 80, 100, 10)
-                strokeWeight(80)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(200, 80, 100, 30)
-                strokeWeight(50)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(200, 80, 100, 30)
-                strokeWeight(37)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(200, 80, 100) // blue
-                strokeWeight(25)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(150, 80, 100) // teal
-                strokeWeight(15)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(120, 100, 100) // green
-                strokeWeight(14)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(70, 100, 100) // green-yellow
-                strokeWeight(13)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(45, 100, 100) // yellow
-                strokeWeight(10)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(45, 50, 100) // yellow-white
-                strokeWeight(6)
-                line(this.x1, this.y1, this.x2, this.y2)
-                stroke(0, 0, 100) // white
-                strokeWeight(3)
-                line(this.x1, this.y1, this.x2, this.y2)
+                for (let lineData of linesForStageThree) {
+                    stroke(lineData.hue, lineData.saturation,
+                        lineData.brightness, lineData.opacity)
+                    strokeWeight(lineData.thickness)
+                    line(this.x1, this.y1, this.x2, this.y2)
+                }
                 break
             case 4:
                 stroke(200, 80, 100, 10)
