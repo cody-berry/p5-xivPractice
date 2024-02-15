@@ -293,12 +293,17 @@ function draw() {
     // display a wooden chess board, basically
     // (with red stuff on the outside and a purple entrance on at the bottom)
     if (mechanic === "Exoflares" || mechanic === "Fighting Spirits" || mechanic === "Malformed Reincarnation") { // Gorai
+        // draw the red stuff on the outside
         fill(0, 80, 75)
         rect(400, 0, 600, 600)
+
+        // display the purple entrance
         stroke(300, 50, 50)
         strokeWeight(10)
         line(650, 600, 750, 600)
         fill(20, 50, 40)
+
+        // now display the chess board
         noStroke()
         rect(420, 20, 560, 560)
         // display the darker parts of the chess board (just a little darker)
@@ -320,14 +325,36 @@ function draw() {
         line(980, 20, 980, 580) // total bottom x line
         line(420, 580, 980, 580) // total right y line
     } if (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri" || mechanic === "Azure Auspice") { // Moko
-        // start with the background
-        let rowHeight = 600/19
-        let columnWidth = 30
+        let rowHeight = 600/19 // there are 19 rows and 20 columns
+        let columnWidth = 600/20
         fill(0, 0, 50)
         rect(400, 0, 600, 600)
         stroke(0, 0, 0)
+
         for (let yIncrements = 1; yIncrements < 20; yIncrements++) {
-            if ([1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18].includes(yIncrements)) {
+            // draw this part of the board:
+            //____________________ 1
+            // __  __  __  __  __  2
+            //____________________ 3
+            //____________________ 4
+            // __  __  __  __  __  5
+            //____________________ 6
+            //____________________ 7
+            // __  __  __  __  __  8
+            //____________________ 9
+            //____________________ 10
+            // __  __  __  __  __  11
+            //____________________ 12
+            //____________________ 13
+            // __  __  __  __  __  14
+            //____________________ 15
+            //____________________ 16
+            // __  __  __  __  __  17
+            //____________________ 18
+            //____________________ 19
+            // these are all the horizontal lines
+            if ([1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19].includes(yIncrements)) {
+
                 line(400, rowHeight*yIncrements, 1000, rowHeight*yIncrements) // straight line across
             } else { // many fragmented lines across
                 line(400 + columnWidth, rowHeight * yIncrements, 400 + columnWidth * 3, rowHeight * yIncrements)
@@ -336,7 +363,30 @@ function draw() {
                 line(400 + columnWidth * 13, rowHeight * yIncrements, 400 + columnWidth * 15, rowHeight * yIncrements)
                 line(400 + columnWidth * 17, rowHeight * yIncrements, 400 + columnWidth * 19, rowHeight * yIncrements)
             }
-            if ([1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17].includes(yIncrements)) { // display vertical connectors
+
+
+            // display this section of the board:
+
+            //                     1
+            // | ||| ||| ||| ||| | 2
+            // | ||| ||| ||| ||| | 3
+            //                     4
+            // | ||| ||| ||| ||| | 5
+            // | ||| ||| ||| ||| | 6
+            //                     7
+            // | ||| ||| ||| ||| | 8
+            // | ||| ||| ||| ||| | 9
+            //                     10
+            // | ||| ||| ||| ||| | 11
+            // | ||| ||| ||| ||| | 12
+            //                     13
+            // | ||| ||| ||| ||| | 14
+            // | ||| ||| ||| ||| | 15
+            //                     16
+            // | ||| ||| ||| ||| | 17
+            // | ||| ||| ||| ||| | 18
+            //                     19
+            if ([1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17].includes(yIncrements)) {
                 line(400 + columnWidth, rowHeight * yIncrements, 400 + columnWidth, rowHeight * (yIncrements + 1))
                 line(400 + columnWidth * 3, rowHeight * yIncrements, 400 + columnWidth * 3, rowHeight * (yIncrements + 1))
                 line(400 + columnWidth * 4, rowHeight * yIncrements, 400 + columnWidth * 4, rowHeight * (yIncrements + 1))
@@ -354,6 +404,8 @@ function draw() {
             }
         }
 
+        // we draw a low-opacity border that covers 2 columns and a little less
+        // than 2 rows on each side
         fill(120, 80, 50, 20)
         noStroke()
         beginShape()
