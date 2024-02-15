@@ -37,11 +37,13 @@ let variableWidthFont
 let instructions
 let debugCorner /* output debug text in the bottom left corner of the canvas */
 
+// everyone's facing starts up
 let yourFacing = Direction.Up
 let drgFacing = Direction.Up
 let sgeFacing = Direction.Up
 let warFacing = Direction.Up
 
+// everyone starts in the middle and the boss goes out the canvas
 let posX = 700
 let posY = 300
 let drgPosX = 700
@@ -134,7 +136,7 @@ function mixDirections(directions) {
             xDiff += normalize(cosForDirection, 0.001)
             yDiff += normalize(sinForDirection, 0.001)
         }
-        let result = new Direction(
+        let result = new Direction( // if the degrees are below 0, add 360 to make it positive
             round((atan2(yDiff, xDiff) < 0) ? atan2(yDiff, xDiff) + 360 : atan2(yDiff, xDiff))
         ) // not returning allows us to reset the angle mode
         angleMode(RADIANS)
@@ -147,6 +149,7 @@ function preload() {
     fixedWidthFont = loadFont('data/consola.ttf')
     variableWidthFont = loadFont('data/meiryo.ttf')
 
+    // load the images
     drgSymbol = loadImage("images/Dragoon_Icon_3.png")
     rdmSymbol = loadImage("images/Red_Mage_Icon_3.png")
     sgeSymbol = loadImage("images/Sage_Icon_3.png")
@@ -160,27 +163,7 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
     textFont(variableWidthFont, 14)
 
-    frameRate(65)
-
-    print("Test outputs:")
-    print(mixDirections([Direction.Left]))
-    print(mixDirections([]))
-    print(mixDirections([Direction.Left, Direction.Right]))
-    print(mixDirections([Direction.Left, Direction.Up]))
-    print(mixDirections([Direction.Down, Direction.Right]))
-    print(mixDirections([Direction.Down, Direction.Up]))
-    print(mixDirections([Direction.Down, Direction.Up, Direction.Left]))
-    print(mixDirections([Direction.Down, Direction.TopRight, Direction.TopLeft]))
-    print("")
-    print("Expected:")
-    print(Direction.Left)
-    print(Direction.Right)
-    print(Direction.Right)
-    print(Direction.TopLeft)
-    print(Direction.BottomRight)
-    print(Direction.Right)
-    print(Direction.Left)
-    print(Direction.Up)
+    frameRate(62) // keep everything consistent!
 
     lastHitBy = {
         1: ["None", 0],
@@ -217,7 +200,7 @@ function setup() {
         // Add exoflares on the east and west. They go to the top-left and
         // bottom-right if swapMovement is false, and the top-right and
         // bottom-left if swapMovement is true.
-        // Or on north and south!
+        // Or on north and south if rotateExaflares is true!!
         new Exaflare((!rotateExaflares) ? 450 : ((swapMovement) ? 620 : 440),
                      (rotateExaflares) ? 50 : ((swapMovement) ? 220 : 40), 180, 6500, (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
         new Exaflare((!rotateExaflares) ? 950 : ((swapMovement) ? 440 : 620),
@@ -236,12 +219,15 @@ function setup() {
 
 
     AoEs = [
-        new SpreadCircle(1, 300, (stackFirst) ? 13470 : 8470),
-        new SpreadCircle(2, 300, (stackFirst) ? 13490 : 8490),
-        new SpreadCircle(3, 300, (stackFirst) ? 13510 : 8510),
-        new SpreadCircle(4, 300, (stackFirst) ? 13530 : 8530),
-        new StackCircle(whoGetsStack[0], 300, (stackFirst) ? 8490 : 13490, 2),
-        new StackCircle(whoGetsStack[1], 300, (stackFirst) ? 8510 : 13510, 2),
+        // add the spreads and stacks
+        // the millisecond differences are because you can't have them trigger
+        // on the same frame if you want to detect if someone else got clipped
+        new SpreadCircle(1, 250, (stackFirst) ? 13470 : 8470),
+        new SpreadCircle(2, 250, (stackFirst) ? 13490 : 8490),
+        new SpreadCircle(3, 250, (stackFirst) ? 13510 : 8510),
+        new SpreadCircle(4, 250, (stackFirst) ? 13530 : 8530),
+        new StackCircle(whoGetsStack[0], 250, (stackFirst) ? 8490 : 13490, 2),
+        new StackCircle(whoGetsStack[1], 250, (stackFirst) ? 8510 : 13510, 2),
     ]
     angleMode(RADIANS)
 }
@@ -305,11 +291,12 @@ function draw() {
 
 
     // display a wooden chess board, basically
-    // (with red, green, or wood stuff on outside and a purple entrance on at the bottom)
+    // (with red stuff on the outside and a purple entrance on at the bottom)
     if (mechanic === "Exoflares" || mechanic === "Fighting Spirits" || mechanic === "Malformed Reincarnation") { // Gorai
         fill(0, 80, 75)
         rect(400, 0, 600, 600)
         stroke(300, 50, 50)
+        strokeWeight(10)
         line(650, 600, 750, 600)
         fill(20, 50, 40)
         noStroke()
