@@ -597,6 +597,7 @@ function draw() {
             rect(350, 0, 50, height)
             break
         case "Malformed Reincarnation":
+            // display the blue and odrange soak towers
             for (let soakTower of blueSoakTowers) {
                 soakTower.update()
                 soakTower.displayTower()
@@ -606,8 +607,10 @@ function draw() {
                 soakTower.displayTower()
             }
 
-            // display the rodential and odder debuffs
+            // display the rodential and odder debuffs, as well as the tower-dropping
+            // ones
             for (let player of [1, 2, 3, 4]) {
+                // each player is displayed on a different y-coordinate
                 let yPos = 45 + player*50
                 if (triplesGivenTo.includes(player)) {
                     if (majorityRed.includes(player)) { // drop blue, soak red-red-red
@@ -617,7 +620,11 @@ function draw() {
                         if (millis() - mechanicStarted < 10000) {
                             circle(70, yPos - 15, 20) // drop blue
                         } else {
-                            // drop blue
+                            // drop a blue tower
+                            // since everything triggers at the same time, it's
+                            // guaranteed that if we stop dropping towers once
+                            // we hit the last player, everyone will drop a
+                            // tower
                             if (!droppedTowers) {
                                 if (player === 4) {
                                     droppedTowers = true
@@ -640,7 +647,6 @@ function draw() {
                                 blueSoakTowers.push(
                                     new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
                                 )
-                                print(playerPosX, playerPosY, player)
                             }
                         }
                         noStroke()
@@ -661,6 +667,10 @@ function draw() {
                         } else {
                             if (!droppedTowers) {
                                 // drop red
+                                // since everything triggers at the same time, it's
+                                // guaranteed that if we stop dropping towers once
+                                // we hit the last player, everyone will drop a
+                                // tower
                                 if (player === 4) {
                                     droppedTowers = true
                                 }
@@ -682,7 +692,6 @@ function draw() {
                                 orangeSoakTowers.push(
                                     new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
                                 )
-                                print(playerPosX, playerPosY, player)
                             }
                         }
                         noStroke()
@@ -705,6 +714,10 @@ function draw() {
                         } else {
                             if (!droppedTowers) {
                                 // drop red
+                                // since everything triggers at the same time, it's
+                                // guaranteed that if we stop dropping towers once
+                                // we hit the last player, everyone will drop a
+                                // tower
                                 if (player === 4) {
                                     droppedTowers = true
                                 }
@@ -726,7 +739,6 @@ function draw() {
                                 orangeSoakTowers.push(
                                     new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
                                 )
-                                print(playerPosX, playerPosY, player)
                             }
                         }
                         noStroke()
@@ -749,6 +761,10 @@ function draw() {
                         } else {
                             if (!droppedTowers) {
                                 // drop blue
+                                // since everything triggers at the same time, it's
+                                // guaranteed that if we stop dropping towers once
+                                // we hit the last player, everyone will drop a
+                                // tower
                                 if (player === 4) {
                                     droppedTowers = true
                                 }
@@ -770,7 +786,6 @@ function draw() {
                                 blueSoakTowers.push(
                                     new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
                                 )
-                                print(playerPosX, playerPosY, player)
                             }
                         }
                         noStroke()
@@ -809,6 +824,8 @@ function draw() {
                 }
             } if (millis() - mechanicStarted > 5500 && millis() - mechanicStarted < 6500) {
                 // now we want to drop our tower
+                // up, down, left, or right depending on what tower we want to
+                // drop behind
                 if (rotatePlayers) {
                     drgPosY += (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1.3 : 1.3
                     drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2))
