@@ -387,20 +387,34 @@ function draw() {
             // | ||| ||| ||| ||| | 18
             //                     19
             if ([1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17].includes(yIncrements)) {
-                line(400 + columnWidth, rowHeight * yIncrements, 400 + columnWidth, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 3, rowHeight * yIncrements, 400 + columnWidth * 3, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 4, rowHeight * yIncrements, 400 + columnWidth * 4, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 5, rowHeight * yIncrements, 400 + columnWidth * 5, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 7, rowHeight * yIncrements, 400 + columnWidth * 7, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 8, rowHeight * yIncrements, 400 + columnWidth * 8, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 9, rowHeight * yIncrements, 400 + columnWidth * 9, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 11, rowHeight * yIncrements, 400 + columnWidth * 11, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 12, rowHeight * yIncrements, 400 + columnWidth * 12, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 13, rowHeight * yIncrements, 400 + columnWidth * 13, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 15, rowHeight * yIncrements, 400 + columnWidth * 15, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 16, rowHeight * yIncrements, 400 + columnWidth * 16, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 17, rowHeight * yIncrements, 400 + columnWidth * 17, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 19, rowHeight * yIncrements, 400 + columnWidth * 19, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth, rowHeight * yIncrements,
+                     400 + columnWidth, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 3, rowHeight * yIncrements,
+                     400 + columnWidth * 3, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 4, rowHeight * yIncrements,
+                     400 + columnWidth * 4, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 5, rowHeight * yIncrements,
+                     400 + columnWidth * 5, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 7, rowHeight * yIncrements,
+                     400 + columnWidth * 7, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 8, rowHeight * yIncrements,
+                     400 + columnWidth * 8, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 9, rowHeight * yIncrements,
+                     400 + columnWidth * 9, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 11, rowHeight * yIncrements,
+                     400 + columnWidth * 11, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 12, rowHeight * yIncrements,
+                     400 + columnWidth * 12, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 13, rowHeight * yIncrements,
+                     400 + columnWidth * 13, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 15, rowHeight * yIncrements,
+                     400 + columnWidth * 15, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 16, rowHeight * yIncrements,
+                     400 + columnWidth * 16, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 17, rowHeight * yIncrements,
+                     400 + columnWidth * 17, rowHeight * (yIncrements + 1))
+                line(400 + columnWidth * 19, rowHeight * yIncrements,
+                     400 + columnWidth * 19, rowHeight * (yIncrements + 1))
             }
         }
 
@@ -428,19 +442,28 @@ function draw() {
     switch (mechanic) {
         case "Exoflares":
             // update so that people can dodge exoflares!
-            // preposition stack
+            // make the sage go to the stack preposition
+            // if swap & swapMovement: we move to the bottom-left corner
+            // if swap & !swapMovement: we move to the bottom-right corner
+            // if !swap & swapMovement: we move to the top-left corner
+            // if !swap & !swapMovement: we move to the top-right corner
             if (millis() > mechanicStarted + 3500 && millis() < mechanicStarted + 5100) {
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
                 sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedRight : Direction.UpTiltedLeft)
             }
-            // go to corner if spread is first
+            // go to corner of exaflare if spread is first
+            // same direction as earlier
             if (millis() > mechanicStarted + 5100 && millis() < mechanicStarted + 5500 && !stackFirst) {
                 sgePosY -= (swap) ? -1.35 : 1.35
                 sgePosX -= (swapMovement ^ swap) ? -1.25 : 1.25
                 sgeFacing = (swap) ? ((swapMovement) ? Direction.LeftTiltedDown : Direction.RightTiltedDown) : ((swapMovement) ? Direction.UpTiltedRight : Direction.UpTiltedLeft)
             }
-            // go out of the corner exaflare
+            // go out of the corner exaflare, parallel to how it's moving
+            // if it's N/S we move down or up, depending on whether we're top or
+            // bottom
+            // if it's E/W we move left or right, depending on which corner
+            // we're in
             if (millis() > mechanicStarted + 5500 && millis() < mechanicStarted + 6800 && !stackFirst) {
                 if (rotateExaflares) {
                     sgePosY -= (swap) ? -1.3 : 1.3
@@ -451,16 +474,20 @@ function draw() {
                 }
             }
             // pre-position dragoon and warrior
+            // warrior always goes north, dragoon south
+            // whether they go east or west is dependent on where the safe spots
+            // are
             if (millis() > mechanicStarted + 4900 && millis() < mechanicStarted + 6500) {
                 warPosY -= 1.3
                 warPosX -= (swapMovement) ? -1.3 : 1.3
-                warFacing = (swapMovement) ? Direction.BottomRight : Direction.BottomLeft
+                warFacing = (swapMovement) ? Direction.TopRight : Direction.TopLeft
                 drgPosY += 1.3
                 drgPosX += (swapMovement) ? -1.3 : 1.3
-                drgFacing = (swapMovement) ? Direction.TopLeft : Direction.TopRight
+                drgFacing = (swapMovement) ? Direction.BottomLeft : Direction.BottomRight
             }
-            // go back to the corner in order to spread
-            if (millis() > mechanicStarted + 7500 && millis() < mechanicStarted + 8500 && !stackFirst) {
+            // the sage goes to the corner before spread goes off in order to
+            // not clip their partner
+            if (millis() > mechanicStarted + 7000 && millis() < mechanicStarted + 8000 && !stackFirst) {
                 if (rotateExaflares) {
                     sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
                     sgeFacing = (swapMovement ^ swap) ? Direction.Right : Direction.Left
@@ -469,7 +496,7 @@ function draw() {
                     sgeFacing = (swap) ? Direction.Down : Direction.Up
                 }
             }
-            // or go to the corner after stack resolves
+            // or go to the corner after stack resolves to dodge exaflares
             if (millis() > mechanicStarted + 8500 && millis() < mechanicStarted + 9800 && stackFirst) {
                 sgePosY -= (swap) ? -1.3 : 1.3
                 sgePosX -= (swapMovement ^ swap) ? -1.3 : 1.3
@@ -484,7 +511,8 @@ function draw() {
                 drgPosX += (swapMovement) ? -1.3 : 1.3
                 drgFacing = (swapMovement) ? Direction.TopLeft : Direction.TopRight
             }
-            // if spread second, dragoon and warrior follow the exaflares
+            // if spread second, dragoon and warrior follow the exaflares to the
+            // opposite corner
             if (millis() > mechanicStarted + 9000 && millis() < mechanicStarted + 12500 && stackFirst) {
                 if (!rotateExaflares) {
                     warPosX += (swapMovement) ? -1.3 : 1.3
@@ -510,13 +538,20 @@ function draw() {
             // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140.
             let xPosStack = (stackFirst) ? 105 : 140
             let xPosSpread = (stackFirst) ? 140 : 105
+
+            // all the spreads/stacks should be gone after 13.5 seconds
             if (millis() < mechanicStarted + 13500) {
                 fill(0, 80, 50)
+                // here we display the red rectangles representing the spread
+                // and stack debuffs
+                // note that the first debuff resolves at 8.5 seconds.
                 if (!stackFirst || millis() < mechanicStarted + 8500) {
+                    // these are the stacks.
                     rect(xPosStack - 15, 20 + whoGetsStack[0] * 50, 30, 30)
                     rect(xPosStack - 15, 20 + whoGetsStack[1] * 50, 30, 30)
                 }
                 if (stackFirst || millis() < mechanicStarted + 8500) {
+                    // these are the spreads.
                     rect(xPosSpread - 15, 70, 30, 30)
                     rect(xPosSpread - 15, 120, 30, 30)
                     rect(xPosSpread - 15, 170, 30, 30)
@@ -530,7 +565,7 @@ function draw() {
                     text("2", xPosStack - 10, 45 + whoGetsStack[1] * 50)
                 }
 
-                // display a circle for spread
+                // display a stroked un-filled circle for spread
                 if (stackFirst || millis() < mechanicStarted + 8500) {
                     stroke(0, 0, 100)
                     noFill()
@@ -544,7 +579,7 @@ function draw() {
 
             noStroke()
 
-            // display exaflares and spreads/stacks
+            // display exaflares and spreads/stack AoEs
             for (let exoflare of exoflares) {
                 exoflare.update()
                 exoflare.displayAoE()
@@ -555,11 +590,8 @@ function draw() {
                 AoE.displayAoE()
             }
 
-            strokeWeight(1)
-            stroke(0, 0, 0)
-
-
-            // make it so that you can't see the corner exaflare sticking out
+            // make it so that you can't see the corner exaflare sticking out by
+            // adding a rectangle colored the background color to the left
             fill(234, 34, 24)
             noStroke()
             rect(350, 0, 50, height)
