@@ -1,9 +1,3 @@
-/**
- *  @author Cody
- *  @date 2024.01.09
- *
- */
-
 // an enum for facing and general direction in degrees
 class Direction {
     static Right = new Direction(0)
@@ -30,6 +24,29 @@ class Direction {
         rotate(radians(this.angle))
     }
 }
+
+/**
+ *  @author Cody
+ *  @date 2024.01.09
+ *
+ *  Bytes list:
+ *  ☐  Add new button for Analysis
+ *  ☐  Add new background for Lala
+ *  ☐  Add random direction debuff
+ *  ☐  Add new PersistingRectangleAOE class
+ *  ☐  Use new PersistingRectangleAOE class with arrows
+ *  ☐  Show empty spot in direction debuff
+ *  ☐  Show orbs
+ *  ☐  Show Blight cast
+ *  ☐  Add rotation buffs
+ *  ☐  Add clockwise/counterclockwise rotation symbol for you and boss
+ *  ☐  Add Arcane Blight semi-telegraph AoE and rotated cone AoE
+ *  ☐  Make orbs and tether activate and give you an message if you angled
+ *     your empty spot incorrectly
+ *  ☐  Rotate your direction debuff
+ */
+
+
 
 let font
 let fixedWidthFont
@@ -847,13 +864,15 @@ function draw() {
             }
             break
         case "Triple Kasumi-Giri":
-            // add ring that represents facing
+            // add the ring that represents facing
             stroke(0, 0, 100)
             strokeWeight(1)
             noFill()
             circle(bossPosX, bossPosY, 160) // note: this is 160 diameter, not 160 radius
             fill(0, 0, 100)
             noStroke()
+
+            // along with the triangle pointing the way that the boss is facing
             if (bossFacing === 1) { // up
                 triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10,
                          bossPosY - 80, bossPosX, bossPosY - 96)
@@ -868,6 +887,11 @@ function draw() {
                          bossPosY + 10, bossPosX - 96, bossPosY)
             }
 
+            // Each cleave has a color and a direction. The direction is the
+            // open section of the cleave symbol. If the color is orange, you
+            // must be out the hitbox. If it's blue, then you must be in the
+            // hitbox.
+
             // display the symbols for each cleave
             if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 1800) { // cleave #1
                 fill(0, 0, 0)
@@ -878,6 +902,7 @@ function draw() {
                     fill(180, 100, 100)
                 }
                 angleMode(DEGREES)
+
                 // display an arc with the cleaveOneSafeDirection not included
                 // (this is filled as a pie segment)
                 // not rotated towards boss facing!
@@ -893,6 +918,7 @@ function draw() {
                     fill(180, 100, 100)
                 }
                 angleMode(DEGREES)
+
                 // display an arc with the cleaveTwoSafeDirection not included
                 // (this is filled as a pie segment)
                 arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90,
@@ -907,6 +933,7 @@ function draw() {
                     fill(180, 100, 100)
                 }
                 angleMode(DEGREES)
+
                 // display an arc with the cleaveThreeSafeDirection not included
                 // (this is filled as a pie segment)
                 arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90,
@@ -914,6 +941,10 @@ function draw() {
                 angleMode(RADIANS)
             }
 
+            // first cleave
+            // note: the AoE opacity always starts at 0, meaning that if it's
+            // meant to resolve immediately, we have to set the opacity to
+            // something other than 0
             if (millis() - mechanicStarted > 6000 && !firstAoEResolved) {
                 firstAoEResolved = true
                 AoEs.push( // make these resolve immediately!
@@ -936,6 +967,7 @@ function draw() {
                 if (bossFacing === 0) bossFacing = 4
             }
 
+            // second cleave
             if (millis() - mechanicStarted > 8700 && !secondAoEResolved) {
                 secondAoEResolved = true
                 AoEs.push( // make these resolve immediately!
@@ -958,6 +990,7 @@ function draw() {
                 if (bossFacing === 0) bossFacing = 4
             }
 
+            // third cleave
             if (millis() - mechanicStarted > 11400 && !thirdAoEResolved) {
                 thirdAoEResolved = true
                 AoEs.push( // make these resolve immediately!
