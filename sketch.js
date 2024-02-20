@@ -962,7 +962,8 @@ function draw() {
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
-                // face away from the cleave. Always plus 2 or minus 2
+                // face away from the cleave. Always plus 2 or minus 2 from
+                // the direction of the cleave
                 bossFacing = (cleaveOneSafeDirection + 2) % 4
                 if (bossFacing === 0) bossFacing = 4
             }
@@ -985,7 +986,8 @@ function draw() {
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
-                // face away from the cleave. Always plus 2 or minus 2
+                // face away from the cleave. Always plus 2 or minus 2 from
+                // the direction of the cleave
                 bossFacing = (cleaveTwoSafeDirection + bossFacing - 1 + 2) % 4
                 if (bossFacing === 0) bossFacing = 4
             }
@@ -1008,11 +1010,13 @@ function draw() {
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
-                // face away from the cleave. Always plus 2 or minus 2
+                // face away from the cleave. Always plus 2 or minus 2 from
+                // the direction of the cleave
                 bossFacing = (cleaveThreeSafeDirection + bossFacing - 1 + 2) % 4
                 if (bossFacing === 0) bossFacing = 4
             }
 
+            // display the AoEs from the cleave and the circle/donut
             for (let AoE of AoEs) {
                 AoE.update()
                 AoE.displayAoE()
