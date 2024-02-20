@@ -266,43 +266,44 @@ function draw() {
     }
 
     // add mechanic buttons
+    // each one has rounded corners and is separated
     fill(0, 0, 25)
     stroke(0, 0, 100)
     strokeWeight(1)
     if (mouseX > 0 && mouseX < 77 &&
         mouseY > 390 && mouseY < 410) fill(0, 0, 15)
-    rect(-10, 390, 87, 20)
+    rect(-10, 390, 87, 20, 5)
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 127 &&
-        mouseY > 410 && mouseY < 433) fill(0, 0, 15)
-    rect(-10, 410, 137, 23)
+        mouseY > 415 && mouseY < 438) fill(0, 0, 15)
+    rect(-10, 415, 137, 23, 5)
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 210 &&
-        mouseY > 433 && mouseY < 453) fill(0, 0, 15)
-    rect(-10, 433, 220, 20)
+        mouseY > 443 && mouseY < 463) fill(0, 0, 15)
+    rect(-10, 443, 220, 20, 5)
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 151 &&
-        mouseY > 453 && mouseY < 476) fill(0, 0, 15)
-    rect(-10, 453, 161, 23)
+        mouseY > 468 && mouseY < 491) fill(0, 0, 15)
+    rect(-10, 468, 161, 23, 5)
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 133 &&
-        mouseY > 476 && mouseY < 499) fill(0, 0, 15)
-    rect(-10, 476, 143, 23)
+        mouseY > 496 && mouseY < 519) fill(0, 0, 15)
+    rect(-10, 496, 143, 23, 5)
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 120 &&
-        mouseY > 499 && mouseY < 519) fill(0, 0, 15)
-    rect(-10, 499, 130, 23)
+        mouseY > 524 && mouseY < 544) fill(0, 0, 15)
+    rect(-10, 524, 130, 23, 5)
     fill(0, 0, 25)
 
     fill(0, 0, 100)
     noStroke()
     textSize(17)
     text("Exoflares", 0, 405)
-    text("Fighting Spirits", 0, 428)
-    text("Malformed Reincarnation", 0, 448)
-    text("Triple Kasumi-Giri", 0, 471)
-    text("Fleeting Lai-Giri", 0, 494)
-    text("Azure Auspice", 0, 517)
+    text("Fighting Spirits", 0, 433)
+    text("Malformed Reincarnation", 0, 458)
+    text("Triple Kasumi-Giri", 0, 486)
+    text("Fleeting Lai-Giri", 0, 514)
+    text("Azure Auspice", 0, 542)
 
     stroke(0, 0, 0)
 
@@ -1032,10 +1033,10 @@ function draw() {
                 AoEs[AoEs.length - 1].opacity = 5
                 // now add the Boundless Scarlet lines
                 AoEs.push(
-                    new LineAOE(400, 170, 1000, 170, 130, 4000),
-                    new LineAOE(400, 430, 1000, 430, 130, 4000),
-                    new LineAOE(400, 0, 1000, 600, 130, 4000),
-                    new LineAOE(400, 600, 1000, 0, 130, 4000)
+                    new LineAOE(400, 170, 1000, 170, 140, 4000),
+                    new LineAOE(400, 430, 1000, 430, 140, 4000),
+                    new LineAOE(400, 0, 1000, 600, 140, 4000),
+                    new LineAOE(400, 600, 1000, 0, 140, 4000)
                 )
             }
 
@@ -1047,6 +1048,7 @@ function draw() {
                 let xPosStackDisplay = (stackFirst) ? 105 : 140
                 let xPosSpreadDisplay = (stackFirst) ? 140 : 105
                 fill(0, 80, 50)
+                // display stack and spread rectangles
                 if (!stackFirst || millis() - mechanicStarted < 32500) {
                     rect(xPosStackDisplay - 15, 20 + whoGetsStack[0] * 50, 30, 30)
                     rect(xPosStackDisplay - 15, 20 + whoGetsStack[1] * 50, 30, 30)
@@ -1082,7 +1084,7 @@ function draw() {
                 noStroke()
                 fill(0, 0, 0)
                 rect(bossPosX - 20, bossPosY - 60, 40, 40)
-                fill(300, 100, 50) // purple-ish color for shadow cleave
+                fill(300, 100, 20) // purple-ish color for shadow cleave
                 angleMode(DEGREES)
                 arc(bossPosX, bossPosY - 40, 30, 30, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
                 angleMode(RADIANS)
@@ -1527,7 +1529,7 @@ function mousePressed() {
         helper = true
     }
 
-    if (mouseX > 0 && mouseX < 90 &&
+    if (mouseX > 0 && mouseX < 77 &&
         mouseY > 390 && mouseY < 410) {
         mechanic = "Exoflares"
         mechanicStarted = millis()
@@ -1592,14 +1594,12 @@ function mousePressed() {
         bossPosX = -100
         bossPosY = -100
         partyWiped = false
-    }
-    if (mouseX > 0 && mouseX < 148 &&
-        mouseY > 410 && mouseY < 434) {
+    } if (mouseX > 0 && mouseX < 127 &&
+        mouseY > 415 && mouseY < 438) {
         mechanic = "Fighting Spirits"
         partyWiped = false
-    }
-    if (mouseX > 0 && mouseX < 245 &&
-        mouseY > 434 && mouseY < 454) {
+    } if (mouseX > 0 && mouseX < 210 &&
+        mouseY > 443 && mouseY < 463) {
         mechanic = "Malformed Reincarnation"
         mechanicStarted = millis()
         directionOfBlue = random([1, 2, 3, 4])
@@ -1714,8 +1714,8 @@ function mousePressed() {
         print(areThereTriples, triplesGivenTo, triplesNotGivenTo, majorityRed)
 
         AoEs = []
-    } if (mouseX > 0 && mouseX < 175 &&
-        mouseY > 454 && mouseY < 478) {
+    } if (mouseX > 0 && mouseX < 151 &&
+        mouseY > 468 && mouseY < 491) {
         mechanic = "Triple Kasumi-Giri"
         mechanicStarted = millis()
         posX = 700
@@ -1744,8 +1744,8 @@ function mousePressed() {
         thirdAoEResolved = false
 
         AoEs = []
-    } if (mouseX > 0 && mouseX < 155 &&
-        mouseY > 478 && mouseY < 502) {
+    } if (mouseX > 0 && mouseX < 133 &&
+        mouseY > 496 && mouseY < 519) {
         mechanic = "Fleeting Lai-Giri"
         mechanicStarted = millis()
         jumpResolved = false
@@ -1810,7 +1810,7 @@ function mousePressed() {
         // the first lines are displayed on top of the second lines
         AoEs.sort(sortByGrowingTime)
     } if (mouseX > 0 && mouseX < 120 &&
-        mouseY > 499 && mouseY < 519) {
+        mouseY > 524 && mouseY < 544) {
         mechanic = "Azure Auspice"
         mechanicStarted = millis()
         drgPosX = -100
