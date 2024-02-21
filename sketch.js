@@ -1537,22 +1537,6 @@ function draw() {
     // if (frameCount > 3000) noLoop()
 }
 
-function displayDonut(posX, posY, size) {
-    beginShape()
-    vertex(400, 0)
-    vertex(1000, 0)
-    vertex(1000, 600)
-    vertex(400, 600)
-    beginContour()
-    for (let angle = TWO_PI; angle > 0; angle -= 0.1) {
-        let x = posX + cos(angle) * size
-        let y = posY + sin(angle) * size
-        vertex(max(x, 400), y)
-    }
-    endContour()
-    endShape(CLOSE)
-}
-
 function mousePressed() {
     if (mouseX > 0 && mouseX < 230 &&
         mouseY > height - 30 && mouseY < height) {
@@ -1563,24 +1547,39 @@ function mousePressed() {
         mouseY > 390 && mouseY < 410) {
         mechanic = "Exoflares"
         mechanicStarted = millis()
+
+        // determines whether top-left and bottom-right are safe or top-right
+        // and bottom-left are safe.
         swapMovement = random([false, true])
+
+        // are exaflares on N/S or not?
         rotateExaflares = random([false, true])
+
+        // is it stack or spread first?
         stackFirst = random([false, true])
+
+        // determine who gets stack
         whoGetsStack = [0, 0]
         whoGetsStack[0] = random([1, 2, 3, 4])
         whoGetsStack[1] = whoGetsStack[0]
         while (whoGetsStack[0] === whoGetsStack[1]) {
             whoGetsStack[1] = random([1, 2, 3, 4])
         }
+
+        // sort the list at the end so that we don't have complications with
+        // defining swap
         whoGetsStack.sort()
+
         // if the same role gets stack, then we have to swap you and healer
-        swap = (whoGetsStack[0] === 1 && whoGetsStack[1] === 2) || (whoGetsStack[0] === 3 && whoGetsStack[1] === 4)
+        swap = (whoGetsStack[0] === 1 && whoGetsStack[1] === 2) ||
+               (whoGetsStack[0] === 3 && whoGetsStack[1] === 4)
         print(swap)
+
         exoflares = [
             // Add exoflares on the east and west. They go to the top-left and
             // bottom-right if swapMovement is false, and the top-right and
             // bottom-left if swapMovement is true.
-            // Or on north and south!
+            // Or on north and south if rotateExoflares is true!
             new Exaflare((!rotateExaflares) ? 450 : ((swapMovement) ? 620 : 440),
                 (rotateExaflares) ? 50 : ((swapMovement) ? 220 : 40), 180, 6500,
                 (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
@@ -1606,13 +1605,15 @@ function mousePressed() {
         // that we can tell whether someone got hit twice with stack or
         // spread.
         AoEs = [
-                new SpreadCircle(1, 300, (stackFirst) ? 13470 : 8470),
-                new SpreadCircle(2, 300, (stackFirst) ? 13490 : 8490),
-                new SpreadCircle(3, 300, (stackFirst) ? 13510 : 8510),
-                new SpreadCircle(4, 300, (stackFirst) ? 13530 : 8530),
+                new SpreadCircle(1, 250, (stackFirst) ? 13470 : 8470),
+                new SpreadCircle(2, 250, (stackFirst) ? 13490 : 8490),
+                new SpreadCircle(3, 250, (stackFirst) ? 13510 : 8510),
+                new SpreadCircle(4, 250, (stackFirst) ? 13530 : 8530),
                 new StackCircle(whoGetsStack[0], 300, (stackFirst) ? 8490 : 13490, 2),
                 new StackCircle(whoGetsStack[1], 300, (stackFirst) ? 8510 : 13510, 2),
             ]
+
+        // The boss is off the board and everyone else is at the center
         posX = 700
         posY = 300
         drgPosX = 700
@@ -1625,7 +1626,7 @@ function mousePressed() {
         bossPosY = -100
         partyWiped = false
     } if (mouseX > 0 && mouseX < 127 &&
-        mouseY > 415 && mouseY < 438) {
+        mouseY > 415 && mouseY < 438) { // Has yet to be implemented!
         mechanic = "Fighting Spirits"
         partyWiped = false
     } if (mouseX > 0 && mouseX < 210 &&
@@ -1634,8 +1635,11 @@ function mousePressed() {
         mechanicStarted = millis()
         directionOfBlue = random([1, 2, 3, 4])
         // 1 is top, 2 is right, 3 is bottom, 4 is left
+
         // we can't have people that are next to each other dropping towers
-        // behind the same tower
+        // behind the same tower color: figure out whether to rotate players
+
+        // figure out which corners are blue
         rotatePlayers = (directionOfBlue === 1 || directionOfBlue === 3)
         topRightIsBlue = (directionOfBlue === 1 || directionOfBlue === 2)
         topLeftIsBlue = (directionOfBlue === 1 || directionOfBlue === 4)
@@ -1656,7 +1660,7 @@ function mousePressed() {
         bossPosX = -100
         bossPosY = -100
 
-        // now add the towers, one for each corner
+        // now add the towers, two for each corner
         if (topRightIsBlue) {
             blueSoakTowers.push(
                 new SoakTower([240, 100, 100], 910, 90, 65, 16000),
@@ -1706,7 +1710,7 @@ function mousePressed() {
 
         // give out the triples now
         areThereTriples = random([false, true])
-        if (areThereTriples) {
+        if (areThereTriples) { // if there are triples...
             // give the triples to two random players
             triplesGivenTo = [0, 0]
             triplesGivenTo[0] = random([1, 2, 3, 4])
@@ -1741,13 +1745,15 @@ function mousePressed() {
                 majorityRed[1] = random([1, 2, 3, 4])
             }
         }
-        print(areThereTriples, triplesGivenTo, triplesNotGivenTo, majorityRed)
 
         AoEs = []
     } if (mouseX > 0 && mouseX < 151 &&
         mouseY > 468 && mouseY < 491) {
         mechanic = "Triple Kasumi-Giri"
         mechanicStarted = millis()
+
+        // the boss starts at the center and you start a little bit below
+        // it
         posX = 700
         posY = 400
         drgPosX = -100
@@ -1758,10 +1764,11 @@ function mousePressed() {
         warPosY = -100
         bossPosX = 700
         bossPosY = 300
-        bossFacing = 1 // always start oriented!
+        bossFacing = 1 // always start oriented north!
 
         // each cleave has a color and direction. orange means a point-blank
-        // AOE and blue means a donut AOE.
+        // AOE and blue means a donut AOE. the direction is the safe direction
+        // from the cleave.
         cleaveOneColor = random(["orange", "blue"])
         cleaveTwoColor = random(["orange", "blue"])
         cleaveThreeColor = random(["orange", "blue"])
@@ -1780,6 +1787,8 @@ function mousePressed() {
         mechanicStarted = millis()
         jumpResolved = false
 
+        // you, the healer, and the dragoon start behind, and the warrior starts
+        // at the top
         posX = 700
         posY = 410
         drgPosX = 610
@@ -1793,17 +1802,22 @@ function mousePressed() {
 
         circleResolved = false
 
+        // which lines expand first?
         topLeftCrossExpandsFirst = random([false, true])
         northLineExpandsFirst = random([false, true])
 
+        // stack or spread first?
         stackFirst = random([false, true])
-        whoGetsStack = [
+
+        whoGetsStack = [ // always given to one of each role
             random([1, 2]), // both DPS
             random([3, 4]), // both supports
         ]
 
+        // what is the safe direction of the cleave?
         cleaveOneSafeDirection = random([1, 2, 3, 4])
 
+        // who is tethered?
         tetheredPlayer = random([1, 2, 3, 4])
 
         // growingTimes[0] is when the line first appears. growingTimes[1-3] is
@@ -1839,10 +1853,13 @@ function mousePressed() {
         // this won't give away anything: sort the aoEs by their growing time.
         // the first lines are displayed on top of the second lines
         AoEs.sort(sortByGrowingTime)
+
+
     } if (mouseX > 0 && mouseX < 120 &&
         mouseY > 524 && mouseY < 544) {
         mechanic = "Azure Auspice"
         mechanicStarted = millis()
+        // everyone except for you starts off the map
         drgPosX = -100
         sgePosX = -100
         warPosX = -100
@@ -1865,7 +1882,7 @@ function mousePressed() {
                  linesInOrderOfResolvingOrder[3] === linesInOrderOfResolvingOrder[0]) {
             linesInOrderOfResolvingOrder[3] = random(["north", "south", "top-left", "top-right"])
         }
-        print(linesInOrderOfResolvingOrder)
+
         AoEs = []
         let lineNumber = 1
         for (let line of linesInOrderOfResolvingOrder) {
