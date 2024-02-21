@@ -298,12 +298,12 @@ function draw() {
     fill(0, 0, 100)
     noStroke()
     textSize(17)
-    text("Exoflares", 0, 405)
-    text("Fighting Spirits", 0, 433)
-    text("Malformed Reincarnation", 0, 458)
-    text("Triple Kasumi-Giri", 0, 486)
-    text("Fleeting Lai-Giri", 0, 514)
-    text("Azure Auspice", 0, 542)
+    text("Exoflares", 2, 405)
+    text("Fighting Spirits", 2, 433)
+    text("Malformed Reincarnation", 2, 458)
+    text("Triple Kasumi-Giri", 2, 486)
+    text("Fleeting Lai-Giri", 2, 514)
+    text("Azure Auspice", 2, 542)
 
     stroke(0, 0, 0)
 
@@ -1084,7 +1084,7 @@ function draw() {
                 noStroke()
                 fill(0, 0, 0)
                 rect(bossPosX - 20, bossPosY - 60, 40, 40)
-                fill(300, 100, 20) // purple-ish color for shadow cleave
+                fill(300, 100, 30) // purple-ish color for shadow cleave
                 angleMode(DEGREES)
                 arc(bossPosX, bossPosY - 40, 30, 30, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
                 angleMode(RADIANS)
@@ -1098,31 +1098,32 @@ function draw() {
             // display the tether
             let x1 = bossPosX
             let y1 = bossPosY
-            let x2
-            let y2
+            let x2 // the x position of the tethered player
+            let y2 // the y position of the tethered player
             let direction
             switch (tetheredPlayer) {
-                case 1:
+                case 1: // you
                     x2 = posX
                     y2 = posY
                     direction = yourFacing
                     break
-                case 2:
+                case 2: // dragoon
                     x2 = drgPosX
                     y2 = drgPosY
                     direction = drgFacing
                     break
-                case 3:
+                case 3: // sage
                     x2 = sgePosX
                     y2 = sgePosY
                     direction = sgeFacing
                     break
-                case 4:
+                case 4: // warrior
                     x2 = warPosX
                     y2 = warPosY
                     direction = warFacing
                     break
             }
+            // display the tether
             if ((12000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 31000)) {
                 stroke(45, 100, 100)
                 strokeWeight(1)
@@ -1133,17 +1134,22 @@ function draw() {
             // make the boss jump
             if (millis() - mechanicStarted > 31000 && !jumpResolved) {
                 angleMode(DEGREES)
-                bossPosX = x2 + 30*cos(-90 + direction*90)
-                bossPosY = y2 + 30*sin(-90 + direction*90)
-                print(direction, tetheredPlayer, cos(-90 + direction*90), sin(-90 + direction*90))
+                // lands 30 units behind you. use sin and cosine to calculate
+                // direction.angle is the exact angle in degrees. we just
+                // need to reverse it so that the boss lands behind you
+                bossPosX = x2 + 30*cos(180 + direction.angle)
+                bossPosY = y2 + 30*sin(180 + direction.angle)
                 angleMode(RADIANS)
                 jumpResolved = true
+
+                // now add the conal AoE after the jump
                 AoEs.push(
-                    new ConeAOE(bossPosX, bossPosY, 400, 405 + direction*90 + cleaveOneSafeDirection*90,
-                                315 + direction*90 + cleaveOneSafeDirection*90, 1500)
+                    new ConeAOE(bossPosX, bossPosY, 400,
+                                315 + direction.angle + cleaveOneSafeDirection*90,
+                                225 + direction.angle + cleaveOneSafeDirection*90, 1500)
                 )
-                print(bossPosX, bossPosY)
             }
+
 
             fill(234, 34, 24)
             noStroke()
@@ -1167,11 +1173,11 @@ function draw() {
                 warPosY += 0.92
                 warFacing = Direction.BottomLeft
             } if (millis() - mechanicStarted > 1700 && millis() - mechanicStarted < 2320) {
-                // the warrior needs to go a little left
+                // the warrior needs to go a little left after this
                 warPosX -= 1.3
                 warFacing = Direction.Left
             } if (millis() - mechanicStarted > 6000 && millis() - mechanicStarted < 7900) {
-                // move back in center
+                // move back into the center to prepare to move
                 sgePosX -= 1.3
                 sgeFacing = Direction.Left
                 drgPosX += 1.3
@@ -1180,7 +1186,7 @@ function draw() {
                 warFacing = Direction.Right
             }
             if (millis() - mechanicStarted > 11900 && millis() - mechanicStarted < 12000) {
-                // just correct everyone
+                // just correct everyone into the center
                 sgePosX = 700
                 sgePosY = 300
                 drgPosX = 700
@@ -1190,8 +1196,6 @@ function draw() {
             }
             // now move players to correct corner.
             // determine which corner is safe.
-            // 1.5 is top-left, 2.5 is top-right, 3.5 is bottom-right, and 4.5 is
-            // bottom-left. Same as system for facing
             let safeCorner = (northLineExpandsFirst) ?
                 (topLeftCrossExpandsFirst) ?
                     Direction.BottomLeft : // top-left and top means only bottom-left is safe
@@ -1201,40 +1205,48 @@ function draw() {
                     Direction.TopLeft // top-right and bottom means only top-left is safe
             if (millis() - mechanicStarted > 12000 && millis() - mechanicStarted < 15000) {
                 if (safeCorner === Direction.BottomLeft || safeCorner ===
-                    Direction.TopLeft) { // left
+                    Direction.TopLeft) { // everyone move left
                     sgePosX -= 0.92
                     drgPosX -= 1.02
                     warPosX -= 0.82
                 } if (safeCorner === Direction.BottomRight || safeCorner ===
-                    Direction.TopRight) { // right
+                    Direction.TopRight) { // everyone move right
                     sgePosX += 0.92
                     drgPosX += 1.02
                     warPosX += 0.82
                 } if (safeCorner === Direction.BottomLeft || safeCorner ===
-                    Direction.BottomRight) { // bottom
+                    Direction.BottomRight) { // everyone move down
                     sgePosY += 0.92
                     drgPosY += 0.82
                     warPosY += 1.02
                 } if (safeCorner === Direction.TopLeft || safeCorner ===
-                    Direction.TopRight) { // top
+                    Direction.TopRight) { // everyone move up
                     sgePosY -= 0.92
                     drgPosY -= 0.82
                     warPosY -= 1.02
                 }
+                // and we're all moving towards thes afe corner
                 sgeFacing = safeCorner
                 drgFacing = safeCorner
                 warFacing = safeCorner
             }
             if (millis() - mechanicStarted > 16900 && millis() - mechanicStarted < 17000) {
-                // Adjust everyone
+                // Everyone was a little offset in order to make sure you know
+                // who has the tether. Just correct now
                 drgPosX = sgePosX
                 drgPosY = sgePosY
                 warPosX = sgePosX
                 warPosY = sgePosY
             }
             // now put everyone in their correct positions
+            // facing towards the center, drg goes right, sge goes left, you
+            // go back, Mommy goes front
             if (millis() - mechanicStarted > 20000 && millis() - mechanicStarted < 20800) {
                 if (safeCorner === Direction.TopLeft) { // top-left
+                    // You     Sge
+                    //
+                    //
+                    // Drg     War
                     drgPosX += 0.92
                     drgPosY -= 0.92
                     sgePosX -= 0.92
@@ -1243,6 +1255,10 @@ function draw() {
                     warPosY += 0.92
                     warFacing = Direction.BottomRight
                 } if (safeCorner === Direction.TopRight) { // top-right
+                    // Sge     You
+                    //
+                    //
+                    // War     Drg
                     drgPosX -= 0.92
                     drgPosY -= 0.92
                     sgePosX += 0.92
@@ -1251,6 +1267,10 @@ function draw() {
                     warPosY += 0.92
                     warFacing = Direction.BottomLeft
                 } if (safeCorner === Direction.BottomRight) { // bottom-right
+                    // War     Drg
+                    //
+                    //
+                    // Sge     You
                     drgPosX -= 0.92
                     drgPosY += 0.92
                     sgePosX += 0.92
@@ -1259,6 +1279,10 @@ function draw() {
                     warPosY -= 0.92
                     warFacing = Direction.TopLeft
                 } if (safeCorner === Direction.BottomLeft) { // bottom-left
+                    // Drg     War
+                    //
+                    //
+                    // You     Sge
                     drgPosX += 0.92
                     drgPosY += 0.92
                     sgePosX -= 0.92
@@ -1273,6 +1297,7 @@ function draw() {
             if (millis() - mechanicStarted > 21000 && millis() - mechanicStarted < 22500) {
                 switch (tetheredPlayer) {
                     case 1: // you
+                        // the warrior goes to your spot towards the corner
                         if (safeCorner === Direction.TopLeft) { // top-left
                             warPosX -= 0.92
                             warPosY -= 0.92
@@ -1292,6 +1317,7 @@ function draw() {
                         }
                         break
                     case 2: // dragoon
+                        // drg and warrior swap places
                         if (safeCorner === Direction.TopLeft) { // top-left
                             drgPosY += 0.92
                             drgFacing = Direction.Down
@@ -1315,6 +1341,7 @@ function draw() {
                         }
                         break
                     case 3: // sage
+                        // sage and warrior swap places
                         if (safeCorner === Direction.TopLeft) { // top-left
                             sgePosX += 0.92
                             sgeFacing = Direction.Right
@@ -1341,7 +1368,7 @@ function draw() {
             }
 
             // put the tethered player in their correct position.
-            // move to the intersection
+            // snap to the intersection
             if (millis() - mechanicStarted > 22500 && millis() - mechanicStarted < 23000) {
                 print(safeCorner)
                 switch (tetheredPlayer) {
@@ -1367,6 +1394,9 @@ function draw() {
             }
             break
         case "Azure Auspice":
+            // since there's no other people involved and there's no special
+            // symbols, unlike in Triple Kasumi-Giri, we can just display all
+            // the AoEs.
             for (let AoE of AoEs) {
                 AoE.update()
                 AoE.displayAoE()
