@@ -31,7 +31,7 @@ class Direction {
  *
  *  Bytes list:
  *  ☒  Add new button for Analysis
- *  ☐  Add new background for Lala
+ *  ☒  Add new background for Lala
  *  ☐  Add random direction debuff
  *  ☐  Add new PersistingRectangleAOE class
  *  ☐  Use new PersistingRectangleAOE class with arrows
@@ -130,6 +130,8 @@ let tetheredPlayer
 let jumpResolved
 
 let linesInOrderOfResolvingOrder
+
+let debuffDirection
 
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
@@ -1424,11 +1426,49 @@ function draw() {
         case "Azure Auspice":
             // since there's no other people involved and there's no special
             // symbols, unlike in Triple Kasumi-Giri, we can just display all
-            // the AoEs.
+            // the AoEs and boom, done.
             for (let AoE of AoEs) {
                 AoE.update()
                 AoE.displayAoE()
             }
+            break
+        case "Analysis":
+            // display debuff direction over a very-dark brown background
+            fill(20, 100, 20)
+            rect(60, 60, 40, 40)
+
+            // display arcs for each direction
+            fill(20, 100, 40) // up
+            if (debuffDirection === Direction.Up) {
+                fill(180, 100, 90)
+            }
+            angleMode(DEGREES)
+            arc(80, 80, 33, 33, 235, 305)
+
+            fill(20, 100, 40) // right
+            if (debuffDirection === Direction.Right) {
+                fill(180, 100, 90)
+            }
+            arc(80, 80, 33, 33, -35, 35)
+
+            fill(20, 100, 40) // down
+            if (debuffDirection === Direction.Down) {
+                fill(180, 100, 90)
+            }
+            arc(80, 80, 33, 33, 55, 125)
+
+            fill(20, 100, 40) // left
+            if (debuffDirection === Direction.Left) {
+                fill(180, 100, 90)
+            }
+            arc(80, 80, 33, 33, 145, 215)
+            angleMode(RADIANS)
+
+            // now since we drew filled arcs, draw a circle in the middle
+            fill(20, 100, 20)
+            circle(80, 80, 20, 20)
+
+            // note: we drew filled arcs so that it wouldn't have rounded edges
     }
 
     // display you and your party members in your and their respective position
@@ -1966,6 +2006,9 @@ function mousePressed() {
         sgePosX = -100
         warPosX = -100
         bossPosX = -100
+
+        // random debuff direction
+        debuffDirection = random([Direction.Up, Direction.Right, Direction.Down, Direction.Left])
     }
 }
 
