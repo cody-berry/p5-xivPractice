@@ -32,7 +32,7 @@ class Direction {
  *  Bytes list:
  *  ☒  Add new button for Analysis
  *  ☒  Add new background for Lala
- *  ☐  Add random direction debuff
+ *  ☒  Add random direction debuff
  *  ☐  Add new PersistingRectangleAOE class
  *  ☐  Use new PersistingRectangleAOE class with arrows
  *  ☐  Show empty spot in direction debuff
@@ -481,6 +481,11 @@ function draw() {
         // then horizontal
         for (let yPos = 20; yPos < 600; yPos += squareSize) {
             line(420, yPos, 980, yPos)
+        }
+
+        // display the persisting rects
+        for (let AoE of AoEs) {
+            AoE.displayAoE()
         }
     }
 
@@ -2006,6 +2011,31 @@ function mousePressed() {
         sgePosX = -100
         warPosX = -100
         bossPosX = -100
+
+        // test persisting rect
+        AoEs = [
+            new PersistingRectangleAOE(420, 20, 112, 112, 5000, 60000),
+            new PersistingRectangleAOE(532, 20, 112, 112, 6100, 60000),
+            new PersistingRectangleAOE(644, 20, 112, 112, 7200, 60000),
+            new PersistingRectangleAOE(756, 20, 112, 112, 8300, 60000),
+            new PersistingRectangleAOE(868, 20, 112, 112, 9400, 60000),
+            new PersistingRectangleAOE(868, 132, 112, 112, 10500, 60000),
+            new PersistingRectangleAOE(756, 132, 112, 112, 11600, 60000),
+            new PersistingRectangleAOE(644, 132, 112, 112, 12700, 60000),
+            new PersistingRectangleAOE(532, 132, 112, 112, 13800, 60000),
+            new PersistingRectangleAOE(420, 132, 112, 112, 14900, 60000),
+
+            new PersistingRectangleAOE(868, 468, 112, 112, 5000, 60000),
+            new PersistingRectangleAOE(756, 468, 112, 112, 6100, 60000),
+            new PersistingRectangleAOE(644, 468, 112, 112, 7200, 60000),
+            new PersistingRectangleAOE(532, 468, 112, 112, 8300, 60000),
+            new PersistingRectangleAOE(420, 468, 112, 112, 9400, 60000),
+            new PersistingRectangleAOE(420, 356, 112, 112, 10500, 60000),
+            new PersistingRectangleAOE(532, 356, 112, 112, 11600, 60000),
+            new PersistingRectangleAOE(644, 356, 112, 112, 12700, 60000),
+            new PersistingRectangleAOE(756, 356, 112, 112, 13800, 60000),
+            new PersistingRectangleAOE(868, 356, 112, 112, 14900, 60000)
+        ]
 
         // random debuff direction
         debuffDirection = random([Direction.Up, Direction.Right, Direction.Down, Direction.Left])

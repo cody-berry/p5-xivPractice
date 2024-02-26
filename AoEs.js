@@ -1137,3 +1137,25 @@ class WaterLine {
              this.y2 + (millis() - this.wentOffAt - 100)/37.5*cos(this.angleOfLine))
     }
 }
+
+// This rectangle AoE persists for some amount of time. Untelegraphed.
+class PersistingRectangleAOE {
+    constructor(x, y, w, h, millisUntilActivation, millisUntilActivationEnds) {
+        this.x = x
+        this.y = y
+        this.w = w
+        this.h = h
+        this.activateAt = millis() + millisUntilActivation
+        this.endActivation = millis() + millisUntilActivationEnds
+    }
+
+    displayAoE() {
+        // just display if the milliseconds is in between when it's supposed to
+        // activate and when it's supposed to stop activating
+        if (this.activateAt < millis() && millis() < this.endActivation) {
+            fill(180, 100, 100, 50)
+            noStroke()
+            rect(this.x, this.y, this.w, this.h)
+        }
+    }
+}
