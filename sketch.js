@@ -251,6 +251,17 @@ function setup() {
     angleMode(RADIANS)
 }
 
+// display an arrow at a specified location in a specified direction
+function displayArrow(x, y, direction) {
+    push()
+    translate(x, y)
+    direction.rotateToDirection()
+    rect(-25, -10, 40, 20) // arrow base
+    triangle(5, 20, 30, 0, 5, -20) // arrow head
+    noStroke()
+    rect(0, -9, 10, 18) // get rid of extra stroke
+    pop()
+}
 
 function draw() {
     background(234, 34, 24)
@@ -1474,6 +1485,90 @@ function draw() {
             circle(80, 80, 20, 20)
 
             // note: we drew filled arcs so that it wouldn't have rounded edges
+
+            // now display the arrows
+            // N&S (!rotatePlayers): NE pointing S and SW pointing N
+            if (!rotatePlayers) {
+                // initial ones at the corners
+                // we represent an arrow by a rectangle and a triangle
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(924, 76, Direction.Down)
+
+                // do the same for SW pointing N
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(476, 524, Direction.Up)
+
+                // then it comes around to SE pointing W and NW pointing E
+                // SE pointing W
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(924, 524, Direction.Left)
+
+                // NW pointing E
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(476, 76, Direction.Right)
+
+                // one cell after that, we get more N/S things
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(812, 524, Direction.Up)
+
+                // NW pointing E
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(588, 76, Direction.Down)
+            }
+            // E&W (rotatePlayers): NW pointing E and SE pointing W
+            if (rotatePlayers) {
+                // initial ones at the corners
+                // SE pointing W
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(924, 524, Direction.Left)
+
+                // NW pointing E
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(476, 76, Direction.Right)
+
+                // then it comes around to NE pointing S and SW pointing N
+                // NE pointing S
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(924, 76, Direction.Down)
+
+                // SW pointing N
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(476, 524, Direction.Up)
+
+                // one cell after that, we get more E/W things
+                // NE pointing W
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(924, 188, Direction.Left)
+
+                // SW pointing E
+                fill(0, 0, 0)
+                stroke(0, 0, 50)
+                strokeWeight(2)
+                displayArrow(476, 412, Direction.Right)
+            }
+            break
     }
 
     // display you and your party members in your and their respective position
@@ -2012,8 +2107,11 @@ function mousePressed() {
         warPosX = -100
         bossPosX = -100
 
+        // sometimes the arrows cover east and west, other times north and south
+        rotatePlayers = random([false, true])
+
         // test persisting rect
-        AoEs = [
+        AoEs = (rotatePlayers) ? [ // N&S
             new PersistingRectangleAOE(420, 20, 112, 112, 5000, 60000),
             new PersistingRectangleAOE(532, 20, 112, 112, 6100, 60000),
             new PersistingRectangleAOE(644, 20, 112, 112, 7200, 60000),
@@ -2035,6 +2133,28 @@ function mousePressed() {
             new PersistingRectangleAOE(644, 356, 112, 112, 12700, 60000),
             new PersistingRectangleAOE(756, 356, 112, 112, 13800, 60000),
             new PersistingRectangleAOE(868, 356, 112, 112, 14900, 60000)
+        ] : [ // E&W 20 132
+            new PersistingRectangleAOE(420, 468, 112, 112, 5000, 60000),
+            new PersistingRectangleAOE(420, 356, 112, 112, 6100, 60000),
+            new PersistingRectangleAOE(420, 244, 112, 112, 7200, 60000),
+            new PersistingRectangleAOE(420, 132, 112, 112, 8300, 60000),
+            new PersistingRectangleAOE(420, 20, 112, 112, 9400, 60000),
+            new PersistingRectangleAOE(532, 20, 112, 112, 10500, 60000),
+            new PersistingRectangleAOE(532, 132, 112, 112, 11600, 60000),
+            new PersistingRectangleAOE(532, 244, 112, 112, 12700, 60000),
+            new PersistingRectangleAOE(532, 356, 112, 112, 13800, 60000),
+            new PersistingRectangleAOE(532, 468, 112, 112, 14900, 60000),
+
+            new PersistingRectangleAOE(868, 20, 112, 112, 5000, 60000),
+            new PersistingRectangleAOE(868, 132, 112, 112, 6100, 60000),
+            new PersistingRectangleAOE(868, 244, 112, 112, 7200, 60000),
+            new PersistingRectangleAOE(868, 356, 112, 112, 8300, 60000),
+            new PersistingRectangleAOE(868, 468, 112, 112, 9400, 60000),
+            new PersistingRectangleAOE(756, 468, 112, 112, 10500, 60000),
+            new PersistingRectangleAOE(756, 356, 112, 112, 11600, 60000),
+            new PersistingRectangleAOE(756, 244, 112, 112, 12700, 60000),
+            new PersistingRectangleAOE(756, 132, 112, 112, 13800, 60000),
+            new PersistingRectangleAOE(756, 20, 112, 112, 14900, 60000)
         ]
 
         // random debuff direction
