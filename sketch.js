@@ -30,7 +30,7 @@ class Direction {
  *  @date 2024.01.09
  *
  *  Bytes list:
- *  ☐  Add new button for Analysis
+ *  ☒  Add new button for Analysis
  *  ☐  Add new background for Lala
  *  ☐  Add random direction debuff
  *  ☐  Add new PersistingRectangleAOE class
@@ -456,6 +456,30 @@ function draw() {
         vertex(400 + columnWidth*2, 600 - rowHeight*2 + 3)
         endContour()
         endShape()
+    } if (mechanic === "Analysis") { // Lala background
+        // there are 5 rows and 5 columns, and all we really need to do is
+        // display that in the 560 width and 560 height that we have after
+        // making the outside unsafe. Each square has a size of 560/5 = 112.
+        // first we just display a blue background for the unsafe section, and
+        // then we draw the stone board on top
+        fill(180, 100, 70)
+        noStroke()
+        rect(400, 0, 600, 600)
+        fill(20, 20, 20)
+        rect(420, 20, 560, 560)
+
+        // now we display the lines
+        stroke(0, 0, 0)
+        strokeWeight(3)
+        let squareSize = 112
+        // vertical first
+        for (let xPos = 420; xPos < 1000; xPos += squareSize) {
+            line(xPos, 20, xPos, 580)
+        }
+        // then horizontal
+        for (let yPos = 20; yPos < 600; yPos += squareSize) {
+            line(420, yPos, 980, yPos)
+        }
     }
 
 
@@ -1933,6 +1957,15 @@ function mousePressed() {
             }
             lineNumber++
         }
+    } if (mouseX > 0 && mouseX < 83 &&
+        mouseY > 542 && mouseY < 565) { // Analysis
+        mechanic = "Analysis"
+        mechanicStarted = millis()
+        // everyone except for you starts off the map
+        drgPosX = -100
+        sgePosX = -100
+        warPosX = -100
+        bossPosX = -100
     }
 }
 
