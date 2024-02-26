@@ -270,40 +270,44 @@ function draw() {
     fill(0, 0, 25)
     stroke(0, 0, 100)
     strokeWeight(1)
-    if (mouseX > 0 && mouseX < 77 &&
-        mouseY > 390 && mouseY < 410) fill(0, 0, 15)
-    rect(-10, 390, 87, 20, 5)
+    if (mouseX > 0 && mouseX < 80 &&
+        mouseY > 380 && mouseY < 400) fill(0, 0, 15)
+    rect(-10, 380, 90, 20, 5)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 127 &&
-        mouseY > 415 && mouseY < 438) fill(0, 0, 15)
-    rect(-10, 415, 137, 23, 5)
+    if (mouseX > 0 && mouseX < 130 &&
+        mouseY > 405 && mouseY < 428) fill(0, 0, 15)
+    rect(-10, 405, 140, 23, 5)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 210 &&
-        mouseY > 443 && mouseY < 463) fill(0, 0, 15)
-    rect(-10, 443, 220, 20, 5)
+    if (mouseX > 0 && mouseX < 213 &&
+        mouseY > 433 && mouseY < 453) fill(0, 0, 15)
+    rect(-10, 433, 223, 20, 5)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 151 &&
-        mouseY > 468 && mouseY < 491) fill(0, 0, 15)
-    rect(-10, 468, 161, 23, 5)
+    if (mouseX > 0 && mouseX < 155 &&
+        mouseY > 458 && mouseY < 481) fill(0, 0, 15)
+    rect(-10, 458, 165, 23, 5)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 133 &&
-        mouseY > 496 && mouseY < 519) fill(0, 0, 15)
-    rect(-10, 496, 143, 23, 5)
+    if (mouseX > 0 && mouseX < 135 &&
+        mouseY > 486 && mouseY < 509) fill(0, 0, 15)
+    rect(-10, 486, 145, 23, 5)
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < 120 &&
-        mouseY > 524 && mouseY < 544) fill(0, 0, 15)
-    rect(-10, 524, 130, 23, 5)
+    if (mouseX > 0 && mouseX < 123 &&
+        mouseY > 514 && mouseY < 534) fill(0, 0, 15)
+    rect(-10, 514, 133, 23, 5)
     fill(0, 0, 25)
+    if (mouseX > 0 && mouseX < 83 &&
+        mouseY > 542 && mouseY < 565) fill(0, 0, 15)
+    rect(-10, 542, 83, 23, 5)
 
     fill(0, 0, 100)
     noStroke()
     textSize(17)
-    text("Exoflares", 2, 405)
-    text("Fighting Spirits", 2, 433)
-    text("Malformed Reincarnation", 2, 458)
-    text("Triple Kasumi-Giri", 2, 486)
-    text("Fleeting Lai-Giri", 2, 514)
-    text("Azure Auspice", 2, 542)
+    text("Exoflares", 3, 395)
+    text("Fighting Spirits", 3, 423)
+    text("Malformed Reincarnation", 3, 448)
+    text("Triple Kasumi-Giri", 3, 476)
+    text("Fleeting Lai-Giri", 3, 504)
+    text("Azure Auspice", 3, 532)
+    text("Analysis", 3, 560)
 
     stroke(0, 0, 0)
 
@@ -1543,8 +1547,8 @@ function mousePressed() {
         helper = true
     }
 
-    if (mouseX > 0 && mouseX < 77 &&
-        mouseY > 390 && mouseY < 410) {
+    if (mouseX > 0 && mouseX < 80 &&
+        mouseY > 380 && mouseY < 400) {
         mechanic = "Exoflares"
         mechanicStarted = millis()
 
@@ -1625,12 +1629,12 @@ function mousePressed() {
         bossPosX = -100
         bossPosY = -100
         partyWiped = false
-    } if (mouseX > 0 && mouseX < 127 &&
-        mouseY > 415 && mouseY < 438) { // Has yet to be implemented!
+    } if (mouseX > 0 && mouseX < 130 &&
+        mouseY > 405 && mouseY < 428) { // Has yet to be implemented!
         mechanic = "Fighting Spirits"
         partyWiped = false
-    } if (mouseX > 0 && mouseX < 210 &&
-        mouseY > 443 && mouseY < 463) {
+    } if (mouseX > 0 && mouseX < 213 &&
+        mouseY > 433 && mouseY < 453) {
         mechanic = "Malformed Reincarnation"
         mechanicStarted = millis()
         directionOfBlue = random([1, 2, 3, 4])
@@ -1747,8 +1751,8 @@ function mousePressed() {
         }
 
         AoEs = []
-    } if (mouseX > 0 && mouseX < 151 &&
-        mouseY > 468 && mouseY < 491) {
+    } if (mouseX > 0 && mouseX < 155 &&
+        mouseY > 458 && mouseY < 481) {
         mechanic = "Triple Kasumi-Giri"
         mechanicStarted = millis()
 
@@ -1781,8 +1785,8 @@ function mousePressed() {
         thirdAoEResolved = false
 
         AoEs = []
-    } if (mouseX > 0 && mouseX < 133 &&
-        mouseY > 496 && mouseY < 519) {
+    } if (mouseX > 0 && mouseX < 135 &&
+        mouseY > 486 && mouseY < 529) {
         mechanic = "Fleeting Lai-Giri"
         mechanicStarted = millis()
         jumpResolved = false
@@ -1855,8 +1859,8 @@ function mousePressed() {
         AoEs.sort(sortByGrowingTime)
 
 
-    } if (mouseX > 0 && mouseX < 120 &&
-        mouseY > 524 && mouseY < 544) {
+    } if (mouseX > 0 && mouseX < 123 &&
+        mouseY > 514 && mouseY < 534) {
         mechanic = "Azure Auspice"
         mechanicStarted = millis()
         // everyone except for you starts off the map
