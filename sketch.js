@@ -35,7 +35,7 @@ class Direction {
  *  ☒  Add random direction debuff
  *  ☒  Add new PersistingRectangleAOE class
  *  ☒  Use new PersistingRectangleAOE class with arrows
- *  ☐  Show empty spot in direction debuff
+ *  ☒  Show empty spot in direction debuff
  *  ☐  Show orbs
  *  ☐  Show Blight cast
  *  ☐  Add rotation buffs
@@ -132,6 +132,9 @@ let jumpResolved
 let linesInOrderOfResolvingOrder
 
 let debuffDirection
+let orbOnePosition
+let orbTwoPosition
+let possibility
 
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
@@ -1449,7 +1452,6 @@ function draw() {
             }
             break
         case "Analysis":
-
             // display your "shield"
             // it's just a bright 270º arc around you with the safe spot
             // being the empty spot
@@ -1457,7 +1459,7 @@ function draw() {
             translate(posX, posY)
             yourFacing.rotateToDirection()
             debuffDirection.rotateToDirection()
-            stroke(0, 0, 75)
+            stroke(0, 0, 100)
             noFill()
             strokeWeight(10)
             angleMode(DEGREES)
@@ -1600,6 +1602,18 @@ function draw() {
                     strokeWeight(2)
                     displayArrow(476, 412, Direction.Right)
                 }
+            }
+
+            // display the orbs
+            // the first goes off at 6.1s, and the second goes off at
+            // 13.8s/14.9s (13.8s if possibility is odd)
+            stroke(0, 0, 50)
+            strokeWeight(30)
+            if (millis() - mechanicStarted < 6100) {
+                point(orbOnePosition[0], orbOnePosition[1])
+            } if (millis() - mechanicStarted < 13800 ||
+                 (millis() - mechanicStarted < 14900 && possibility % 2 === 0)) {
+                point(orbTwoPosition[0], orbTwoPosition[1])
             }
 
             break
@@ -2166,7 +2180,7 @@ function mousePressed() {
             new PersistingRectangleAOE(644, 356, 112, 112, 12700, 60000),
             new PersistingRectangleAOE(756, 356, 112, 112, 13800, 60000),
             new PersistingRectangleAOE(868, 356, 112, 112, 14900, 60000)
-        ] : [ // E&W 20 132
+        ] : [ // E&W
             new PersistingRectangleAOE(420, 468, 112, 112, 0, 60000),
             new PersistingRectangleAOE(420, 356, 112, 112, 6100, 60000),
             new PersistingRectangleAOE(420, 244, 112, 112, 7200, 60000),
@@ -2193,6 +2207,57 @@ function mousePressed() {
         // random debuff direction
         debuffDirection = random(
             [Direction.Up, Direction.Right, Direction.Down, Direction.Left])
+
+        // there are 8 possibilities:
+        // 1:
+        // →O  ↓
+        //     ←
+        //
+        // →  O
+        // ↑   ←
+        // 2: same as 1, but with the SE orb 1 square to the right
+        // 3: same as 1, except the orb that triggers immediately is on the
+        //    opposite side of the board
+        // 4: same as 2, except the orb that triggers immediately is on the
+        //    opposite side of the board
+        // 5: same as 1, but rotated 90º
+        // 6: same as 2, but rotated 90º
+        // 7: same as 3, but rotated 90º
+        // 8: same as 4, but rotated 90º
+        // 1, 2, 3, and 4 only trigger with rotatePlayers
+        // 5, 6, 7, and 8 only trigger with !rotatePlayers
+
+        if (rotatePlayers) {
+            possibility = random([1, 2, 3, 4])
+            if (possibility === 1) {
+                orbOnePosition = [588, 76]
+                orbTwoPosition = [812, 412]
+            } if (possibility === 2) {
+                orbOnePosition = [588, 76]
+                orbTwoPosition = [924, 412]
+            } if (possibility === 3) {
+                orbOnePosition = [812, 524]
+                orbTwoPosition = [588, 188]
+            } if (possibility === 4) {
+                orbOnePosition = [812, 524]
+                orbTwoPosition = [476, 188]
+            }
+        } else {
+            possibility = random([5, 6, 7, 8])
+            if (possibility === 5) {
+                orbOnePosition = [924, 188]
+                orbTwoPosition = [588, 412]
+            } if (possibility === 6) {
+                orbOnePosition = [924, 188]
+                orbTwoPosition = [588, 524]
+            } if (possibility === 7) {
+                orbOnePosition = [476, 412]
+                orbTwoPosition = [812, 188]
+            } if (possibility === 8) {
+                orbOnePosition = [476, 412]
+                orbTwoPosition = [812, 76]
+            }
+        }
     }
 }
 
