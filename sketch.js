@@ -33,8 +33,8 @@ class Direction {
  *  ☒  Add new button for Analysis
  *  ☒  Add new background for Lala
  *  ☒  Add random direction debuff
- *  ☐  Add new PersistingRectangleAOE class
- *  ☐  Use new PersistingRectangleAOE class with arrows
+ *  ☒  Add new PersistingRectangleAOE class
+ *  ☒  Use new PersistingRectangleAOE class with arrows
  *  ☐  Show empty spot in direction debuff
  *  ☐  Show orbs
  *  ☐  Show Blight cast
@@ -1449,6 +1449,22 @@ function draw() {
             }
             break
         case "Analysis":
+
+            // display your "shield"
+            // it's just a bright 270º arc around you with the safe spot
+            // being the empty spot
+            push()
+            translate(posX, posY)
+            yourFacing.rotateToDirection()
+            debuffDirection.rotateToDirection()
+            stroke(0, 0, 75)
+            noFill()
+            strokeWeight(10)
+            angleMode(DEGREES)
+            arc(0, 0, 80, 80, 135, 45)
+            angleMode(RADIANS)
+            pop()
+
             // display debuff direction over a very-dark brown background
             fill(20, 100, 20)
             rect(60, 60, 40, 40)
@@ -1482,92 +1498,110 @@ function draw() {
 
             // now since we drew filled arcs, draw a circle in the middle
             fill(20, 100, 20)
-            circle(80, 80, 20, 20)
+            circle(80, 80, 20)
 
             // note: we drew filled arcs so that it wouldn't have rounded edges
+            // timings:
+            // the initial arrows are activated at 5s
+            // the rectangle AoEs will move to the second arrows at 9.4s
+            // they will move to the third arrows at 10.5s
 
             // now display the arrows
             // N&S (!rotatePlayers): NE pointing S and SW pointing N
             if (!rotatePlayers) {
                 // initial ones at the corners
-                // we represent an arrow by a rectangle and a triangle
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(924, 76, Direction.Down)
+                if (millis() - mechanicStarted < 5000) {
+                    // NE pointing S
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(924, 76, Direction.Down)
 
-                // do the same for SW pointing N
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(476, 524, Direction.Up)
+                    // SW pointing N
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(476, 524, Direction.Up)
+                }
 
                 // then it comes around to SE pointing W and NW pointing E
-                // SE pointing W
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(924, 524, Direction.Left)
+                if (millis() - mechanicStarted < 9400) {
+                    // SE pointing W
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(924, 524, Direction.Left)
 
-                // NW pointing E
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(476, 76, Direction.Right)
+                    // NW pointing E
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(476, 76, Direction.Right)
+                }
 
                 // one cell after that, we get more N/S things
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(812, 524, Direction.Up)
+                if (millis() - mechanicStarted < 10500) {
+                    // SE pointing N
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(812, 524, Direction.Up)
 
-                // NW pointing E
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(588, 76, Direction.Down)
+                    // NW pointing S
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(588, 76, Direction.Down)
+                }
             }
             // E&W (rotatePlayers): NW pointing E and SE pointing W
             if (rotatePlayers) {
                 // initial ones at the corners
-                // SE pointing W
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(924, 524, Direction.Left)
+                if (millis() - mechanicStarted < 5000) {
+                    // SE pointing W
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(924, 524, Direction.Left)
 
-                // NW pointing E
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(476, 76, Direction.Right)
+                    // NW pointing E
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(476, 76, Direction.Right)
+                }
 
                 // then it comes around to NE pointing S and SW pointing N
-                // NE pointing S
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(924, 76, Direction.Down)
+                if (millis() - mechanicStarted < 9400) {
+                    // NE pointing S
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(924, 76, Direction.Down)
 
-                // SW pointing N
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(476, 524, Direction.Up)
+                    // SW pointing N
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(476, 524, Direction.Up)
+                }
 
                 // one cell after that, we get more E/W things
-                // NE pointing W
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(924, 188, Direction.Left)
+                if (millis() - mechanicStarted < 10500) {
+                    // NE pointing W
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(924, 188, Direction.Left)
 
-                // SW pointing E
-                fill(0, 0, 0)
-                stroke(0, 0, 50)
-                strokeWeight(2)
-                displayArrow(476, 412, Direction.Right)
+                    // SW pointing E
+                    fill(0, 0, 0)
+                    stroke(0, 0, 50)
+                    strokeWeight(2)
+                    displayArrow(476, 412, Direction.Right)
+                }
             }
+
             break
     }
 
@@ -1647,7 +1681,6 @@ function draw() {
         noStroke()
         text(causeOfWipe, 10, 300)
     }
-    print(engagedAt)
 
     push()
     translate(posX, posY)
@@ -2112,7 +2145,7 @@ function mousePressed() {
 
         // test persisting rect
         AoEs = (rotatePlayers) ? [ // N&S
-            new PersistingRectangleAOE(420, 20, 112, 112, 5000, 60000),
+            new PersistingRectangleAOE(420, 20, 112, 112, 0, 60000),
             new PersistingRectangleAOE(532, 20, 112, 112, 6100, 60000),
             new PersistingRectangleAOE(644, 20, 112, 112, 7200, 60000),
             new PersistingRectangleAOE(756, 20, 112, 112, 8300, 60000),
@@ -2123,7 +2156,7 @@ function mousePressed() {
             new PersistingRectangleAOE(532, 132, 112, 112, 13800, 60000),
             new PersistingRectangleAOE(420, 132, 112, 112, 14900, 60000),
 
-            new PersistingRectangleAOE(868, 468, 112, 112, 5000, 60000),
+            new PersistingRectangleAOE(868, 468, 112, 112, 0, 60000),
             new PersistingRectangleAOE(756, 468, 112, 112, 6100, 60000),
             new PersistingRectangleAOE(644, 468, 112, 112, 7200, 60000),
             new PersistingRectangleAOE(532, 468, 112, 112, 8300, 60000),
@@ -2134,7 +2167,7 @@ function mousePressed() {
             new PersistingRectangleAOE(756, 356, 112, 112, 13800, 60000),
             new PersistingRectangleAOE(868, 356, 112, 112, 14900, 60000)
         ] : [ // E&W 20 132
-            new PersistingRectangleAOE(420, 468, 112, 112, 5000, 60000),
+            new PersistingRectangleAOE(420, 468, 112, 112, 0, 60000),
             new PersistingRectangleAOE(420, 356, 112, 112, 6100, 60000),
             new PersistingRectangleAOE(420, 244, 112, 112, 7200, 60000),
             new PersistingRectangleAOE(420, 132, 112, 112, 8300, 60000),
@@ -2145,7 +2178,7 @@ function mousePressed() {
             new PersistingRectangleAOE(532, 356, 112, 112, 13800, 60000),
             new PersistingRectangleAOE(532, 468, 112, 112, 14900, 60000),
 
-            new PersistingRectangleAOE(868, 20, 112, 112, 5000, 60000),
+            new PersistingRectangleAOE(868, 20, 112, 112, 0, 60000),
             new PersistingRectangleAOE(868, 132, 112, 112, 6100, 60000),
             new PersistingRectangleAOE(868, 244, 112, 112, 7200, 60000),
             new PersistingRectangleAOE(868, 356, 112, 112, 8300, 60000),
@@ -2158,7 +2191,8 @@ function mousePressed() {
         ]
 
         // random debuff direction
-        debuffDirection = random([Direction.Up, Direction.Right, Direction.Down, Direction.Left])
+        debuffDirection = random(
+            [Direction.Up, Direction.Right, Direction.Down, Direction.Left])
     }
 }
 
