@@ -335,6 +335,50 @@ function displayArrow(x, y, direction) {
     pop()
 }
 
+function drawRotationSymbol(x, y, disappearsWhen) {
+    if (millis() < disappearsWhen && millis() > disappearsWhen - 10000) {
+        stroke(20, 100, 40)
+        strokeWeight(2)
+        noFill()
+
+        // outer circle
+        push()
+        translate(x, y)
+        circle(0, 0, 50)
+
+        // now the lines
+        line(-17, -17, 17, 17)
+        line(-17, 17, 17, -17)
+
+        // in place of the rotating thing, add an arrow
+        stroke(0, 0, 100)
+        strokeWeight(2)
+        angleMode(DEGREES)
+        arc(0, 0, 40, 40, -90, 0)
+        angleMode(RADIANS)
+        line(17, -3, 20, 0)
+        line(22, -3, 20, 0)
+
+        // add a triangle where it's going to rotate if it's V
+        stroke(240, 50, 50)
+        fill(240, 50, 50)
+        triangle(27, -3, 27, 3, 32, 0)
+
+        // add 3 triangles where it's going to rotate if it's III
+        stroke(30, 50, 50)
+        fill(30, 50, 50)
+        triangle(-33, 3, -27, 3, -30, -3)
+        triangle(-3, 27, -3, 33, -8, 30)
+
+        // and the number of seconds until it's done
+        if (millis() > disappearsWhen - 5000) {
+            fill(0, 0, 100)
+            text(ceil((disappearsWhen - millis()) / 1000), -10, 12)
+        }
+        pop()
+    }
+}
+
 function draw() {
     background(234, 34, 24)
 
@@ -1746,43 +1790,12 @@ function draw() {
                 // then add some dainty red lines as an outline
                 line(0, 0, 848, 848)
                 line(0, 0, -848, 848)
-
                 pop()
-
-
             }
-            // and the rotation symbol
-            stroke(20, 100, 40)
-            strokeWeight(2)
-            noFill()
 
-            // outer circle
-            circle(700, 220, 50)
 
-            // now the lines
-            line(683, 203, 717, 237)
-            line(683, 237, 717, 203)
-
-            // in place of the rotating thing, add an arrow
-            stroke(0, 0, 100)
-            strokeWeight(2)
-            angleMode(DEGREES)
-            arc(700, 220, 40, 40, -90, 0)
-            angleMode(RADIANS)
-            line(717, 217, 720, 220)
-            line(722, 217, 720, 220)
-
-            // add a triangle where it's going to rotate if it's V
-            stroke(240, 50, 50)
-            fill(240, 50, 50)
-            triangle(727, 217, 727, 223, 732, 220)
-
-            // add 3 triangles where it's going to rotate if it's III
-            stroke(30, 50, 50)
-            fill(30, 50, 50)
-            triangle(667, 223, 673, 223, 670, 217)
-            triangle(697, 247, 697, 253, 692, 250)
-
+            drawRotationSymbol(700, 240, mechanicStarted + 10900)
+            drawRotationSymbol(posX, posY - 60, mechanicStarted + 19900)
 
             break
     }
