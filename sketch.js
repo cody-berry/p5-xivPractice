@@ -38,7 +38,7 @@ class Direction {
  *  ☒  Show empty spot in direction debuff
  *  ☒  Show orbs
  *  ☒  Show Blight cast
- *  ☐  Add rotation buffs
+ *  ☒  Add rotation buffs
  *  ☐  Add clockwise/counterclockwise rotation symbol for you and boss
  *  ☐  Add Arcane Blight semi-telegraph AoE and rotated cone AoE
  *  ☐  Make orbs and tether activate and give you an message if you angled
@@ -1748,7 +1748,41 @@ function draw() {
                 line(0, 0, -848, 848)
 
                 pop()
+
+
             }
+            // and the rotation symbol
+            stroke(20, 100, 40)
+            strokeWeight(2)
+            noFill()
+
+            // outer circle
+            circle(700, 220, 50)
+
+            // now the lines
+            line(683, 203, 717, 237)
+            line(683, 237, 717, 203)
+
+            // in place of the rotating thing, add an arrow
+            stroke(0, 0, 100)
+            strokeWeight(2)
+            angleMode(DEGREES)
+            arc(700, 220, 40, 40, -90, 0)
+            angleMode(RADIANS)
+            line(717, 217, 720, 220)
+            line(722, 217, 720, 220)
+
+            // add a triangle where it's going to rotate if it's V
+            stroke(240, 50, 50)
+            fill(240, 50, 50)
+            triangle(727, 217, 727, 223, 732, 220)
+
+            // add 3 triangles where it's going to rotate if it's III
+            stroke(30, 50, 50)
+            fill(30, 50, 50)
+            triangle(667, 223, 673, 223, 670, 217)
+            triangle(697, 247, 697, 253, 692, 250)
+
 
             break
     }
