@@ -37,7 +37,7 @@ class Direction {
  *  ☒  Use new PersistingRectangleAOE class with arrows
  *  ☒  Show empty spot in direction debuff
  *  ☒  Show orbs
- *  ☐  Show Blight cast
+ *  ☒  Show Blight cast
  *  ☐  Add rotation buffs
  *  ☐  Add clockwise/counterclockwise rotation symbol for you and boss
  *  ☐  Add Arcane Blight semi-telegraph AoE and rotated cone AoE
@@ -134,7 +134,9 @@ let linesInOrderOfResolvingOrder
 let debuffDirection
 let orbOnePosition
 let orbTwoPosition
-let possibility
+let possibility // there are 8 different possibilities for where the orbs spawn
+let yourDebuffNumber
+let bossBuffNumber
 
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
@@ -1544,25 +1546,25 @@ function draw() {
                 fill(180, 100, 90)
             }
             angleMode(DEGREES)
-            arc(80, 80, 33, 33, 235, 305)
+            arc(80, 78, 28, 28, 225, 315)
 
             fill(20, 100, 40) // right
             if (debuffDirection === Direction.Right) {
                 fill(180, 100, 90)
             }
-            arc(80, 80, 33, 33, -35, 35)
+            arc(82, 80, 28, 28, -45, 45)
 
             fill(20, 100, 40) // down
             if (debuffDirection === Direction.Down) {
                 fill(180, 100, 90)
             }
-            arc(80, 80, 33, 33, 55, 125)
+            arc(80, 82, 28, 28, 45, 135)
 
             fill(20, 100, 40) // left
             if (debuffDirection === Direction.Left) {
                 fill(180, 100, 90)
             }
-            arc(80, 80, 33, 33, 145, 215)
+            arc(78, 80, 28, 28, 135, 225)
             angleMode(RADIANS)
 
             // now since we drew filled arcs, draw a circle in the middle
@@ -1570,6 +1572,50 @@ function draw() {
             circle(80, 80, 20)
 
             // note: we drew filled arcs so that it wouldn't have rounded edges
+
+
+            // then display your rotation number debuff
+            fill(180, 100, 30)
+            rect(120, 60, 40, 40)
+            stroke(0, 0, 70)
+            strokeWeight(2)
+            // III: display top/bottom lines, then 3 lines in the middle
+            if (yourDebuffNumber === 3) {
+                line(130, 65, 150, 65)
+                line(130, 80, 150, 80)
+                line(133, 65, 133, 80)
+                line(140, 65, 140, 80)
+                line(147, 65, 147, 80)
+            } else {
+                // V: display top/bottom lines, then a V shape in the imddle
+                line(132, 65, 148, 65)
+                line(132, 80, 148, 80)
+                line(135, 65, 140, 80)
+                line(145, 65, 140, 80)
+            }
+
+            // display the boss's one
+            fill(180, 100, 30)
+            noStroke()
+            rect(60, 310, 40, 40)
+            stroke(0, 0, 70)
+            strokeWeight(2)
+            // III: display top/bottom lines, then 3 lines in the middle
+            if (bossBuffNumber === 3) {
+                line(70, 315, 90, 315)
+                line(70, 330, 90, 330)
+                line(73, 315, 73, 330)
+                line(80, 315, 80, 330)
+                line(87, 315, 87, 330)
+            } else {
+                // V: display top/bottom lines, then a V shape in the middle
+                line(72, 315, 88, 315)
+                line(72, 330, 88, 330)
+                line(75, 315, 80, 330)
+                line(85, 315, 80, 330)
+            }
+
+
             // timings:
             // the initial arrows are activated at 5s
             // the rectangle AoEs will move to the second arrows at 9.4s
@@ -1691,14 +1737,13 @@ function draw() {
                 translate(700, 300)
                 cleaveOneSafeDirection.rotateToDirection()
                 fill(20, 100, 50, 10)
-                noStroke()
+                stroke(20, 100, 50)
+                strokeWeight(3)
                 angleMode(DEGREES)
                 arc(0, 0, 848, 848, 135, 45)
                 angleMode(RADIANS)
 
                 // then add some dainty red lines as an outline
-                stroke(20, 100, 50)
-                strokeWeight(3)
                 line(0, 0, 848, 848)
                 line(0, 0, -848, 848)
 
@@ -2350,6 +2395,9 @@ function mousePressed() {
 
         cleaveOneSafeDirection = random(
             [Direction.Up, Direction.Right, Direction.Down, Direction.Left])
+
+        yourDebuffNumber = random([3, 5])
+        bossBuffNumber = random([3, 5])
     }
 }
 
