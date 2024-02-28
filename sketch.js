@@ -36,7 +36,7 @@ class Direction {
  *  ☒  Add new PersistingRectangleAOE class
  *  ☒  Use new PersistingRectangleAOE class with arrows
  *  ☒  Show empty spot in direction debuff
- *  ☐  Show orbs
+ *  ☒  Show orbs
  *  ☐  Show Blight cast
  *  ☐  Add rotation buffs
  *  ☐  Add clockwise/counterclockwise rotation symbol for you and boss
@@ -203,54 +203,121 @@ function setup() {
 
     debugCorner = new CanvasDebugCorner(5)
 
-    // assign now so that we can position exoflares properly
-    swapMovement = random([false, true])
-    rotateExaflares = random([false, true])
-    stackFirst = random([false, true])
-    whoGetsStack = [0, 0]
-    whoGetsStack[0] = random([1, 2, 3, 4])
-    whoGetsStack[1] = whoGetsStack[0]
-    while (whoGetsStack[0] === whoGetsStack[1]) {
-        whoGetsStack[1] = random([1, 2, 3, 4])
+    mechanic = "Analysis"
+    mechanicStarted = millis()
+    // everyone except for you starts off the map
+    drgPosX = -100
+    sgePosX = -100
+    warPosX = -100
+    bossPosX = -100
+
+    // sometimes the arrows cover east and west, other times north and south
+    rotatePlayers = random([false, true])
+
+    // test persisting rect
+    AoEs = (rotatePlayers) ? [ // N&S
+        new PersistingRectangleAOE(420, 20, 112, 112, 0, 60000),
+        new PersistingRectangleAOE(532, 20, 112, 112, 6100, 60000),
+        new PersistingRectangleAOE(644, 20, 112, 112, 7200, 60000),
+        new PersistingRectangleAOE(756, 20, 112, 112, 8300, 60000),
+        new PersistingRectangleAOE(868, 20, 112, 112, 9400, 60000),
+        new PersistingRectangleAOE(868, 132, 112, 112, 10500, 60000),
+        new PersistingRectangleAOE(756, 132, 112, 112, 11600, 60000),
+        new PersistingRectangleAOE(644, 132, 112, 112, 12700, 60000),
+        new PersistingRectangleAOE(532, 132, 112, 112, 13800, 60000),
+        new PersistingRectangleAOE(420, 132, 112, 112, 14900, 60000),
+
+        new PersistingRectangleAOE(868, 468, 112, 112, 0, 60000),
+        new PersistingRectangleAOE(756, 468, 112, 112, 6100, 60000),
+        new PersistingRectangleAOE(644, 468, 112, 112, 7200, 60000),
+        new PersistingRectangleAOE(532, 468, 112, 112, 8300, 60000),
+        new PersistingRectangleAOE(420, 468, 112, 112, 9400, 60000),
+        new PersistingRectangleAOE(420, 356, 112, 112, 10500, 60000),
+        new PersistingRectangleAOE(532, 356, 112, 112, 11600, 60000),
+        new PersistingRectangleAOE(644, 356, 112, 112, 12700, 60000),
+        new PersistingRectangleAOE(756, 356, 112, 112, 13800, 60000),
+        new PersistingRectangleAOE(868, 356, 112, 112, 14900, 60000)
+    ] : [ // E&W
+        new PersistingRectangleAOE(420, 468, 112, 112, 0, 60000),
+        new PersistingRectangleAOE(420, 356, 112, 112, 6100, 60000),
+        new PersistingRectangleAOE(420, 244, 112, 112, 7200, 60000),
+        new PersistingRectangleAOE(420, 132, 112, 112, 8300, 60000),
+        new PersistingRectangleAOE(420, 20, 112, 112, 9400, 60000),
+        new PersistingRectangleAOE(532, 20, 112, 112, 10500, 60000),
+        new PersistingRectangleAOE(532, 132, 112, 112, 11600, 60000),
+        new PersistingRectangleAOE(532, 244, 112, 112, 12700, 60000),
+        new PersistingRectangleAOE(532, 356, 112, 112, 13800, 60000),
+        new PersistingRectangleAOE(532, 468, 112, 112, 14900, 60000),
+
+        new PersistingRectangleAOE(868, 20, 112, 112, 0, 60000),
+        new PersistingRectangleAOE(868, 132, 112, 112, 6100, 60000),
+        new PersistingRectangleAOE(868, 244, 112, 112, 7200, 60000),
+        new PersistingRectangleAOE(868, 356, 112, 112, 8300, 60000),
+        new PersistingRectangleAOE(868, 468, 112, 112, 9400, 60000),
+        new PersistingRectangleAOE(756, 468, 112, 112, 10500, 60000),
+        new PersistingRectangleAOE(756, 356, 112, 112, 11600, 60000),
+        new PersistingRectangleAOE(756, 244, 112, 112, 12700, 60000),
+        new PersistingRectangleAOE(756, 132, 112, 112, 13800, 60000),
+        new PersistingRectangleAOE(756, 20, 112, 112, 14900, 60000)
+    ]
+
+    // random debuff direction
+    debuffDirection = random(
+        [Direction.Up, Direction.Right, Direction.Down, Direction.Left])
+
+    // there are 8 possibilities:
+    // 1:
+    // →O  ↓
+    //     ←
+    //
+    // →  O
+    // ↑   ←
+    // 2: same as 1, but with the SE orb 1 square to the right
+    // 3: same as 1, except the orb that triggers immediately is on the
+    //    opposite side of the board
+    // 4: same as 2, except the orb that triggers immediately is on the
+    //    opposite side of the board
+    // 5: same as 1, but rotated 90º
+    // 6: same as 2, but rotated 90º
+    // 7: same as 3, but rotated 90º
+    // 8: same as 4, but rotated 90º
+    // 1, 2, 3, and 4 only trigger with rotatePlayers
+    // 5, 6, 7, and 8 only trigger with !rotatePlayers
+
+    if (rotatePlayers) {
+        possibility = random([1, 2, 3, 4])
+        if (possibility === 1) {
+            orbOnePosition = [588, 76]
+            orbTwoPosition = [812, 412]
+        } if (possibility === 2) {
+            orbOnePosition = [588, 76]
+            orbTwoPosition = [924, 412]
+        } if (possibility === 3) {
+            orbOnePosition = [812, 524]
+            orbTwoPosition = [588, 188]
+        } if (possibility === 4) {
+            orbOnePosition = [812, 524]
+            orbTwoPosition = [476, 188]
+        }
+    } else {
+        possibility = random([5, 6, 7, 8])
+        if (possibility === 5) {
+            orbOnePosition = [924, 188]
+            orbTwoPosition = [588, 412]
+        } if (possibility === 6) {
+            orbOnePosition = [924, 188]
+            orbTwoPosition = [588, 524]
+        } if (possibility === 7) {
+            orbOnePosition = [476, 412]
+            orbTwoPosition = [812, 188]
+        } if (possibility === 8) {
+            orbOnePosition = [476, 412]
+            orbTwoPosition = [812, 76]
+        }
     }
-    whoGetsStack.sort()
-    swap = (whoGetsStack[0] === 1 && whoGetsStack[1] === 2) || (whoGetsStack[0] === 3 && whoGetsStack[1] === 4)
-    print(swap)
 
-    helper = false
-    exoflares = [
-        // Add exoflares on the east and west. They go to the top-left and
-        // bottom-right if swapMovement is false, and the top-right and
-        // bottom-left if swapMovement is true.
-        // Or on north and south if rotateExaflares is true!!
-        new Exaflare((!rotateExaflares) ? 450 : ((swapMovement) ? 620 : 440),
-                     (rotateExaflares) ? 50 : ((swapMovement) ? 220 : 40), 180, 6500, (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
-        new Exaflare((!rotateExaflares) ? 950 : ((swapMovement) ? 440 : 620),
-                     (rotateExaflares) ? 550 : ((swapMovement) ? 40 : 220), 180, 6500, (rotateExaflares) ? 0 : -79, (!rotateExaflares) ? 0 : -79, 0, 1000),
-        new Exaflare((!rotateExaflares) ? 450 : ((swapMovement) ? 960 : 780),
-                     (rotateExaflares) ? 50 : ((swapMovement) ? 560 : 380), 180, 6500, (rotateExaflares) ? 0 : 79, (!rotateExaflares) ? 0 : 79, 0, 1000),
-        new Exaflare((!rotateExaflares) ? 950 : ((swapMovement) ? 780 : 960),
-                     (rotateExaflares) ? 550 : ((swapMovement) ? 380 : 560), 180, 6500, (rotateExaflares) ? 0 : -79, (!rotateExaflares) ? 0 : -79, 0, 1000),
-        // These are the cardinal exoflares. They're always in the same
-        // orientation.
-        new Exaflare(620, 300, 200, 6500, -79, 0, 0, 1000),
-        new Exaflare(780, 300, 200, 6500, 79, 0, 0, 1000),
-        new Exaflare(700, 380, 200, 6500, 0, 79, 0, 1000),
-        new Exaflare(700, 220, 200, 6500, 0, -79, 0, 1000)
-    ]
-
-
-    AoEs = [
-        // add the spreads and stacks
-        // the millisecond differences are because you can't have them trigger
-        // on the same frame if you want to detect if someone else got clipped
-        new SpreadCircle(1, 250, (stackFirst) ? 13470 : 8470),
-        new SpreadCircle(2, 250, (stackFirst) ? 13490 : 8490),
-        new SpreadCircle(3, 250, (stackFirst) ? 13510 : 8510),
-        new SpreadCircle(4, 250, (stackFirst) ? 13530 : 8530),
-        new StackCircle(whoGetsStack[0], 250, (stackFirst) ? 8490 : 13490, 2),
-        new StackCircle(whoGetsStack[1], 250, (stackFirst) ? 8510 : 13510, 2),
-    ]
+    cleaveOneSafeDirection = random(
+        [Direction.Up, Direction.Right, Direction.Down, Direction.Left])
     angleMode(RADIANS)
 }
 
@@ -1616,6 +1683,28 @@ function draw() {
                 point(orbTwoPosition[0], orbTwoPosition[1])
             }
 
+            // show a Blight semi-telegraph
+            // from 6s to 11s
+            if (6000 < millis() - mechanicStarted &&
+                millis() - mechanicStarted < 11000) {
+                push()
+                translate(700, 300)
+                cleaveOneSafeDirection.rotateToDirection()
+                fill(20, 100, 50, 10)
+                noStroke()
+                angleMode(DEGREES)
+                arc(0, 0, 848, 848, 135, 45)
+                angleMode(RADIANS)
+
+                // then add some dainty red lines as an outline
+                stroke(20, 100, 50)
+                strokeWeight(3)
+                line(0, 0, 848, 848)
+                line(0, 0, -848, 848)
+
+                pop()
+            }
+
             break
     }
 
@@ -2258,6 +2347,9 @@ function mousePressed() {
                 orbTwoPosition = [812, 76]
             }
         }
+
+        cleaveOneSafeDirection = random(
+            [Direction.Up, Direction.Right, Direction.Down, Direction.Left])
     }
 }
 
