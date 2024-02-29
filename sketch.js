@@ -140,6 +140,8 @@ let bossBuffNumber
 let yourRotationClockwise
 let bossRotationClockwise
 let yourRotationWentOff
+let firstOrbWentOff
+let secondOrbWentOff
 
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
@@ -1777,9 +1779,93 @@ function draw() {
             strokeWeight(30)
             if (millis() - mechanicStarted < 6100) {
                 point(orbOnePosition[0], orbOnePosition[1])
-            } if (millis() - mechanicStarted < 13800 ||
+                if (helper) {
+                    // check if angle is correct
+                    angleMode(DEGREES)
+                    let safeSpot = new Direction(
+                        yourFacing.angle + debuffDirection.angle
+                    )
+                    let angleFromOrb = atan2(
+                        orbOnePosition[1] - posY, orbOnePosition[0] - posX
+                    )
+                    let angleDiff = safeSpot.angle % 360 - angleFromOrb % 360
+
+                    // if check was failed, make it a red line
+                    stroke(120, 100, 100)
+                    if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
+                        stroke(0, 100, 100)
+                    }
+                    strokeWeight(3)
+                    line(posX, posY, orbOnePosition[0], orbOnePosition[1])
+                    angleMode(RADIANS)
+                }
+            } else {
+                if (!firstOrbWentOff) {
+                    firstOrbWentOff = true
+                    // check if angle is correct
+                    angleMode(DEGREES)
+                    let safeSpot = new Direction(
+                        yourFacing.angle + debuffDirection.angle
+                    )
+                    let angleFromOrb = atan2(
+                        orbOnePosition[1] - posY, orbOnePosition[0] - posX
+                    )
+                    let angleDiff = safeSpot.angle % 360 - angleFromOrb % 360
+
+                    // if check was failed, the party wiped!
+                    if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
+                        partyWiped = true
+                        causeOfWipe = "You got hit by the first \norb."
+                    }
+                    angleMode(RADIANS)
+                }
+            }
+
+            if (millis() - mechanicStarted < 13800 ||
                  (millis() - mechanicStarted < 14900 && possibility % 2 === 0)) {
+                stroke(0, 0, 50)
+                strokeWeight(30)
                 point(orbTwoPosition[0], orbTwoPosition[1])
+                if (helper) {
+                    // check if angle is correct
+                    angleMode(DEGREES)
+                    let safeSpot = new Direction(
+                        yourFacing.angle + debuffDirection.angle
+                    )
+                    let angleFromOrb = atan2(
+                        orbTwoPosition[1] - posY, orbTwoPosition[0] - posX
+                    )
+                    let angleDiff = safeSpot.angle % 360 - angleFromOrb % 360
+
+                    // if check was failed, make it a red line
+                    stroke(120, 100, 100)
+                    if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
+                        stroke(0, 100, 100)
+                    }
+                    strokeWeight(3)
+                    line(posX, posY, orbTwoPosition[0], orbTwoPosition[1])
+                    angleMode(RADIANS)
+                }
+            } else {
+                if (!secondOrbWentOff) {
+                    secondOrbWentOff = true
+                    // check if angle is correct
+                    angleMode(DEGREES)
+                    let safeSpot = new Direction(
+                        yourFacing.angle + debuffDirection.angle
+                    )
+                    let angleFromOrb = atan2(
+                        orbTwoPosition[1] - posY, orbTwoPosition[0] - posX
+                    )
+                    let angleDiff = safeSpot.angle % 360 - angleFromOrb % 360
+
+                    // if check was failed, the party wiped!
+                    if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
+                        partyWiped = true
+                        causeOfWipe = "You got hit by the \nsecond orb."
+                    }
+                    angleMode(RADIANS)
+                }
             }
 
             // show a Blight semi-telegraph
@@ -1807,7 +1893,7 @@ function draw() {
                 push()
                 translate(700, 300)
                 cleaveOneSafeDirection.rotateToDirection()
-                fill(20, 100, 50, map(millis() - mechanicStarted,
+                fill(0, 100, 50, map(millis() - mechanicStarted,
                     11000, 12000, 100, 0)) // map the millis to the opacity
                 noStroke()
                 angleMode(DEGREES)
@@ -1828,15 +1914,6 @@ function draw() {
                     cleaveOneSafeDirection = new Direction(cleaveOneSafeDirection.angle)
                     cleaveOneSafeDirection.angle +=
                         ((bossRotationClockwise) ? 90 : -90)*bossBuffNumber
-                }
-            } if (millis() - mechanicStarted > 19950) {
-                if (!yourRotationWentOff) {
-                    yourRotationWentOff = true
-
-                    // rotate
-                    debuffDirection = new Direction(debuffDirection.angle)
-                    debuffDirection.angle +=
-                        ((yourRotationClockwise) ? 90 : -90)*yourDebuffNumber
                 }
             }
 
