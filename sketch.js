@@ -1915,7 +1915,34 @@ function draw() {
                     cleaveOneSafeDirection.angle +=
                         ((bossRotationClockwise) ? 90 : -90)*bossBuffNumber
                 }
+            } if (millis() - mechanicStarted > 19950) {
+            if (!yourRotationWentOff) {
+                yourRotationWentOff = true
+
+                // rotate
+                debuffDirection = new Direction(debuffDirection.angle)
+                debuffDirection.angle +=
+                    ((yourRotationClockwise) ? 90 : -90)*yourDebuffNumber
+
+                // then make the tether go off
+                // check if angle is correct
+                angleMode(DEGREES)
+                let safeSpot = new Direction(
+                    yourFacing.angle + debuffDirection.angle
+                )
+                let angleFromOrb = atan2(
+                    700 - posY, 300 - posX
+                )
+                let angleDiff = safeSpot.angle % 360 - angleFromOrb % 360
+
+                // if check was failed, the party wiped!
+                if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
+                    partyWiped = true
+                    causeOfWipe = "You got hit by the \ntether."
+                }
+                angleMode(RADIANS)
             }
+        }
 
             break
     }
