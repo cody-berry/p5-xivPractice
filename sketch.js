@@ -30,20 +30,7 @@ class Direction {
  *  @date 2024.01.09
  *
  *  Bytes list:
- *  ☒  Add new button for Analysis
- *  ☒  Add new background for Lala
- *  ☒  Add random direction debuff
- *  ☒  Add new PersistingRectangleAOE class
- *  ☒  Use new PersistingRectangleAOE class with arrows
- *  ☒  Show empty spot in direction debuff
- *  ☒  Show orbs
- *  ☒  Show Blight cast
- *  ☒  Add rotation buffs
- *  ☒  Add clockwise/counterclockwise rotation symbol for you and boss
- *  ☐  Add Arcane Blight rotated cone AoE
- *  ☐  Make orbs and tether activate and give you an message if you angled
- *     your empty spot incorrectly
- *  ☐  Rotate your direction debuff
+ *  ☐ Display a "microscope" to the left of board
  */
 
 
@@ -449,6 +436,21 @@ function draw() {
     text("Analysis", 3, 560)
 
     stroke(0, 0, 0)
+
+    // to the right of the buttons is a microscope displaying your facing
+    stroke(70, 50, 50)
+    noFill()
+    circle(300, 200, 100)
+    image(rdmSymbol, 280, 180, 40, 40)
+
+    push()
+    // display your facing
+    translate(300, 200)
+    yourFacing.rotateToDirection()
+    fill(45, 100, 100)
+    triangle(55, -10, 55, 10, 75, 0)
+    pop()
+
 
 
     // display a wooden chess board, basically
