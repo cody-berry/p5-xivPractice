@@ -451,6 +451,19 @@ function draw() {
     triangle(55, -10, 55, 10, 75, 0)
     pop()
 
+    // if your mouse is in the microscope, highlight your facing if your self in
+    // the microscope would turn to the mouse
+    if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
+        angleMode(DEGREES)
+        push()
+        translate(300, 200)
+        rotate(-atan2(mouseX - 300, mouseY - 200) + 90)
+        fill(45, 100, 100, 50)
+        triangle(55, -10, 55, 10, 75, 0)
+        pop()
+        angleMode(RADIANS)
+    }
+
 
 
     // display a wooden chess board, basically
@@ -2598,6 +2611,11 @@ function mousePressed() {
         bossRotationClockwise = random([true, false])
         yourRotationWentOff = false
         bossRotationWentOff = false
+    } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
+        // click on the microscope to make you turn to the microscope
+        angleMode(DEGREES)
+        yourFacing = new Direction(-atan2(mouseX - 300, mouseY - 200) + 90)
+        angleMode(RADIANS)
     }
 }
 
