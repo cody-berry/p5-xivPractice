@@ -39,8 +39,8 @@ class Direction {
  *  ☒  Show orbs
  *  ☒  Show Blight cast
  *  ☒  Add rotation buffs
- *  ☐  Add clockwise/counterclockwise rotation symbol for you and boss
- *  ☐  Add Arcane Blight semi-telegraph AoE and rotated cone AoE
+ *  ☒  Add clockwise/counterclockwise rotation symbol for you and boss
+ *  ☐  Add Arcane Blight rotated cone AoE
  *  ☐  Make orbs and tether activate and give you an message if you angled
  *     your empty spot incorrectly
  *  ☐  Rotate your direction debuff
@@ -137,6 +137,9 @@ let orbTwoPosition
 let possibility // there are 8 different possibilities for where the orbs spawn
 let yourDebuffNumber
 let bossBuffNumber
+let yourRotationClockwise
+let bossRotationClockwise
+let yourRotationWentOff
 
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
@@ -195,8 +198,6 @@ function setup() {
         3: ["None", 0],
         4: ["None", 0]
     }
-    mechanic = "Exoflares"
-    mechanicStarted = 0
 
     /* initialize instruction div */
     instructions = select('#ins')
@@ -320,6 +321,13 @@ function setup() {
 
     cleaveOneSafeDirection = random(
         [Direction.Up, Direction.Right, Direction.Down, Direction.Left])
+
+    yourDebuffNumber = random([3, 5])
+    bossBuffNumber = random([3, 5])
+    yourRotationClockwise = random([true, false])
+    bossRotationClockwise = random([true, false])
+    yourRotationWentOff = false
+    bossRotationWentOff = false
     angleMode(RADIANS)
 }
 
@@ -335,7 +343,7 @@ function displayArrow(x, y, direction) {
     pop()
 }
 
-function drawRotationSymbol(x, y, disappearsWhen) {
+function drawRotationSymbol(x, y, disappearsWhen, isClockwise) {
     if (millis() < disappearsWhen && millis() > disappearsWhen - 10000) {
         stroke(20, 100, 40)
         strokeWeight(2)
@@ -354,21 +362,21 @@ function drawRotationSymbol(x, y, disappearsWhen) {
         stroke(0, 0, 100)
         strokeWeight(2)
         angleMode(DEGREES)
-        arc(0, 0, 40, 40, -90, 0)
+        arc(0, 0, 40, 40, isClockwise ? -90 : -180, isClockwise ? 0 : -90)
         angleMode(RADIANS)
-        line(17, -3, 20, 0)
-        line(22, -3, 20, 0)
+        line(isClockwise ? 17 : -17, -3, isClockwise ? 20 : -20, 0)
+        line(isClockwise ? 22 : -22, -3, isClockwise ? 20 : -20, 0)
 
         // add a triangle where it's going to rotate if it's V
         stroke(240, 50, 50)
         fill(240, 50, 50)
-        triangle(27, -3, 27, 3, 32, 0)
+        triangle(isClockwise ? 27 : -27, -3, isClockwise ? 27 : -27, 3, isClockwise ? 32 : -32, 0)
 
         // add 3 triangles where it's going to rotate if it's III
         stroke(30, 50, 50)
         fill(30, 50, 50)
-        triangle(-33, 3, -27, 3, -30, -3)
-        triangle(-3, 27, -3, 33, -8, 30)
+        triangle(isClockwise ? -33 : 33, 3, isClockwise ? -27 : 27, 3, isClockwise ? -30 : 30, -3)
+        triangle(isClockwise ? -3 : 3, 27, isClockwise ? -3 : 3, 33, isClockwise ? -8 : 8, 30)
 
         // and the number of seconds until it's done
         if (millis() > disappearsWhen - 5000) {
@@ -1586,26 +1594,27 @@ function draw() {
 
             // display arcs for each direction
             fill(20, 100, 40) // up
-            if (debuffDirection === Direction.Up) {
+            if (230 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 310) {
                 fill(180, 100, 90)
             }
             angleMode(DEGREES)
             arc(80, 78, 28, 28, 225, 315)
 
             fill(20, 100, 40) // right
-            if (debuffDirection === Direction.Right) {
+            if ((320 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 360) ||
+                (0 <= debuffDirection.angle % 360 && debuffDirection.angle % 360 < 40)) {
                 fill(180, 100, 90)
             }
             arc(82, 80, 28, 28, -45, 45)
 
             fill(20, 100, 40) // down
-            if (debuffDirection === Direction.Down) {
+            if (50 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 130) {
                 fill(180, 100, 90)
             }
             arc(80, 82, 28, 28, 45, 135)
 
             fill(20, 100, 40) // left
-            if (debuffDirection === Direction.Left) {
+            if (140 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 220) {
                 fill(180, 100, 90)
             }
             arc(78, 80, 28, 28, 135, 225)
@@ -1792,10 +1801,44 @@ function draw() {
                 line(0, 0, -848, 848)
                 pop()
             }
+            // from 11s to 12s, show a fading cone AoE
+            if (11000 < millis() - mechanicStarted &&
+                millis() - mechanicStarted < 12000) {
+                push()
+                translate(700, 300)
+                cleaveOneSafeDirection.rotateToDirection()
+                fill(20, 100, 50, map(millis() - mechanicStarted,
+                    11000, 12000, 100, 0)) // map the millis to the opacity
+                noStroke()
+                angleMode(DEGREES)
+                arc(0, 0, 848, 848, 135, 45)
+                angleMode(RADIANS)
+                pop()
+            }
 
 
-            drawRotationSymbol(700, 240, mechanicStarted + 10900)
-            drawRotationSymbol(posX, posY - 60, mechanicStarted + 19900)
+            drawRotationSymbol(700, 240, mechanicStarted + 10900, bossRotationClockwise)
+            drawRotationSymbol(posX, posY - 60, mechanicStarted + 19900, yourRotationClockwise)
+            if (millis() - mechanicStarted > 10900) {
+                if (!bossRotationWentOff) {
+                    bossRotationWentOff = true
+
+                    // rotate
+                    // avoid modifying the direction itself
+                    cleaveOneSafeDirection = new Direction(cleaveOneSafeDirection.angle)
+                    cleaveOneSafeDirection.angle +=
+                        ((bossRotationClockwise) ? 90 : -90)*bossBuffNumber
+                }
+            } if (millis() - mechanicStarted > 19950) {
+                if (!yourRotationWentOff) {
+                    yourRotationWentOff = true
+
+                    // rotate
+                    debuffDirection = new Direction(debuffDirection.angle)
+                    debuffDirection.angle +=
+                        ((yourRotationClockwise) ? 90 : -90)*yourDebuffNumber
+                }
+            }
 
             break
     }
@@ -2445,6 +2488,10 @@ function mousePressed() {
 
         yourDebuffNumber = random([3, 5])
         bossBuffNumber = random([3, 5])
+        yourRotationClockwise = random([true, false])
+        bossRotationClockwise = random([true, false])
+        yourRotationWentOff = false
+        bossRotationWentOff = false
     }
 }
 
