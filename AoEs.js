@@ -274,7 +274,7 @@ class Exaflare {
 
             if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2 + 16) {
                 partyWiped = true
-                causeOfWipe = "You got hit by an \nexoflare."
+                causeOfWipe = "You got hit by an exoflare."
             }
         } if (this.wentOff && millis() > this.goesOffAt + this.millisBetween*this.iterations) {
             this.iterations += 1
@@ -293,7 +293,7 @@ class Exaflare {
 
             if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2 + 16) {
                 partyWiped = true
-                causeOfWipe = "You got hit by an \nexoflare."
+                causeOfWipe = "You got hit by an exoflare."
             }
         }
     }
@@ -390,7 +390,7 @@ class SpreadCircle {
                         print(lastHitBy)
                         if (position[2] !== this.player) {
                             partyWiped = true
-                            causeOfWipe = "Someone clipped \nsomeone else with \nspread."
+                            causeOfWipe = "Someone clipped someone else with spread."
                         }
                     }
                 }
@@ -452,7 +452,7 @@ class StackCircle {
                     if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size/2) {
                         if (lastHitBy[position[2]][1] > millis() - 1000) {
                             partyWiped = true
-                            causeOfWipe = "2 stack people stacked \nup."
+                            causeOfWipe = "2 stack people stacked up."
                         }
                         lastHitBy[position[2]] = ["stack", millis()]
                         print(lastHitBy)
@@ -461,7 +461,7 @@ class StackCircle {
                 } if (playersHit < this.minPlayers) {
                     // if less than the minimum players have stacked up, one dies
                     partyWiped = true
-                    causeOfWipe = "Too little people \nstacked up."
+                    causeOfWipe = "Too little people stacked up."
                 }
             }
             this.opacity -= 3

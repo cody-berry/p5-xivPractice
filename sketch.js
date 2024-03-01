@@ -174,7 +174,7 @@ function preload() {
 
 
 function setup() {
-    let cnv = createCanvas(1000, 600)
+    let cnv = createCanvas(1000, 650)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
     textFont(variableWidthFont, 14)
@@ -437,33 +437,6 @@ function draw() {
 
     stroke(0, 0, 0)
 
-    // to the right of the buttons is a microscope displaying your facing
-    stroke(70, 50, 50)
-    noFill()
-    circle(300, 200, 100)
-    image(rdmSymbol, 280, 180, 40, 40)
-
-    push()
-    // display your facing
-    translate(300, 200)
-    yourFacing.rotateToDirection()
-    fill(45, 100, 100)
-    triangle(55, -10, 55, 10, 75, 0)
-    pop()
-
-    // if your mouse is in the microscope, highlight your facing if your self in
-    // the microscope would turn to the mouse
-    if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
-        angleMode(DEGREES)
-        push()
-        translate(300, 200)
-        rotate(-atan2(mouseX - 300, mouseY - 200) + 90)
-        fill(45, 100, 100, 50)
-        triangle(55, -10, 55, 10, 75, 0)
-        pop()
-        angleMode(RADIANS)
-    }
-
 
 
     // display a wooden chess board, basically
@@ -475,7 +448,7 @@ function draw() {
 
         // display the purple entrance
         stroke(300, 50, 50)
-        strokeWeight(10)
+        strokeWeight(2)
         line(650, 600, 750, 600)
         fill(20, 50, 40)
 
@@ -505,6 +478,13 @@ function draw() {
         let columnWidth = 600/20
         fill(0, 0, 50)
         rect(400, 0, 600, 600)
+
+        // display the purple entrance
+        stroke(300, 50, 50)
+        strokeWeight(2)
+        line(650, 600, 750, 600)
+        fill(20, 50, 40)
+
         stroke(0, 0, 0)
 
         for (let yIncrements = 1; yIncrements < 20; yIncrements++) {
@@ -621,6 +601,12 @@ function draw() {
         rect(400, 0, 600, 600)
         fill(20, 20, 20)
         rect(420, 20, 560, 560)
+
+        // display the purple entrance
+        stroke(300, 50, 50)
+        strokeWeight(2)
+        line(650, 600, 750, 600)
+        fill(20, 50, 40)
 
         // now we display the lines
         stroke(0, 0, 0)
@@ -1830,7 +1816,7 @@ function draw() {
                     // if check was failed, the party wiped!
                     if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
                         partyWiped = true
-                        causeOfWipe = "You got hit by the first \norb."
+                        causeOfWipe = "You got hit by the first orb."
                     }
                     angleMode(RADIANS)
                 }
@@ -1877,7 +1863,7 @@ function draw() {
                     // if check was failed, the party wiped!
                     if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
                         partyWiped = true
-                        causeOfWipe = "You got hit by the \nsecond orb."
+                        causeOfWipe = "You got hit by the second orb."
                     }
                     angleMode(RADIANS)
                 }
@@ -1953,7 +1939,7 @@ function draw() {
                 // if check was failed, the party wiped!
                 if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
                     partyWiped = true
-                    causeOfWipe = "You got hit by the \ntether."
+                    causeOfWipe = "You got hit by the tether."
                 }
                 angleMode(RADIANS)
             }
@@ -2030,13 +2016,15 @@ function draw() {
         posX > 968 || posY > 568)) &&
         (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri")) {
         partyWiped = true
-        causeOfWipe = "You entered the edge \nof the arena."
+        causeOfWipe = "You entered the edge of the arena."
     }
 
     if (partyWiped === true) {
         fill(0, 100, 100)
         noStroke()
-        text(causeOfWipe, 10, 300)
+        textAlign(RIGHT, BOTTOM)
+        text(causeOfWipe, width, height)
+        textAlign(LEFT, BASELINE)
     }
 
     push()
@@ -2086,6 +2074,45 @@ function draw() {
         triangle(25, -10, 25, 10, 45, 0)
     }
     pop()
+
+    // to the right of the buttons is a microscope displaying your facing
+    // add microscope "handle"
+    fill(20, 100, 30)
+    noStroke()
+    rect(350, 190, 50, 20) // wood handle
+    // then just add a few steel dots
+    fill(240, 8, 65)
+    rect(350, 190, 10, 20)
+    circle(370, 200, 10)
+    circle(390, 200, 10)
+
+    // then the microscope glass
+    stroke(70, 50, 50)
+    strokeWeight(2)
+    noFill()
+    circle(300, 200, 100)
+    image(rdmSymbol, 280, 180, 40, 40)
+
+    push()
+    // display your facing
+    translate(300, 200)
+    yourFacing.rotateToDirection()
+    fill(45, 100, 100)
+    triangle(25, -10, 25, 10, 45, 0)
+    pop()
+
+    // if your mouse is in the microscope, highlight your facing if your self in
+    // the microscope would turn to the mouse
+    if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
+        angleMode(DEGREES)
+        push()
+        translate(300, 200)
+        rotate(-atan2(mouseX - 300, mouseY - 200) + 90)
+        fill(45, 100, 100, 50)
+        triangle(25, -10, 25, 10, 45, 0)
+        pop()
+        angleMode(RADIANS)
+    }
 
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
