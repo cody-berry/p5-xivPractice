@@ -130,6 +130,25 @@ let yourRotationWentOff
 let firstOrbWentOff
 let secondOrbWentOff
 
+let heightForNoTextDescent
+let heightForTextDescent
+
+let exaflareWidth
+let fightingSpiritsWidth
+let malformedReincarnationWidth
+let tripleKasumiGiriWidth
+let fleetingLaiGiriWidth
+let azureAuspiceWidth
+let analysisWidth
+
+let exaflareYPos
+let fightingSpiritsYPos
+let malformedReincarnationYPos
+let tripleKasumiGiriYPos
+let fleetingLaiGiriYPos
+let azureAuspiceYPos
+let analysisYPos
+
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
     if (Math.abs(value) < threshold) return 0;
@@ -177,7 +196,6 @@ function setup() {
     let cnv = createCanvas(1000, 650)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
-    textFont(variableWidthFont, 14)
 
     frameRate(62) // keep everything consistent!
 
@@ -318,6 +336,28 @@ function setup() {
     yourRotationWentOff = false
     bossRotationWentOff = false
     angleMode(RADIANS)
+
+    textFont(variableWidthFont, 17)
+    heightForNoTextDescent = textAscent() + 2
+    heightForTextDescent = textAscent() + 4 + textDescent()/2
+
+    exaflareWidth = textWidth("Exaflares") + 4
+    fightingSpiritsWidth = textWidth("Fighting Spirits") + 4
+    malformedReincarnationWidth = textWidth("Malformed Reincarnation") + 4
+    tripleKasumiGiriWidth = textWidth("Triple Kasumi-Giri") + 4
+    fleetingLaiGiriWidth = textWidth("Fleeting Lai-Giri") + 4
+    azureAuspiceWidth = textWidth("Azure Auspice") + 4
+    analysisWidth = textWidth("Analysis") + 4
+
+    exaflareYPos = 380
+    fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
+    malformedReincarnationYPos = fightingSpiritsYPos + heightForTextDescent + 5
+    tripleKasumiGiriYPos = malformedReincarnationYPos + heightForNoTextDescent + 5
+    fleetingLaiGiriYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
+    azureAuspiceYPos = fleetingLaiGiriYPos + heightForTextDescent + 5
+    analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
+
+    textSize(14)
 }
 
 // display an arrow at a specified location in a specified direction
@@ -398,25 +438,6 @@ function draw() {
     stroke(0, 0, 100)
     strokeWeight(1)
     textSize(17)
-
-    let heightForNoTextDescent = textAscent() + 2
-    let heightForTextDescent = textAscent() + 4 + textDescent()/2
-
-    let exaflareWidth = textWidth("Exaflares") + 4
-    let fightingSpiritsWidth = textWidth("Fighting Spirits") + 4
-    let malformedReincarnationWidth = textWidth("Malformed Reincarnation") + 4
-    let tripleKasumiGiriWidth = textWidth("Triple Kasumi-Giri") + 4
-    let fleetingLaiGiriWidth = textWidth("Fleeting Lai-Giri") + 4
-    let azureAuspiceWidth = textWidth("Azure Auspice") + 4
-    let analysisWidth = textWidth("Analysis") + 4
-
-    let exaflareYPos = 380
-    let fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
-    let malformedReincarnationYPos = fightingSpiritsYPos + heightForTextDescent + 5
-    let tripleKasumiGiriYPos = malformedReincarnationYPos + heightForNoTextDescent + 5
-    let fleetingLaiGiriYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
-    let azureAuspiceYPos = fleetingLaiGiriYPos + heightForTextDescent + 5
-    let analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
 
     // exaflares
     if (mouseX > 0 && mouseX < 80 &&
