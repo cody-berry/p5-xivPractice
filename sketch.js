@@ -132,7 +132,6 @@ let secondOrbWentOff
 
 let heightForNoTextDescent
 let heightForTextDescent
-
 let exaflareWidth
 let fightingSpiritsWidth
 let malformedReincarnationWidth
@@ -140,7 +139,6 @@ let tripleKasumiGiriWidth
 let fleetingLaiGiriWidth
 let azureAuspiceWidth
 let analysisWidth
-
 let exaflareYPos
 let fightingSpiritsYPos
 let malformedReincarnationYPos
@@ -148,6 +146,7 @@ let tripleKasumiGiriYPos
 let fleetingLaiGiriYPos
 let azureAuspiceYPos
 let analysisYPos
+let padding
 
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
@@ -338,16 +337,18 @@ function setup() {
     angleMode(RADIANS)
 
     textFont(variableWidthFont, 17)
+    padding = 3
+
     heightForNoTextDescent = textAscent() + 2
     heightForTextDescent = textAscent() + 4 + textDescent()/2
 
-    exaflareWidth = textWidth("Exaflares") + 4
-    fightingSpiritsWidth = textWidth("Fighting Spirits") + 4
-    malformedReincarnationWidth = textWidth("Malformed Reincarnation") + 4
-    tripleKasumiGiriWidth = textWidth("Triple Kasumi-Giri") + 4
-    fleetingLaiGiriWidth = textWidth("Fleeting Lai-Giri") + 4
-    azureAuspiceWidth = textWidth("Azure Auspice") + 4
-    analysisWidth = textWidth("Analysis") + 4
+    exaflareWidth = textWidth("Exaflares") + padding*2
+    fightingSpiritsWidth = textWidth("Fighting Spirits") + padding*2
+    malformedReincarnationWidth = textWidth("Malformed Reincarnation") + padding*2
+    tripleKasumiGiriWidth = textWidth("Triple Kasumi-Giri") + padding*2
+    fleetingLaiGiriWidth = textWidth("Fleeting Lai-Giri") + padding*2
+    azureAuspiceWidth = textWidth("Azure Auspice") + padding*2
+    analysisWidth = textWidth("Analysis") + padding*2
 
     exaflareYPos = 380
     fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
@@ -356,6 +357,7 @@ function setup() {
     fleetingLaiGiriYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
     azureAuspiceYPos = fleetingLaiGiriYPos + heightForTextDescent + 5
     analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
+
 
     textSize(14)
 }
@@ -443,54 +445,58 @@ function draw() {
     if (mouseX > 0 && mouseX < exaflareWidth + 5 &&
         mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent)
         fill(0, 0, 15)
-    rect(5, exaflareYPos, exaflareWidth, heightForNoTextDescent, 5)
+    rect(padding + 1, exaflareYPos, exaflareWidth, heightForNoTextDescent, 5)
 
     // fighting spirits
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < fightingSpiritsWidth + 5 &&
         mouseY > fightingSpiritsYPos && mouseY < fightingSpiritsYPos
         + heightForTextDescent) fill(0, 0, 15)
-    rect(5, fightingSpiritsYPos, fightingSpiritsWidth, heightForTextDescent, 5)
+    rect(padding + 1, fightingSpiritsYPos, fightingSpiritsWidth, heightForTextDescent, 5)
 
     // malformed reincarnation
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < malformedReincarnationWidth + 5 &&
         mouseY > malformedReincarnationYPos && mouseY < malformedReincarnationYPos
         + heightForNoTextDescent) fill(0, 0, 15)
-    rect(5, malformedReincarnationYPos, malformedReincarnationWidth, heightForNoTextDescent, 5)
+    rect(padding + 1, malformedReincarnationYPos, malformedReincarnationWidth, heightForNoTextDescent, 5)
 
     // triple kasumi-giri
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < tripleKasumiGiriWidth + 5 &&
         mouseY > tripleKasumiGiriYPos && mouseY < tripleKasumiGiriYPos
         + heightForTextDescent) fill(0, 0, 15)
-    rect(5, tripleKasumiGiriYPos, tripleKasumiGiriWidth, heightForTextDescent, 5)
+    rect(padding + 1, tripleKasumiGiriYPos, tripleKasumiGiriWidth, heightForTextDescent, 5)
 
     // fleeting lai-giri
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < fleetingLaiGiriWidth + 5 &&
         mouseY > fleetingLaiGiriYPos && mouseY < fleetingLaiGiriYPos
         + heightForTextDescent) fill(0, 0, 15)
-    rect(5, fleetingLaiGiriYPos, fleetingLaiGiriWidth, heightForTextDescent, 5)
+    rect(padding + 1, fleetingLaiGiriYPos, fleetingLaiGiriWidth, heightForTextDescent, 5)
     fill(0, 0, 25)
+
+    // azure auspice
     if (mouseX > 0 && mouseX < azureAuspiceWidth + 5 &&
         mouseY > azureAuspiceYPos && mouseY < azureAuspiceYPos + heightForTextDescent)
         fill(0, 0, 15)
-    rect(5, azureAuspiceYPos, azureAuspiceWidth, heightForTextDescent, 5)
+    rect(padding, azureAuspiceYPos, azureAuspiceWidth, heightForTextDescent, 5)
+
+    // analysis
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < analysisWidth + 5 &&
         mouseY > analysisYPos && mouseY < analysisYPos - heightForTextDescent) fill(0, 0, 15)
-    rect(5, analysisYPos, analysisWidth, heightForTextDescent, 5)
+    rect(padding + 1, analysisYPos, analysisWidth, heightForTextDescent, 5)
 
     fill(0, 0, 100)
     noStroke()
-    text("Exaflares", 7, exaflareYPos + textAscent())
-    text("Fighting Spirits", 7, fightingSpiritsYPos + textAscent())
-    text("Malformed Reincarnation", 7, malformedReincarnationYPos + textAscent())
-    text("Triple Kasumi-Giri", 7, tripleKasumiGiriYPos + textAscent())
-    text("Fleeting Lai-Giri", 7, fleetingLaiGiriYPos + textAscent())
-    text("Azure Auspice", 7, azureAuspiceYPos + textAscent())
-    text("Analysis", 7, analysisYPos + textAscent())
+    text("Exaflares", padding*2 + 1, exaflareYPos + textAscent() - 1)
+    text("Fighting Spirits", padding*2 + 1, fightingSpiritsYPos + textAscent())
+    text("Malformed Reincarnation", padding*2 + 1, malformedReincarnationYPos + textAscent() - 1)
+    text("Triple Kasumi-Giri", padding*2 + 1, tripleKasumiGiriYPos + textAscent())
+    text("Fleeting Lai-Giri", padding*2 + 1, fleetingLaiGiriYPos + textAscent())
+    text("Azure Auspice", padding*2 + 1, azureAuspiceYPos + textAscent())
+    text("Analysis", padding*2 + 1, analysisYPos + textAscent())
 
     stroke(0, 0, 0)
 
