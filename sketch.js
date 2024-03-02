@@ -393,47 +393,83 @@ function draw() {
 
     // add mechanic buttons
     // each one has rounded corners and is separated
+
     fill(0, 0, 25)
     stroke(0, 0, 100)
     strokeWeight(1)
+    textSize(17)
+
+    let heightForNoTextDescent = textAscent() + 2
+    let heightForTextDescent = textAscent() + 4 + textDescent()/2
+
+    let exaflareWidth = textWidth("Exaflares") + 4
+    let fightingSpiritsWidth = textWidth("Fighting Spirits") + 4
+    let malformedReincarnationWidth = textWidth("Malformed Reincarnation") + 4
+    let tripleKasumiGiriWidth = textWidth("Triple Kasumi-Giri") + 4
+    let fleetingLaiGiriWidth = textWidth("Fleeting Lai-Giri") + 4
+    let azureAuspiceWidth = textWidth("Azure Auspice") + 4
+    let analysisWidth = textWidth("Analysis") + 4
+
+    let exaflareYPos = 380
+    let fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
+    let malformedReincarnationYPos = fightingSpiritsYPos + heightForTextDescent + 5
+    let tripleKasumiGiriYPos = malformedReincarnationYPos + heightForNoTextDescent + 5
+    let fleetingLaiGiriYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
+    let azureAuspiceYPos = fleetingLaiGiriYPos + heightForTextDescent + 5
+    let analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
+
+    // exaflares
     if (mouseX > 0 && mouseX < 80 &&
-        mouseY > 380 && mouseY < 400) fill(0, 0, 15)
-    rect(-10, 380, 90, 20, 5)
+        mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent)
+        fill(0, 0, 15)
+    rect(-10, exaflareYPos, exaflareWidth + 10, heightForNoTextDescent, 5)
+
+    // fighting spirits
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 130 &&
-        mouseY > 405 && mouseY < 428) fill(0, 0, 15)
-    rect(-10, 405, 140, 23, 5)
+        mouseY > fightingSpiritsYPos && mouseY < fightingSpiritsYPos
+        + heightForTextDescent) fill(0, 0, 15)
+    rect(-10, fightingSpiritsYPos, fightingSpiritsWidth + 10, heightForTextDescent, 5)
+
+    // malformed reincarnation
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 213 &&
-        mouseY > 433 && mouseY < 453) fill(0, 0, 15)
-    rect(-10, 433, 223, 20, 5)
+        mouseY > malformedReincarnationYPos && mouseY < malformedReincarnationYPos
+        + heightForNoTextDescent) fill(0, 0, 15)
+    rect(-10, malformedReincarnationYPos, malformedReincarnationWidth + 10, heightForNoTextDescent, 5)
+
+    // triple kasumi-giri
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 155 &&
-        mouseY > 458 && mouseY < 481) fill(0, 0, 15)
-    rect(-10, 458, 165, 23, 5)
+        mouseY > tripleKasumiGiriYPos && mouseY < tripleKasumiGiriYPos
+        + heightForTextDescent) fill(0, 0, 15)
+    rect(-10, tripleKasumiGiriYPos, tripleKasumiGiriWidth + 10, heightForTextDescent, 5)
+
+    // fleeting lai-giri
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 135 &&
-        mouseY > 486 && mouseY < 509) fill(0, 0, 15)
-    rect(-10, 486, 145, 23, 5)
+        mouseY > fleetingLaiGiriYPos && mouseY < fleetingLaiGiriYPos
+        + heightForTextDescent) fill(0, 0, 15)
+    rect(-10, fleetingLaiGiriYPos, fleetingLaiGiriWidth + 10, heightForTextDescent, 5)
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 123 &&
-        mouseY > 514 && mouseY < 534) fill(0, 0, 15)
-    rect(-10, 514, 133, 23, 5)
+        mouseY > azureAuspiceYPos && mouseY < azureAuspiceYPos + heightForTextDescent)
+        fill(0, 0, 15)
+    rect(-10, azureAuspiceYPos, azureAuspiceWidth + 10, heightForTextDescent, 5)
     fill(0, 0, 25)
     if (mouseX > 0 && mouseX < 83 &&
-        mouseY > 542 && mouseY < 565) fill(0, 0, 15)
-    rect(-10, 542, 83, 23, 5)
+        mouseY > analysisYPos && mouseY < analysisYPos - heightForTextDescent) fill(0, 0, 15)
+    rect(-10, analysisYPos, analysisWidth + 10, heightForTextDescent, 5)
 
     fill(0, 0, 100)
     noStroke()
-    textSize(17)
-    text("Exoflares", 3, 395)
-    text("Fighting Spirits", 3, 423)
-    text("Malformed Reincarnation", 3, 448)
-    text("Triple Kasumi-Giri", 3, 476)
-    text("Fleeting Lai-Giri", 3, 504)
-    text("Azure Auspice", 3, 532)
-    text("Analysis", 3, 560)
+    text("Exaflares", 2, exaflareYPos + textAscent())
+    text("Fighting Spirits", 2, fightingSpiritsYPos + textAscent())
+    text("Malformed Reincarnation", 2, malformedReincarnationYPos + textAscent())
+    text("Triple Kasumi-Giri", 2, tripleKasumiGiriYPos + textAscent())
+    text("Fleeting Lai-Giri", 2, fleetingLaiGiriYPos + textAscent())
+    text("Azure Auspice", 2, azureAuspiceYPos + textAscent())
+    text("Analysis", 2, analysisYPos + textAscent())
 
     stroke(0, 0, 0)
 
