@@ -1130,7 +1130,7 @@ function draw() {
             // hitbox.
 
             // display the symbols for each cleave
-            if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 1800) { // cleave #1
+            if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 2000) { // cleave #1
                 fill(0, 0, 0)
                 rect(bossPosX - 15, bossPosY - 45, 30, 30)
                 if (cleaveOneColor === "orange") {
@@ -1146,7 +1146,7 @@ function draw() {
                 arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90,
                     135 + cleaveOneSafeDirection*90)
                 angleMode(RADIANS)
-            } if (millis() - mechanicStarted > 2000 && millis() - mechanicStarted < 3800) { // cleave #2
+            } if (millis() - mechanicStarted > 2500 && millis() - mechanicStarted < 4500) { // cleave #2
                 fill(0, 0, 0)
                 rect(bossPosX - 15, bossPosY - 45, 30, 30)
                 if (cleaveTwoColor === "orange") {
@@ -1161,7 +1161,7 @@ function draw() {
                 arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90,
                     135 + cleaveTwoSafeDirection*90)
                 angleMode(RADIANS)
-            } if (millis() - mechanicStarted > 4000 && millis() - mechanicStarted < 5800) { // cleave #2
+            } if (millis() - mechanicStarted > 5000 && millis() - mechanicStarted < 7000) { // cleave #2
                 fill(0, 0, 0)
                 rect(bossPosX - 15, bossPosY - 45, 30, 30)
                 if (cleaveThreeColor === "orange") {
@@ -1182,7 +1182,7 @@ function draw() {
             // note: the AoE opacity always starts at 0, meaning that if it's
             // meant to resolve immediately, we have to set the opacity to
             // something other than 0
-            if (millis() - mechanicStarted > 6000 && !firstAoEResolved) {
+            if (millis() - mechanicStarted > 8500 && !firstAoEResolved) {
                 firstAoEResolved = true
                 AoEs.push( // make these resolve immediately!
                     (cleaveOneColor === "orange") ? // orange = circle, blue = donut
@@ -1206,7 +1206,7 @@ function draw() {
             }
 
             // second cleave
-            if (millis() - mechanicStarted > 8700 && !secondAoEResolved) {
+            if (millis() - mechanicStarted > 11500 && !secondAoEResolved) {
                 secondAoEResolved = true
                 AoEs.push( // make these resolve immediately!
                     (cleaveTwoColor === "orange") ? // orange = circle, blue = donut
@@ -1230,7 +1230,7 @@ function draw() {
             }
 
             // third cleave
-            if (millis() - mechanicStarted > 11400 && !thirdAoEResolved) {
+            if (millis() - mechanicStarted > 15500 && !thirdAoEResolved) {
                 thirdAoEResolved = true
                 AoEs.push( // make these resolve immediately!
                     (cleaveThreeColor === "orange") ? // orange = circle, blue = donut
