@@ -442,50 +442,50 @@ function draw() {
     textSize(17)
 
     // exaflares
-    if (mouseX > 0 && mouseX < exaflareWidth + 5 &&
+    if (mouseX > padding && mouseX < exaflareWidth + 5 &&
         mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent)
         fill(0, 0, 15)
     rect(padding + 1, exaflareYPos, exaflareWidth, heightForNoTextDescent, 5)
 
     // fighting spirits
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < fightingSpiritsWidth + 5 &&
+    if (mouseX > padding && mouseX < fightingSpiritsWidth + 5 &&
         mouseY > fightingSpiritsYPos && mouseY < fightingSpiritsYPos
         + heightForTextDescent) fill(0, 0, 15)
     rect(padding + 1, fightingSpiritsYPos, fightingSpiritsWidth, heightForTextDescent, 5)
 
     // malformed reincarnation
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < malformedReincarnationWidth + 5 &&
+    if (mouseX > padding && mouseX < malformedReincarnationWidth + 5 &&
         mouseY > malformedReincarnationYPos && mouseY < malformedReincarnationYPos
         + heightForNoTextDescent) fill(0, 0, 15)
     rect(padding + 1, malformedReincarnationYPos, malformedReincarnationWidth, heightForNoTextDescent, 5)
 
     // triple kasumi-giri
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < tripleKasumiGiriWidth + 5 &&
+    if (mouseX > padding && mouseX < tripleKasumiGiriWidth + 5 &&
         mouseY > tripleKasumiGiriYPos && mouseY < tripleKasumiGiriYPos
         + heightForTextDescent) fill(0, 0, 15)
     rect(padding + 1, tripleKasumiGiriYPos, tripleKasumiGiriWidth, heightForTextDescent, 5)
 
     // fleeting lai-giri
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < fleetingLaiGiriWidth + 5 &&
+    if (mouseX > padding && mouseX < fleetingLaiGiriWidth + 5 &&
         mouseY > fleetingLaiGiriYPos && mouseY < fleetingLaiGiriYPos
         + heightForTextDescent) fill(0, 0, 15)
     rect(padding + 1, fleetingLaiGiriYPos, fleetingLaiGiriWidth, heightForTextDescent, 5)
     fill(0, 0, 25)
 
     // azure auspice
-    if (mouseX > 0 && mouseX < azureAuspiceWidth + 5 &&
+    if (mouseX > padding && mouseX < azureAuspiceWidth + 5 &&
         mouseY > azureAuspiceYPos && mouseY < azureAuspiceYPos + heightForTextDescent)
         fill(0, 0, 15)
     rect(padding, azureAuspiceYPos, azureAuspiceWidth, heightForTextDescent, 5)
 
     // analysis
     fill(0, 0, 25)
-    if (mouseX > 0 && mouseX < analysisWidth + 5 &&
-        mouseY > analysisYPos && mouseY < analysisYPos - heightForTextDescent) fill(0, 0, 15)
+    if (mouseX > padding && mouseX < analysisWidth + 5 &&
+        mouseY > analysisYPos && mouseY < analysisYPos + heightForTextDescent) fill(0, 0, 15)
     rect(padding + 1, analysisYPos, analysisWidth, heightForTextDescent, 5)
 
     fill(0, 0, 100)
@@ -2191,8 +2191,8 @@ function mousePressed() {
         helper = true
     }
 
-    if (mouseX > 0 && mouseX < 80 &&
-        mouseY > 380 && mouseY < 400) {
+    if (mouseX > padding && mouseX < exaflareWidth + 5 &&
+        mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent) {
         mechanic = "Exoflares"
         mechanicStarted = millis()
 
@@ -2273,12 +2273,14 @@ function mousePressed() {
         bossPosX = -100
         bossPosY = -100
         partyWiped = false
-    } if (mouseX > 0 && mouseX < 130 &&
-        mouseY > 405 && mouseY < 428) { // Has yet to be implemented!
+    } if (mouseX > padding && mouseX < fightingSpiritsWidth + 5 &&
+        mouseY > fightingSpiritsYPos && mouseY < fightingSpiritsYPos
+        + heightForTextDescent) { // Has yet to be implemented!
         mechanic = "Fighting Spirits"
         partyWiped = false
-    } if (mouseX > 0 && mouseX < 213 &&
-        mouseY > 433 && mouseY < 453) {
+    } if (mouseX > padding && mouseX < malformedReincarnationWidth + 5 &&
+        mouseY > malformedReincarnationYPos && mouseY < malformedReincarnationYPos
+        + heightForNoTextDescent) {
         mechanic = "Malformed Reincarnation"
         mechanicStarted = millis()
         directionOfBlue = random([1, 2, 3, 4])
@@ -2395,8 +2397,9 @@ function mousePressed() {
         }
 
         AoEs = []
-    } if (mouseX > 0 && mouseX < 155 &&
-        mouseY > 458 && mouseY < 481) {
+    } if (mouseX > padding && mouseX < tripleKasumiGiriWidth + 5 &&
+        mouseY > tripleKasumiGiriYPos && mouseY < tripleKasumiGiriYPos
+        + heightForTextDescent) {
         mechanic = "Triple Kasumi-Giri"
         mechanicStarted = millis()
 
@@ -2429,8 +2432,9 @@ function mousePressed() {
         thirdAoEResolved = false
 
         AoEs = []
-    } if (mouseX > 0 && mouseX < 135 &&
-        mouseY > 486 && mouseY < 529) {
+    } if (mouseX > padding && mouseX < fleetingLaiGiriWidth + 5 &&
+        mouseY > fleetingLaiGiriYPos && mouseY < fleetingLaiGiriYPos
+        + heightForTextDescent) {
         mechanic = "Fleeting Lai-Giri"
         mechanicStarted = millis()
         jumpResolved = false
@@ -2503,8 +2507,8 @@ function mousePressed() {
         AoEs.sort(sortByGrowingTime)
 
 
-    } if (mouseX > 0 && mouseX < 123 &&
-        mouseY > 514 && mouseY < 534) {
+    } if (mouseX > padding && mouseX < azureAuspiceWidth + 5 &&
+        mouseY > azureAuspiceYPos && mouseY < azureAuspiceYPos + heightForTextDescent) {
         mechanic = "Azure Auspice"
         mechanicStarted = millis()
         // everyone except for you starts off the map
@@ -2577,8 +2581,8 @@ function mousePressed() {
             }
             lineNumber++
         }
-    } if (mouseX > 0 && mouseX < 83 &&
-        mouseY > 542 && mouseY < 565) { // Analysis
+    } if (mouseX > padding && mouseX < analysisWidth + 5 &&
+        mouseY > analysisYPos && mouseY < analysisYPos + heightForTextDescent) { // Analysis
         mechanic = "Analysis"
         mechanicStarted = millis()
         // everyone except for you starts off the map
