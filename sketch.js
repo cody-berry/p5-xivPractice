@@ -343,19 +343,19 @@ function setup() {
     heightForTextDescent = textAscent() + 4 + textDescent()/2
 
     exaflareWidth = textWidth("Exaflares") + padding*2
-    fightingSpiritsWidth = textWidth("Fighting Spirits") + padding*2
-    malformedReincarnationWidth = textWidth("Malformed Reincarnation") + padding*2
+    // fightingSpiritsWidth = textWidth("Fighting Spirits") + padding*2
+    // malformedReincarnationWidth = textWidth("Malformed Reincarnation") + padding*2
     tripleKasumiGiriWidth = textWidth("Triple Kasumi-Giri") + padding*2
-    fleetingLaiGiriWidth = textWidth("Fleeting Lai-Giri") + padding*2
+    // fleetingLaiGiriWidth = textWidth("Fleeting Lai-Giri") + padding*2
     azureAuspiceWidth = textWidth("Azure Auspice") + padding*2
     analysisWidth = textWidth("Analysis") + padding*2
 
     exaflareYPos = 380
-    fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
-    malformedReincarnationYPos = fightingSpiritsYPos + heightForTextDescent + 5
-    tripleKasumiGiriYPos = malformedReincarnationYPos + heightForNoTextDescent + 5
-    fleetingLaiGiriYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
-    azureAuspiceYPos = fleetingLaiGiriYPos + heightForTextDescent + 5
+    // fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
+    // malformedReincarnationYPos = fightingSpiritsYPos + heightForTextDescent + 5
+    tripleKasumiGiriYPos = exaflareYPos + heightForNoTextDescent + 5
+    // fleetingLaiGiriYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
+    azureAuspiceYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
     analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
 
 
@@ -447,19 +447,19 @@ function draw() {
         fill(0, 0, 15)
     rect(padding + 1, exaflareYPos, exaflareWidth, heightForNoTextDescent, 5)
 
-    // fighting spirits
-    fill(0, 0, 25)
-    if (mouseX > padding && mouseX < fightingSpiritsWidth + 5 &&
-        mouseY > fightingSpiritsYPos && mouseY < fightingSpiritsYPos
-        + heightForTextDescent) fill(0, 0, 15)
-    rect(padding + 1, fightingSpiritsYPos, fightingSpiritsWidth, heightForTextDescent, 5)
+    // // fighting spirits
+    // fill(0, 0, 25)
+    // if (mouseX > padding && mouseX < fightingSpiritsWidth + 5 &&
+    //     mouseY > fightingSpiritsYPos && mouseY < fightingSpiritsYPos
+    //     + heightForTextDescent) fill(0, 0, 15)
+    // rect(padding + 1, fightingSpiritsYPos, fightingSpiritsWidth, heightForTextDescent, 5)
 
-    // malformed reincarnation
-    fill(0, 0, 25)
-    if (mouseX > padding && mouseX < malformedReincarnationWidth + 5 &&
-        mouseY > malformedReincarnationYPos && mouseY < malformedReincarnationYPos
-        + heightForNoTextDescent) fill(0, 0, 15)
-    rect(padding + 1, malformedReincarnationYPos, malformedReincarnationWidth, heightForNoTextDescent, 5)
+    // // malformed reincarnation
+    // fill(0, 0, 25)
+    // if (mouseX > padding && mouseX < malformedReincarnationWidth + 5 &&
+    //     mouseY > malformedReincarnationYPos && mouseY < malformedReincarnationYPos
+    //     + heightForNoTextDescent) fill(0, 0, 15)
+    // rect(padding + 1, malformedReincarnationYPos, malformedReincarnationWidth, heightForNoTextDescent, 5)
 
     // triple kasumi-giri
     fill(0, 0, 25)
@@ -468,13 +468,13 @@ function draw() {
         + heightForTextDescent) fill(0, 0, 15)
     rect(padding + 1, tripleKasumiGiriYPos, tripleKasumiGiriWidth, heightForTextDescent, 5)
 
-    // fleeting lai-giri
-    fill(0, 0, 25)
-    if (mouseX > padding && mouseX < fleetingLaiGiriWidth + 5 &&
-        mouseY > fleetingLaiGiriYPos && mouseY < fleetingLaiGiriYPos
-        + heightForTextDescent) fill(0, 0, 15)
-    rect(padding + 1, fleetingLaiGiriYPos, fleetingLaiGiriWidth, heightForTextDescent, 5)
-    fill(0, 0, 25)
+    // // fleeting lai-giri
+    // fill(0, 0, 25)
+    // if (mouseX > padding && mouseX < fleetingLaiGiriWidth + 5 &&
+    //     mouseY > fleetingLaiGiriYPos && mouseY < fleetingLaiGiriYPos
+    //     + heightForTextDescent) fill(0, 0, 15)
+    // rect(padding + 1, fleetingLaiGiriYPos, fleetingLaiGiriWidth, heightForTextDescent, 5)
+    // fill(0, 0, 25)
 
     // azure auspice
     if (mouseX > padding && mouseX < azureAuspiceWidth + 5 &&
@@ -491,10 +491,10 @@ function draw() {
     fill(0, 0, 100)
     noStroke()
     text("Exaflares", padding*2 + 1, exaflareYPos + textAscent() - 1)
-    text("Fighting Spirits", padding*2 + 1, fightingSpiritsYPos + textAscent())
-    text("Malformed Reincarnation", padding*2 + 1, malformedReincarnationYPos + textAscent() - 1)
+    // text("Fighting Spirits", padding*2 + 1, fightingSpiritsYPos + textAscent())
+    // text("Malformed Reincarnation", padding*2 + 1, malformedReincarnationYPos + textAscent() - 1)
     text("Triple Kasumi-Giri", padding*2 + 1, tripleKasumiGiriYPos + textAscent())
-    text("Fleeting Lai-Giri", padding*2 + 1, fleetingLaiGiriYPos + textAscent())
+    // text("Fleeting Lai-Giri", padding*2 + 1, fleetingLaiGiriYPos + textAscent())
     text("Azure Auspice", padding*2 + 1, azureAuspiceYPos + textAscent())
     text("Analysis", padding*2 + 1, analysisYPos + textAscent())
 
