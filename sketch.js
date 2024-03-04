@@ -129,6 +129,9 @@ let bossRotationClockwise
 let yourRotationWentOff
 let firstOrbWentOff
 let secondOrbWentOff
+let gotHitByFirstOrb
+let gotHitBySecondOrb
+let gotHitByTether
 
 let heightForNoTextDescent
 let heightForTextDescent
@@ -334,6 +337,9 @@ function setup() {
     bossRotationClockwise = random([true, false])
     yourRotationWentOff = false
     bossRotationWentOff = false
+    gotHitByFirstOrb = false
+    gotHitBySecondOrb = false
+    gotHitByTether = false
     angleMode(RADIANS)
 
     textFont(variableWidthFont, 17)
@@ -1880,8 +1886,23 @@ function draw() {
                     if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
                         partyWiped = true
                         causeOfWipe = "You got hit by the first orb."
+                        gotHitByFirstOrb = true
                     }
                     angleMode(RADIANS)
+                }
+
+                // also display a check mark or x mark over your head temporarily
+                stroke(gotHitByFirstOrb ? 0 : 120, 100, 80, map(
+                    millis() - mechanicStarted, 6100, 8100, 600, 0
+                ))
+                strokeWeight(4)
+                // display an X or a check mark
+                if (gotHitByFirstOrb) {
+                    line(posX - 10, posY - 60, posX + 10, posY - 40)
+                    line(posX - 10, posY - 40, posX + 10, posY - 60)
+                } else {
+                    line(posX - 10, posY - 48, posX - 3, posY - 40)
+                    line(posX - 3, posY - 40, posX + 10, posY - 60)
                 }
             }
 
@@ -1927,8 +1948,23 @@ function draw() {
                     if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
                         partyWiped = true
                         causeOfWipe = "You got hit by the second orb."
+                        gotHitBySecondOrb = true
                     }
                     angleMode(RADIANS)
+                }
+
+                // also display a check mark or x mark over your head temporarily
+                stroke(gotHitBySecondOrb ? 0 : 120, 100, 80, map(
+                    millis() - mechanicStarted, 14900, 16900, 600, 0
+                ))
+                strokeWeight(4)
+                // display an X or a check mark
+                if (gotHitBySecondOrb) {
+                    line(posX - 10, posY - 60, posX + 10, posY - 40)
+                    line(posX - 10, posY - 40, posX + 10, posY - 60)
+                } else {
+                    line(posX - 10, posY - 48, posX - 3, posY - 40)
+                    line(posX - 3, posY - 40, posX + 10, posY - 60)
                 }
             }
 
@@ -1995,7 +2031,7 @@ function draw() {
                     yourFacing.angle + debuffDirection.angle
                 )
                 let angleFromOrb = atan2(
-                    700 - posY, 300 - posX
+                    300 - posY, 700 - posX
                 )
                 let angleDiff = safeSpot.angle % 360 - angleFromOrb % 360
 
@@ -2710,6 +2746,9 @@ function mousePressed() {
 
         firstOrbWentOff = false
         secondOrbWentOff = false
+        gotHitByFirstOrb = false
+        gotHitBySecondOrb = false
+        gotHitByTether = false
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
         // click on the microscope to make you turn to the microscope
         angleMode(DEGREES)
