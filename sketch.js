@@ -2432,6 +2432,7 @@ function mousePressed() {
         thirdAoEResolved = false
 
         AoEs = []
+        partyWiped = false
     } if (mouseX > padding && mouseX < fleetingLaiGiriWidth + 5 &&
         mouseY > fleetingLaiGiriYPos && mouseY < fleetingLaiGiriYPos
         + heightForTextDescent) {
@@ -2505,8 +2506,7 @@ function mousePressed() {
         // this won't give away anything: sort the aoEs by their growing time.
         // the first lines are displayed on top of the second lines
         AoEs.sort(sortByGrowingTime)
-
-
+        partyWiped = false
     } if (mouseX > padding && mouseX < azureAuspiceWidth + 5 &&
         mouseY > azureAuspiceYPos && mouseY < azureAuspiceYPos + heightForTextDescent) {
         mechanic = "Azure Auspice"
@@ -2581,6 +2581,7 @@ function mousePressed() {
             }
             lineNumber++
         }
+        partyWiped = false
     } if (mouseX > padding && mouseX < analysisWidth + 5 &&
         mouseY > analysisYPos && mouseY < analysisYPos + heightForTextDescent) { // Analysis
         mechanic = "Analysis"
@@ -2705,6 +2706,10 @@ function mousePressed() {
         bossRotationClockwise = random([true, false])
         yourRotationWentOff = false
         bossRotationWentOff = false
+        partyWiped = false
+
+        firstOrbWentOff = false
+        secondOrbWentOff = false
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
         // click on the microscope to make you turn to the microscope
         angleMode(DEGREES)
