@@ -28,9 +28,6 @@ class Direction {
 /**
  *  @author Cody
  *  @date 2024.01.09
- *
- *  Bytes list:
- *  ☐ Display a "microscope" to the left of board
  */
 
 
@@ -427,7 +424,7 @@ function drawRotationSymbol(x, y, disappearsWhen, isClockwise) {
         } else if (abs(millisUntilDisappears - 1500) < 300) {
             stroke(20, 100, 40, map(abs(millisUntilDisappears - 1500), 0, 300, 0, 100))
         } else if (abs(millisUntilDisappears) < 300) {
-            stroke(20, 100, 40, map(abs(millisUntilDisappears), 0, 300, 0, 1g00))
+            stroke(20, 100, 40, map(abs(millisUntilDisappears), 0, 300, 0, 100))
         }
         line(-7, -7, 0, -15)
         line(7, -7, 0, -15)
@@ -447,8 +444,29 @@ function drawRotationSymbol(x, y, disappearsWhen, isClockwise) {
 
         // and the number of seconds until it's done
         if (millisUntilDisappears < 5000) {
-            fill(0, 0, 100)
-            text(ceil((millisUntilDisappears)/1000), -10, 12)
+            let secondsUntilDisappears = ceil((millisUntilDisappears)/1000)
+            let millisUntilSecondsChange = millisUntilDisappears - secondsUntilDisappears*1000 + 1000
+            print(millisUntilSecondsChange)
+            stroke(0, 0, 100, map(
+                millisUntilSecondsChange, 1000, 0, 300, -100
+            ))
+            strokeWeight(6)
+            // if it's 1, 3, or 5, there's a dot in the middle
+            if (secondsUntilDisappears % 2 === 1) {
+                point(0, 0)
+            }
+            // if it's 2+, there's 2 dots at the bottom-left and
+            // bottom-right corners
+            if (secondsUntilDisappears > 1) {
+                point(-12, 12)
+                point(12, -12)
+            }
+
+            // if it's 4+, there's 2 dotsd at the other corners
+            if (secondsUntilDisappears > 3) {
+                point(12, 12)
+                point(-12, -12)
+            }
         }
         pop()
     }
