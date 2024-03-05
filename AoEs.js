@@ -1158,10 +1158,10 @@ class PersistingRectangleAOE {
             rect(this.x, this.y, this.w, this.h)
 
             // if you are in it, though, party wipe (you're dead)!
-            // the rectangle AoE is 10 bigger than it looks because it has to
+            // the rectangle AoE is 20 bigger than it looks because it has to
             // account for just your symbol, not your center, touching the AoE.
-            if (posX > this.x - 5 && posX < this.x + this.w + 5 &&
-                posY > this.y - 5 && posY < this.y + this.h + 5) {
+            if (posX > this.x - 10 && posX < this.x + this.w + 10 &&
+                posY > this.y - 10 && posY < this.y + this.h + 10) {
                 partyWiped = true
                 causeOfWipe = "You are in a persisting rectangle AoE."
             }
