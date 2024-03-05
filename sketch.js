@@ -381,7 +381,8 @@ function displayArrow(x, y, direction) {
 }
 
 function drawRotationSymbol(x, y, disappearsWhen, isClockwise) {
-    if (millis() < disappearsWhen && millis() > disappearsWhen - 10000) {
+    let millisUntilDisappears = disappearsWhen - millis()
+    if (millisUntilDisappears > 0 && millisUntilDisappears < 10000) {
         stroke(20, 100, 40)
         strokeWeight(2)
         noFill()
@@ -392,17 +393,46 @@ function drawRotationSymbol(x, y, disappearsWhen, isClockwise) {
         circle(0, 0, 50)
 
         // now the lines
+        // a small rotation as well
+        // the linesn rotate with some sign as well
+        push()
+        angleMode(DEGREES)
+        if (8300 < millisUntilDisappears && millisUntilDisappears < 9000) {
+            rotate(map(millisUntilDisappears, 9000, 8300, 0, isClockwise ? 90 : -90))
+        } else if (6300 < millisUntilDisappears && millisUntilDisappears < 7000) {
+            rotate(map(millisUntilDisappears, 7000, 6300, 0, isClockwise ? 90 : -90))
+        } else if (4300 < millisUntilDisappears && millisUntilDisappears < 5000) {
+            rotate(map(millisUntilDisappears, 5000, 4300, 0, isClockwise ? 90 : -90))
+        } else if (2300 < millisUntilDisappears && millisUntilDisappears < 3000) {
+            rotate(map(millisUntilDisappears, 3000, 2300, 0, isClockwise ? 90 : -90))
+        } else if (300 < millisUntilDisappears && millisUntilDisappears < 1000) {
+            rotate(map(millisUntilDisappears, 1000, 300, 0, isClockwise ? 90 : -90))
+        }
+        if ((7500 < millisUntilDisappears && millisUntilDisappears < 8300) ||
+            (5500 < millisUntilDisappears && millisUntilDisappears < 6300) ||
+            (3500 < millisUntilDisappears && millisUntilDisappears < 4300) ||
+            (1500 < millisUntilDisappears && millisUntilDisappears < 2300) ||
+            (0 < millisUntilDisappears && millisUntilDisappears < 300))
+            rotate(isClockwise ? 90 : -90)
+        angleMode(RADIANS)
         line(-17, -17, 17, 17)
         line(-17, 17, 17, -17)
 
-        // in place of the rotating thing, add an arrow
-        stroke(0, 0, 100)
-        strokeWeight(2)
-        angleMode(DEGREES)
-        arc(0, 0, 40, 40, isClockwise ? -90 : -180, isClockwise ? 0 : -90)
-        angleMode(RADIANS)
-        line(isClockwise ? 17 : -17, -3, isClockwise ? 20 : -20, 0)
-        line(isClockwise ? 22 : -22, -3, isClockwise ? 20 : -20, 0)
+        if (abs(millisUntilDisappears - 7500) < 300) {
+            stroke(20, 100, 40, map(abs(millisUntilDisappears - 7500), 0, 300, 0, 100))
+        } else if (abs(millisUntilDisappears - 5500) < 300) {
+            stroke(20, 100, 40, map(abs(millisUntilDisappears - 5500), 0, 300, 0, 100))
+        } else if (abs(millisUntilDisappears - 3500) < 300) {
+            stroke(20, 100, 40, map(abs(millisUntilDisappears - 3500), 0, 300, 0, 100))
+        } else if (abs(millisUntilDisappears - 1500) < 300) {
+            stroke(20, 100, 40, map(abs(millisUntilDisappears - 1500), 0, 300, 0, 100))
+        } else if (abs(millisUntilDisappears) < 300) {
+            stroke(20, 100, 40, map(abs(millisUntilDisappears), 0, 300, 0, 1g00))
+        }
+        line(-7, -7, 0, -15)
+        line(7, -7, 0, -15)
+        pop()
+
 
         // add a triangle where it's going to rotate if it's V
         stroke(240, 50, 50)
@@ -416,9 +446,9 @@ function drawRotationSymbol(x, y, disappearsWhen, isClockwise) {
         triangle(isClockwise ? -3 : 3, 27, isClockwise ? -3 : 3, 33, isClockwise ? -8 : 8, 30)
 
         // and the number of seconds until it's done
-        if (millis() > disappearsWhen - 5000) {
+        if (millisUntilDisappears < 5000) {
             fill(0, 0, 100)
-            text(ceil((disappearsWhen - millis()) / 1000), -10, 12)
+            text(ceil((millisUntilDisappears)/1000), -10, 12)
         }
         pop()
     }
@@ -2016,33 +2046,33 @@ function draw() {
                         ((bossRotationClockwise) ? 90 : -90)*bossBuffNumber
                 }
             } if (millis() - mechanicStarted > 19950) {
-            if (!yourRotationWentOff) {
-                yourRotationWentOff = true
+                if (!yourRotationWentOff) {
+                    yourRotationWentOff = true
 
-                // rotate
-                debuffDirection = new Direction(debuffDirection.angle)
-                debuffDirection.angle +=
-                    ((yourRotationClockwise) ? 90 : -90)*yourDebuffNumber
+                    // rotate
+                    debuffDirection = new Direction(debuffDirection.angle)
+                    debuffDirection.angle +=
+                        ((yourRotationClockwise) ? 90 : -90)*yourDebuffNumber
 
-                // then make the tether go off
-                // check if angle is correct
-                angleMode(DEGREES)
-                let safeSpot = new Direction(
-                    yourFacing.angle + debuffDirection.angle
-                )
-                let angleFromOrb = atan2(
-                    300 - posY, 700 - posX
-                )
-                let angleDiff = safeSpot.angle % 360 - angleFromOrb % 360
+                    // then make the tether go off
+                    // check if angle is correct
+                    angleMode(DEGREES)
+                    let safeSpot = new Direction(
+                        yourFacing.angle + debuffDirection.angle
+                    )
+                    let angleFromOrb = atan2(
+                        300 - posY, 700 - posX
+                    )
+                    let angleDiff = safeSpot.angle % 360 - angleFromOrb % 360
 
-                // if check was failed, the party wiped!
-                if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
-                    partyWiped = true
-                    causeOfWipe = "You got hit by the tether."
+                    // if check was failed, the party wiped!
+                    if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
+                        partyWiped = true
+                        causeOfWipe = "You got hit by the tether."
+                    }
+                    angleMode(RADIANS)
                 }
-                angleMode(RADIANS)
             }
-        }
 
             break
     }
