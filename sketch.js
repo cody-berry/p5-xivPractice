@@ -369,12 +369,14 @@ function setup() {
 
 
     // test
-    logWindowRow6 = {"text": "asdf", "color": [0, 0, 100]}
-    logWindowRow5 = {"text": "sdfg", "color": [72, 50, 90]}
-    logWindowRow4 = {"text": "dfgh", "color": [144, 75, 80]}
-    logWindowRow3 = {"text": "fghj", "color": [216, 80, 80]}
-    logWindowRow2 = {"text": "ghjk", "color": [288, 80, 80]}
-    logWindowRow1 = {"text": "hjkl", "color": [0, 80, 80]}
+    logWindowRow6 = {"text": "Movement abilities are restricted.", "color": [0, 80, 80]}
+    logWindowRow5 = {"text": "Use W, A, S, and D to move.", "color": [72, 80, 80]}
+    logWindowRow4 = {"text": "Click on part of the microscope to change" +
+            " facing.", "color": [72, 80, 80]}
+    logWindowRow3 = {"text": "Click on any mechanic button to change to it.", "color": [72, 80, 80]}
+    logWindowRow2 = {"text": "Feel free to execute mechanics incorrectly to" +
+            " test!", "color": [144, 80, 80]}
+    logWindowRow1 = {"text": "Loading Analysis...", "color": [0, 0, 100]}
 
     textSize(14)
 }
