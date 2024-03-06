@@ -148,6 +148,12 @@ let azureAuspiceYPos
 let analysisYPos
 let padding
 
+let logWindowRow5
+let logWindowRow4
+let logWindowRow3
+let logWindowRow2
+let logWindowRow1
+
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
     if (Math.abs(value) < threshold) return 0;
@@ -362,6 +368,14 @@ function setup() {
     analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
 
 
+    // test
+    logWindowRow6 = {"text": "asdf", "color": [0, 0, 100]}
+    logWindowRow5 = {"text": "sdfg", "color": [72, 50, 90]}
+    logWindowRow4 = {"text": "dfgh", "color": [144, 75, 80]}
+    logWindowRow3 = {"text": "fghj", "color": [216, 80, 80]}
+    logWindowRow2 = {"text": "ghjk", "color": [288, 80, 80]}
+    logWindowRow1 = {"text": "hjkl", "color": [0, 80, 80]}
+
     textSize(14)
 }
 
@@ -476,15 +490,16 @@ function draw() {
     background(234, 34, 24)
 
 
-    // add exoflare helper toggle
+    // add helper toggle
     if (!helper) {
+        textSize(30)
         fill(0, 0, 25)
         if (mouseX > 0 && mouseX < 230 &&
             mouseY > height - 30 && mouseY < height) fill(0, 0, 20)
         noStroke()
-        rect(0, height - 30, 230, 30)
+        rect(170, height - 180, 230, 30)
         fill(0, 0, 100)
-        text("Enable helper", 5, height - 3)
+        text("Enable helper", 175, height - 153)
     }
 
     // add mechanic buttons
@@ -2172,6 +2187,41 @@ function draw() {
         textAlign(RIGHT, BOTTOM)
         text(causeOfWipe, width, height)
         textAlign(LEFT, BASELINE)
+    }
+
+    // display a mini log window displaying recent messages
+    fill(0, 0, 0, 10)
+    noStroke()
+    rect(5, height - 155, 390, 150, 5)
+    fill(0, 0, 0, 20)
+    noStroke()
+    rect(10, height - 150, 380, 140, 5)
+    fill(0, 0, 0, 30)
+    noStroke()
+    rect(15, height - 145, 370, 130, 5)
+    fill(0, 0, 0, 40)
+    noStroke()
+    rect(20, height - 140, 360, 120, 5)
+    fill(0, 0, 100)
+    textSize(14)
+    if (logWindowRow6) {
+        fill(logWindowRow6["color"][0], logWindowRow6["color"][1], logWindowRow6["color"][2])
+        text(logWindowRow6["text"], 25, height - 125)
+    } if (logWindowRow5) {
+        fill(logWindowRow5["color"][0], logWindowRow5["color"][1], logWindowRow5["color"][2])
+        text(logWindowRow5["text"], 25, height - 105)
+    } if (logWindowRow4) {
+        fill(logWindowRow4["color"][0], logWindowRow4["color"][1], logWindowRow4["color"][2])
+        text(logWindowRow4["text"], 25, height - 85)
+    } if (logWindowRow3) {
+        fill(logWindowRow3["color"][0], logWindowRow3["color"][1], logWindowRow3["color"][2])
+        text(logWindowRow3["text"], 25, height - 65)
+    } if (logWindowRow2) {
+        fill(logWindowRow2["color"][0], logWindowRow2["color"][1], logWindowRow2["color"][2])
+        text(logWindowRow2["text"], 25, height - 45)
+    } if (logWindowRow1) {
+        fill(logWindowRow1["color"][0], logWindowRow1["color"][1], logWindowRow1["color"][2])
+        text(logWindowRow1["text"], 25, height - 25)
     }
 
     push()
