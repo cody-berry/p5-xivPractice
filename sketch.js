@@ -496,8 +496,8 @@ function draw() {
     if (!helper) {
         textSize(30)
         fill(0, 0, 25)
-        if (mouseX > 0 && mouseX < 230 &&
-            mouseY > height - 30 && mouseY < height) fill(0, 0, 20)
+        if (mouseX > 170 && mouseX < 400 &&
+            mouseY > height - 180 && mouseY < height - 150) fill(0, 0, 20)
         noStroke()
         rect(170, height - 180, 230, 30)
         fill(0, 0, 100)
@@ -2322,8 +2322,8 @@ function draw() {
 }
 
 function mousePressed() {
-    if (mouseX > 0 && mouseX < 230 &&
-        mouseY > height - 30 && mouseY < height) {
+    if (mouseX > 170 && mouseX < 400 &&
+        mouseY > height - 180 && mouseY < height - 150) {
         helper = true
     }
 
