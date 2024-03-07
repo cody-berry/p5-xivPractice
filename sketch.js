@@ -158,6 +158,8 @@ let logWindowRow1
 let inRectangleAoE
 let inEdgeOfArena
 
+let doneWithMechanic
+
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
     if (Math.abs(value) < threshold) return 0;
@@ -941,6 +943,20 @@ function draw() {
             fill(234, 34, 24)
             noStroke()
             rect(350, 0, 50, height)
+
+            // now if you performed the mechanic correctly you can pass
+            if (doneWithMechanic === false && millis() - mechanicStarted > 15000 && !partyWiped) {
+                doneWithMechanic = true
+                logWindowRow6 = logWindowRow5
+                logWindowRow5 = logWindowRow4
+                logWindowRow4 = logWindowRow3
+                logWindowRow3 = logWindowRow2
+                logWindowRow2 = logWindowRow1
+                logWindowRow1 = {
+                    "text": `You executed the mechanic perfectly.`,
+                    "color": [144, 80, 80]
+                }
+            }
             break
         case "Malformed Reincarnation":
             // display the blue and odrange soak towers
@@ -2169,6 +2185,21 @@ function draw() {
                 }
             }
 
+
+            // now if you performed the mechanic correctly you can pass
+            if (doneWithMechanic === false && millis() - mechanicStarted > 21000 && !partyWiped) {
+                doneWithMechanic = true
+                logWindowRow6 = logWindowRow5
+                logWindowRow5 = logWindowRow4
+                logWindowRow4 = logWindowRow3
+                logWindowRow3 = logWindowRow2
+                logWindowRow2 = logWindowRow1
+                logWindowRow1 = {
+                    "text": `You executed the mechanic perfectly.`,
+                    "color": [144, 80, 80]
+                }
+            }
+
             break
     }
 
@@ -2424,6 +2455,7 @@ function mousePressed() {
         if (mechanic === "Exoflares") logWindowRow1 = {"text": "Reloading exoflares...", "color": [0, 0, 100]}
         // log message for switching mechanics
         else logWindowRow1 = {"text": "Switching to exoflares...", "color": [0, 0, 100]}
+        doneWithMechanic = false
         mechanic = "Exoflares"
         mechanicStarted = millis()
 
@@ -2631,6 +2663,7 @@ function mousePressed() {
     } if (mouseX > padding && mouseX < tripleKasumiGiriWidth + 5 &&
         mouseY > tripleKasumiGiriYPos && mouseY < tripleKasumiGiriYPos
         + heightForTextDescent) {
+        doneWithMechanic = false
         logWindowRow6 = logWindowRow5
         logWindowRow5 = logWindowRow4
         logWindowRow4 = logWindowRow3
@@ -2749,6 +2782,7 @@ function mousePressed() {
         partyWiped = false
     } if (mouseX > padding && mouseX < azureAuspiceWidth + 5 &&
         mouseY > azureAuspiceYPos && mouseY < azureAuspiceYPos + heightForTextDescent) {
+        doneWithMechanic = false
         logWindowRow6 = logWindowRow5
         logWindowRow5 = logWindowRow4
         logWindowRow4 = logWindowRow3
@@ -2833,6 +2867,7 @@ function mousePressed() {
         partyWiped = false
     } if (mouseX > padding && mouseX < analysisWidth + 5 &&
         mouseY > analysisYPos && mouseY < analysisYPos + heightForTextDescent) { // Analysis
+        doneWithMechanic = false
         logWindowRow6 = logWindowRow5
         logWindowRow5 = logWindowRow4
         logWindowRow4 = logWindowRow3
