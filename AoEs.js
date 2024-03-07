@@ -400,6 +400,7 @@ class SpreadCircle {
             // when it goes off, check if anyone is in the vicinity
             if (!this.wentOff) {
                 this.wentOff = true
+                let executedCorrectly = true
                 // set the
                 if (this.player === 1) { // 1 is you
                     this.x = posX
@@ -427,14 +428,23 @@ class SpreadCircle {
                         if (position[2] !== this.player) {
                             partyWiped = true
                             causeOfWipe = "Someone clipped someone else with spread."
+                            executedCorrectly = false
                             logWindowRow6 = logWindowRow5
                             logWindowRow5 = logWindowRow4
                             logWindowRow4 = logWindowRow3
                             logWindowRow3 = logWindowRow2
                             logWindowRow2 = logWindowRow1
-                            logWindowRow1 = {"text": "Someone clipped someone else with spread.", "color": [0, 80, 80]}
+                            logWindowRow1 = {"text": `Player ${this.player} clipped player ${position[2]} with spread.`, "color": [0, 80, 80]}
                         }
                     }
+                }
+                if (executedCorrectly) {
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": `Player ${this.player}'s spread didn't clip anyone else.`, "color": [144, 80, 80]}
                 }
             }
             this.opacity -= 3
@@ -467,17 +477,21 @@ class StackCircle {
             // when it goes off, check if anyone is in the vicinity
             if (!this.wentOff) {
                 this.wentOff = true
+                let executedCorrectly = true
                 // have the stack circle leap to the player needed
                 if (this.player === 1) { // 1 is you
                     this.x = posX
                     this.y = posY
-                } if (this.player === 2) { // 2 is the dragoon
+                }
+                if (this.player === 2) { // 2 is the dragoon
                     this.x = drgPosX
                     this.y = drgPosY
-                } if (this.player === 3) { // 3 is the sage
+                }
+                if (this.player === 3) { // 3 is the sage
                     this.x = sgePosX
                     this.y = sgePosY
-                } if (this.player === 4) { // 4 is the warrior
+                }
+                if (this.player === 4) { // 4 is the warrior
                     this.x = warPosX
                     this.y = warPosY
                 }
@@ -491,31 +505,51 @@ class StackCircle {
                     // check for anyone in the vicinity
                     // if someone has been hit in the last second by spread/stack,
                     // then boom, dead
-                    if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size/2) {
+                    if (sqrt((this.x - position[0]) ** 2 + (this.y - position[1]) ** 2) < this.size / 2) {
                         if (lastHitBy[position[2]][1] > millis() - 1000) {
                             partyWiped = true
+                            executedCorrectly = false
                             causeOfWipe = "2 stack people stacked up."
                             logWindowRow6 = logWindowRow5
                             logWindowRow5 = logWindowRow4
                             logWindowRow4 = logWindowRow3
                             logWindowRow3 = logWindowRow2
                             logWindowRow2 = logWindowRow1
-                            logWindowRow1 = {"text": "2 stack people stacked up.", "color": [0, 80, 80]}
+                            logWindowRow1 = {
+                                "text": `Player ${position[2]} got hit by 2 stacks.`,
+                                "color": [0, 80, 80]
+                            }
                         }
                         lastHitBy[position[2]] = ["stack", millis()]
                         print(lastHitBy)
                         playersHit += 1
                     }
-                } if (playersHit < this.minPlayers) {
+                }
+                if (playersHit < this.minPlayers) {
                     // if less than the minimum players have stacked up, one dies
                     partyWiped = true
+                    executedCorrectly = false
                     causeOfWipe = "Too little people stacked up."
                     logWindowRow6 = logWindowRow5
                     logWindowRow5 = logWindowRow4
                     logWindowRow4 = logWindowRow3
                     logWindowRow3 = logWindowRow2
                     logWindowRow2 = logWindowRow1
-                    logWindowRow1 = {"text": "Too little people stacked up.", "color": [0, 80, 80]}
+                    logWindowRow1 = {
+                        "text": `Only ${playersHit} of ${this.minPlayers} got hit by player ${this.player}'s stack.`,
+                        "color": [0, 80, 80]
+                    }
+                }
+                if (executedCorrectly) {
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {
+                        "text": `Player ${this.player}'s stack was resolved correctly.`,
+                        "color": [144, 80, 80]
+                    }
                 }
             }
             this.opacity -= 3
@@ -572,6 +606,8 @@ class SoakTower {
                     logWindowRow2 = logWindowRow1
                     logWindowRow1 = {"text": "A tower went unsoaked.", "color": [0, 80, 80]}
                     this.opacity = 150
+                } else {
+                    logWindowRow1 = {"text": "A tower was soaked.", "color": [144, 80, 80]}
                 }
             }
 
