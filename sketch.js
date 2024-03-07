@@ -2325,10 +2325,25 @@ function mousePressed() {
     if (mouseX > 170 && mouseX < 400 &&
         mouseY > height - 180 && mouseY < height - 150) {
         helper = true
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        logWindowRow1 = {"text": "Helper enabled.", "color": [144, 80, 80]}
     }
 
     if (mouseX > padding && mouseX < exaflareWidth + 5 &&
         mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent) {
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        // log message for reloading mechanic
+        if (mechanic === "Exoflares") logWindowRow1 = {"text": "Reloading exoflares...", "color": [0, 0, 100]}
+        // log message for switching mechanics
+        else logWindowRow1 = {"text": "Switching to exoflares...", "color": [0, 0, 100]}
         mechanic = "Exoflares"
         mechanicStarted = millis()
 
@@ -2536,6 +2551,15 @@ function mousePressed() {
     } if (mouseX > padding && mouseX < tripleKasumiGiriWidth + 5 &&
         mouseY > tripleKasumiGiriYPos && mouseY < tripleKasumiGiriYPos
         + heightForTextDescent) {
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        // log message for reloading mechanic
+        if (mechanic === "Triple Kasumi-Giri") logWindowRow1 = {"text": "Reloading Triple Kasumi-Giri...", "color": [0, 0, 100]}
+        // log message for switching mechanics
+        else logWindowRow1 = {"text": "Switching to Triple Kasumi-Giri...", "color": [0, 0, 100]}
         mechanic = "Triple Kasumi-Giri"
         mechanicStarted = millis()
 
@@ -2645,6 +2669,15 @@ function mousePressed() {
         partyWiped = false
     } if (mouseX > padding && mouseX < azureAuspiceWidth + 5 &&
         mouseY > azureAuspiceYPos && mouseY < azureAuspiceYPos + heightForTextDescent) {
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        // log message for reloading mechanic
+        if (mechanic === "Azure Auspice") logWindowRow1 = {"text": "Reloading Azure Auspice...", "color": [0, 0, 100]}
+        // log message for switching mechanics
+        else logWindowRow1 = {"text": "Switching to Azure Auspice...", "color": [0, 0, 100]}
         mechanic = "Azure Auspice"
         mechanicStarted = millis()
         // everyone except for you starts off the map
@@ -2720,6 +2753,15 @@ function mousePressed() {
         partyWiped = false
     } if (mouseX > padding && mouseX < analysisWidth + 5 &&
         mouseY > analysisYPos && mouseY < analysisYPos + heightForTextDescent) { // Analysis
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        // log message for reloading mechanic
+        if (mechanic === "Analysis") logWindowRow1 = {"text": "Reloading Analysis...", "color": [0, 0, 100]}
+        // log message for switching mechanics
+        else logWindowRow1 = {"text": "Switching to Analysis...", "color": [0, 0, 100]}
         mechanic = "Analysis"
         mechanicStarted = millis()
         // everyone except for you starts off the map
