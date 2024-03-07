@@ -1222,16 +1222,9 @@ class PersistingRectangleAOE {
             // account for just your symbol, not your center, touching the AoE.
             if (posX > this.x - 10 && posX < this.x + this.w + 10 &&
                 posY > this.y - 10 && posY < this.y + this.h + 10) {
+                inRectangleAoE = true
                 partyWiped = true
                 causeOfWipe = "You are in a persisting rectangle AoE."
-                if (frameCount % 20 === 0) {
-                    logWindowRow6 = logWindowRow5
-                    logWindowRow5 = logWindowRow4
-                    logWindowRow4 = logWindowRow3
-                    logWindowRow3 = logWindowRow2
-                    logWindowRow2 = logWindowRow1
-                    logWindowRow1 = {"text": "You are in a persisting rectangle AoE.", "color": [0, 80, 80]}
-                }
             }
         }
     }

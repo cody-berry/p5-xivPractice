@@ -155,6 +155,9 @@ let logWindowRow3
 let logWindowRow2
 let logWindowRow1
 
+let inRectangleAoE
+let inEdgeOfArena
+
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
     if (Math.abs(value) < threshold) return 0;
@@ -757,8 +760,25 @@ function draw() {
         }
 
         // display the persisting rects
+        let previouslyInRectangleAoE = inRectangleAoE
+        inRectangleAoE = false
         for (let AoE of AoEs) {
             AoE.displayAoE()
+        }
+        if (inRectangleAoE && !previouslyInRectangleAoE) {
+            logWindowRow6 = logWindowRow5
+            logWindowRow5 = logWindowRow4
+            logWindowRow4 = logWindowRow3
+            logWindowRow3 = logWindowRow2
+            logWindowRow2 = logWindowRow1
+            logWindowRow1 = {"text": "You are in a persisting rectangle AoE.", "color": [0, 80, 80]}
+        } if (!inRectangleAoE && previouslyInRectangleAoE) {
+            logWindowRow6 = logWindowRow5
+            logWindowRow5 = logWindowRow4
+            logWindowRow4 = logWindowRow3
+            logWindowRow3 = logWindowRow2
+            logWindowRow2 = logWindowRow1
+            logWindowRow1 = {"text": "You left the persisting rectangle AoE(s).", "color": [144, 80, 80]}
         }
     }
 
@@ -2196,17 +2216,28 @@ function draw() {
     if ((posX < 432 || posY < 32 ||
         posX > 978 || posY > 578) ||
         ((posX < 42 || posY < 42 ||
-        posX > 968 || posY > 568)) &&
+        posX > 958 || posY > 558)) &&
         (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri")) {
-        partyWiped = true
-        causeOfWipe = "You entered the edge of the arena."
-        if (frameCount % 60 === 0) {
+        if (!inEdgeOfArena) {
+            inEdgeOfArena = true
             logWindowRow6 = logWindowRow5
             logWindowRow5 = logWindowRow4
             logWindowRow4 = logWindowRow3
             logWindowRow3 = logWindowRow2
             logWindowRow2 = logWindowRow1
             logWindowRow1 = {"text": "You are in the edge of the arena.", "color": [0, 80, 80]}
+        }
+        partyWiped = true
+        causeOfWipe = "You entered the edge of the arena."
+    } else {
+        if (inEdgeOfArena) {
+            inEdgeOfArena = false
+            logWindowRow6 = logWindowRow5
+            logWindowRow5 = logWindowRow4
+            logWindowRow4 = logWindowRow3
+            logWindowRow3 = logWindowRow2
+            logWindowRow2 = logWindowRow1
+            logWindowRow1 = {"text": "You left the edge of the arena.", "color": [144, 80, 80]}
         }
     }
 
@@ -2219,6 +2250,7 @@ function draw() {
     }
 
     // display a mini log window displaying recent messages
+    // each row is interpreted as {"text": "some string", "color": [h, s, b]}
     fill(0, 0, 0, 10)
     noStroke()
     rect(5, height - 155, 390, 150, 5)
