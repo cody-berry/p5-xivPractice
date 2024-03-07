@@ -1979,6 +1979,13 @@ function draw() {
                         logWindowRow2 = logWindowRow1
                         logWindowRow1 = {"text": "You got hit by the first orb.", "color": [0, 80, 80]}
                         gotHitByFirstOrb = true
+                    } else {
+                        logWindowRow6 = logWindowRow5
+                        logWindowRow5 = logWindowRow4
+                        logWindowRow4 = logWindowRow3
+                        logWindowRow3 = logWindowRow2
+                        logWindowRow2 = logWindowRow1
+                        logWindowRow1 = {"text": "You didn't get hit by the first orb.", "color": [144, 80, 80]}
                     }
                     angleMode(RADIANS)
                 }
@@ -2047,6 +2054,13 @@ function draw() {
                         logWindowRow2 = logWindowRow1
                         logWindowRow1 = {"text": "You got hit by the second orb.", "color": [0, 80, 80]}
                         gotHitBySecondOrb = true
+                    } else {
+                        logWindowRow6 = logWindowRow5
+                        logWindowRow5 = logWindowRow4
+                        logWindowRow4 = logWindowRow3
+                        logWindowRow3 = logWindowRow2
+                        logWindowRow2 = logWindowRow1
+                        logWindowRow1 = {"text": "You didn't get hit by the second orb.", "color": [144, 80, 80]}
                     }
                     angleMode(RADIANS)
                 }
@@ -2143,6 +2157,13 @@ function draw() {
                         logWindowRow3 = logWindowRow2
                         logWindowRow2 = logWindowRow1
                         logWindowRow1 = {"text": "You got hit by the tether.", "color": [0, 80, 80]}
+                    } else {
+                        logWindowRow6 = logWindowRow5
+                        logWindowRow5 = logWindowRow4
+                        logWindowRow4 = logWindowRow3
+                        logWindowRow3 = logWindowRow2
+                        logWindowRow2 = logWindowRow1
+                        logWindowRow1 = {"text": "You didn't get hit by the tether.", "color": [144, 80, 80]}
                     }
                     angleMode(RADIANS)
                 }
