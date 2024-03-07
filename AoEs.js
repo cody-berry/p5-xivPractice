@@ -56,6 +56,12 @@ class CircleAOE {
                 if (sqrt((posX - this.x)**2 + (posY - this.y)**2) < this.diameter/2) {
                     partyWiped = true
                     causeOfWipe = "You got hit by a circle."
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": "You got hit by a circle.", "color": [0, 80, 80]}
                 }
             }
             this.opacity -= 0.2
@@ -94,6 +100,12 @@ class RectAOE {
                     posY > this.y || posY < this.y + this.height) {
                     partyWiped = true
                     causeOfWipe = "You got hit by a rectangle."
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": "You got hit by a rectangle.", "color": [0, 80, 80]}
                 }
             }
             this.opacity -= 0.2
@@ -166,6 +178,12 @@ class DonutAOE {
                 if (sqrt((posX - this.x)**2 + (posY - this.y)**2) > this.size) {
                     partyWiped = true
                     causeOfWipe = "You got hit by a donut."
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": "You got hit by a donut.", "color": [0, 80, 80]}
                 }
             }
             this.opacity -= 0.2
@@ -228,6 +246,12 @@ class ConeAOE {
                     atan2(posY - this.y, posX - this.x) % TWO_PI < this.endAngle % TWO_PI) {
                     partyWiped = true
                     causeOfWipe = "You got hit by a cone."
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": "You got hit by a cone.", "color": [0, 80, 80]}
                 }
             }
             this.opacity -= 0.2
@@ -274,7 +298,13 @@ class Exaflare {
 
             if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2 + 16) {
                 partyWiped = true
-                causeOfWipe = "You got hit by an exoflare."
+                causeOfWipe = "You got hit by an exaflare."
+                logWindowRow6 = logWindowRow5
+                logWindowRow5 = logWindowRow4
+                logWindowRow4 = logWindowRow3
+                logWindowRow3 = logWindowRow2
+                logWindowRow2 = logWindowRow1
+                logWindowRow1 = {"text": "You got hit by an exaflare.", "color": [0, 80, 80]}
             }
         } if (this.wentOff && millis() > this.goesOffAt + this.millisBetween*this.iterations) {
             this.iterations += 1
@@ -293,7 +323,13 @@ class Exaflare {
 
             if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2 + 16) {
                 partyWiped = true
-                causeOfWipe = "You got hit by an exoflare."
+                causeOfWipe = "You got hit by an exaflare."
+                logWindowRow6 = logWindowRow5
+                logWindowRow5 = logWindowRow4
+                logWindowRow4 = logWindowRow3
+                logWindowRow3 = logWindowRow2
+                logWindowRow2 = logWindowRow1
+                logWindowRow1 = {"text": "You got hit by an exaflare.", "color": [0, 80, 80]}
             }
         }
     }
@@ -391,6 +427,12 @@ class SpreadCircle {
                         if (position[2] !== this.player) {
                             partyWiped = true
                             causeOfWipe = "Someone clipped someone else with spread."
+                            logWindowRow6 = logWindowRow5
+                            logWindowRow5 = logWindowRow4
+                            logWindowRow4 = logWindowRow3
+                            logWindowRow3 = logWindowRow2
+                            logWindowRow2 = logWindowRow1
+                            logWindowRow1 = {"text": "Someone clipped someone else with spread.", "color": [0, 80, 80]}
                         }
                     }
                 }
@@ -453,6 +495,12 @@ class StackCircle {
                         if (lastHitBy[position[2]][1] > millis() - 1000) {
                             partyWiped = true
                             causeOfWipe = "2 stack people stacked up."
+                            logWindowRow6 = logWindowRow5
+                            logWindowRow5 = logWindowRow4
+                            logWindowRow4 = logWindowRow3
+                            logWindowRow3 = logWindowRow2
+                            logWindowRow2 = logWindowRow1
+                            logWindowRow1 = {"text": "2 stack people stacked up.", "color": [0, 80, 80]}
                         }
                         lastHitBy[position[2]] = ["stack", millis()]
                         print(lastHitBy)
@@ -462,6 +510,12 @@ class StackCircle {
                     // if less than the minimum players have stacked up, one dies
                     partyWiped = true
                     causeOfWipe = "Too little people stacked up."
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": "Too little people stacked up.", "color": [0, 80, 80]}
                 }
             }
             this.opacity -= 3
@@ -511,6 +565,12 @@ class SoakTower {
                 if (!this.soaked) {
                     partyWiped = true
                     causeOfWipe = "A tower went unsoaked."
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": "A tower went unsoaked.", "color": [0, 80, 80]}
                     this.opacity = 150
                 }
             }
@@ -1164,6 +1224,14 @@ class PersistingRectangleAOE {
                 posY > this.y - 10 && posY < this.y + this.h + 10) {
                 partyWiped = true
                 causeOfWipe = "You are in a persisting rectangle AoE."
+                if (frameCount % 20 === 0) {
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": "You are in a persisting rectangle AoE.", "color": [0, 80, 80]}
+                }
             }
         }
     }

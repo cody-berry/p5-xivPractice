@@ -148,6 +148,7 @@ let azureAuspiceYPos
 let analysisYPos
 let padding
 
+let logWindowRow6
 let logWindowRow5
 let logWindowRow4
 let logWindowRow3
@@ -1951,6 +1952,12 @@ function draw() {
                     if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
                         partyWiped = true
                         causeOfWipe = "You got hit by the first orb."
+                        logWindowRow6 = logWindowRow5
+                        logWindowRow5 = logWindowRow4
+                        logWindowRow4 = logWindowRow3
+                        logWindowRow3 = logWindowRow2
+                        logWindowRow2 = logWindowRow1
+                        logWindowRow1 = {"text": "You got hit by the first orb.", "color": [0, 80, 80]}
                         gotHitByFirstOrb = true
                     }
                     angleMode(RADIANS)
@@ -2013,6 +2020,12 @@ function draw() {
                     if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
                         partyWiped = true
                         causeOfWipe = "You got hit by the second orb."
+                        logWindowRow6 = logWindowRow5
+                        logWindowRow5 = logWindowRow4
+                        logWindowRow4 = logWindowRow3
+                        logWindowRow3 = logWindowRow2
+                        logWindowRow2 = logWindowRow1
+                        logWindowRow1 = {"text": "You got hit by the second orb.", "color": [0, 80, 80]}
                         gotHitBySecondOrb = true
                     }
                     angleMode(RADIANS)
@@ -2104,6 +2117,12 @@ function draw() {
                     if ((angleDiff + 360) % 360 < 225 || (angleDiff + 360) % 360 > 315) {
                         partyWiped = true
                         causeOfWipe = "You got hit by the tether."
+                        logWindowRow6 = logWindowRow5
+                        logWindowRow5 = logWindowRow4
+                        logWindowRow4 = logWindowRow3
+                        logWindowRow3 = logWindowRow2
+                        logWindowRow2 = logWindowRow1
+                        logWindowRow1 = {"text": "You got hit by the tether.", "color": [0, 80, 80]}
                     }
                     angleMode(RADIANS)
                 }
@@ -2181,6 +2200,14 @@ function draw() {
         (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri")) {
         partyWiped = true
         causeOfWipe = "You entered the edge of the arena."
+        if (frameCount % 60 === 0) {
+            logWindowRow6 = logWindowRow5
+            logWindowRow5 = logWindowRow4
+            logWindowRow4 = logWindowRow3
+            logWindowRow3 = logWindowRow2
+            logWindowRow2 = logWindowRow1
+            logWindowRow1 = {"text": "You are in the edge of the arena.", "color": [0, 80, 80]}
+        }
     }
 
     if (partyWiped === true) {
