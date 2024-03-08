@@ -1824,22 +1824,22 @@ function draw() {
             // display the boss's one
             fill(180, 100, 30)
             noStroke()
-            rect(60, 310, 40, 40)
+            rect(340, 310, 40, 40)
             stroke(0, 0, 70)
             strokeWeight(2)
             // III: display top/bottom lines, then 3 lines in the middle
             if (bossBuffNumber === 3) {
-                line(70, 315, 90, 315)
-                line(70, 330, 90, 330)
-                line(73, 315, 73, 330)
-                line(80, 315, 80, 330)
-                line(87, 315, 87, 330)
+                line(350, 315, 370, 315)
+                line(350, 330, 370, 330)
+                line(353, 315, 353, 330)
+                line(360, 315, 360, 330)
+                line(367, 315, 367, 330)
             } else {
                 // V: display top/bottom lines, then a V shape in the middle
-                line(72, 315, 88, 315)
-                line(72, 330, 88, 330)
-                line(75, 315, 80, 330)
-                line(85, 315, 80, 330)
+                line(352, 315, 368, 315)
+                line(352, 330, 368, 330)
+                line(355, 315, 360, 330)
+                line(365, 315, 360, 330)
             }
 
 
