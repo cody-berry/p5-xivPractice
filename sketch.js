@@ -204,7 +204,7 @@ function preload() {
 
 
 function setup() {
-    let cnv = createCanvas(1000, 650)
+    let cnv = createCanvas(1000, 700)
     cnv.parent('#canvas')
     colorMode(HSB, 360, 100, 100, 100)
 
@@ -351,8 +351,8 @@ function setup() {
     gotHitByTether = false
     angleMode(RADIANS)
 
-    textFont(variableWidthFont, 17)
-    padding = 3
+    textFont(variableWidthFont, 20)
+    padding = 4
 
     heightForNoTextDescent = textAscent() + 2
     heightForTextDescent = textAscent() + 4 + textDescent()/2
@@ -502,12 +502,12 @@ function draw() {
     if (!helper) {
         textSize(30)
         fill(0, 0, 25)
-        if (mouseX > 170 && mouseX < 400 &&
-            mouseY > height - 180 && mouseY < height - 150) fill(0, 0, 20)
+        if (mouseX > width - 205 && mouseX < width &&
+            mouseY > height - 100 && mouseY < height - 70) fill(0, 0, 20)
         noStroke()
-        rect(170, height - 180, 230, 30)
+        rect(width - 205, height - 100, width, 30)
         fill(0, 0, 100)
-        text("Enable helper", 175, height - 153)
+        text("Enable helper", width - 205, height - 73)
     }
 
     // add mechanic buttons
@@ -516,7 +516,7 @@ function draw() {
     fill(0, 0, 25)
     stroke(0, 0, 100)
     strokeWeight(1)
-    textSize(17)
+    textSize(20)
 
     // exaflares
     if (mouseX > padding && mouseX < exaflareWidth + 5 &&
@@ -2433,8 +2433,8 @@ function draw() {
 }
 
 function mousePressed() {
-    if (mouseX > 170 && mouseX < 400 &&
-        mouseY > height - 180 && mouseY < height - 150) {
+    if (mouseX > width - 205 && mouseX < width &&
+        mouseY > height - 100 && mouseY < height - 70) {
         helper = true
         logWindowRow6 = logWindowRow5
         logWindowRow5 = logWindowRow4
