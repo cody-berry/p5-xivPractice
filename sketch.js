@@ -132,6 +132,8 @@ let gotHitByTether
 
 let heightForNoTextDescent
 let heightForTextDescent
+let counterClockwiseWidth
+let clockwiseWidth
 let exaflareWidth
 let fightingSpiritsWidth
 let malformedReincarnationWidth
@@ -139,6 +141,8 @@ let tripleKasumiGiriWidth
 let fleetingLaiGiriWidth
 let azureAuspiceWidth
 let analysisWidth
+let counterClockwiseYPos
+let clockwiseYPos
 let exaflareYPos
 let fightingSpiritsYPos
 let malformedReincarnationYPos
@@ -159,6 +163,8 @@ let inRectangleAoE
 let inEdgeOfArena
 
 let doneWithMechanic
+
+let boardRotationDegrees = 0
 
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
@@ -357,6 +363,8 @@ function setup() {
     heightForNoTextDescent = textAscent() + 2
     heightForTextDescent = textAscent() + 4 + textDescent()/2
 
+    counterClockwiseWidth = textWidth("Rotate counterclockwise 90º") + 5
+    clockwiseWidth = textWidth("Rotate clockwise 90º") + 5
     exaflareWidth = textWidth("Exaflares") + padding*2
     // fightingSpiritsWidth = textWidth("Fighting Spirits") + padding*2
     // malformedReincarnationWidth = textWidth("Malformed Reincarnation") + padding*2
@@ -365,6 +373,8 @@ function setup() {
     azureAuspiceWidth = textWidth("Azure Auspice") + padding*2
     analysisWidth = textWidth("Analysis") + padding*2
 
+    counterClockwiseYPos = 300
+    clockwiseYPos = 340
     exaflareYPos = 380
     // fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
     // malformedReincarnationYPos = fightingSpiritsYPos + heightForTextDescent + 5
@@ -551,13 +561,13 @@ function draw() {
     //     mouseY > fleetingLaiGiriYPos && mouseY < fleetingLaiGiriYPos
     //     + heightForTextDescent) fill(0, 0, 15)
     // rect(padding + 1, fleetingLaiGiriYPos, fleetingLaiGiriWidth, heightForTextDescent, 5)
-    // fill(0, 0, 25)
 
+    fill(0, 0, 25)
     // azure auspice
     if (mouseX > padding && mouseX < azureAuspiceWidth + 5 &&
         mouseY > azureAuspiceYPos && mouseY < azureAuspiceYPos + heightForTextDescent)
         fill(0, 0, 15)
-    rect(padding, azureAuspiceYPos, azureAuspiceWidth, heightForTextDescent, 5)
+    rect(padding + 1, azureAuspiceYPos, azureAuspiceWidth, heightForTextDescent, 5)
 
     // analysis
     fill(0, 0, 25)
@@ -565,8 +575,25 @@ function draw() {
         mouseY > analysisYPos && mouseY < analysisYPos + heightForTextDescent) fill(0, 0, 15)
     rect(padding + 1, analysisYPos, analysisWidth, heightForTextDescent, 5)
 
+    // also add a few rotation buttons
+    // counterclockwise
+    fill(0, 0, 25)
+    if (mouseX > padding && mouseX < counterClockwiseWidth + 5 &&
+        mouseY > counterClockwiseYPos && mouseY < counterClockwiseYPos + heightForNoTextDescent)
+        fill(0, 0, 15)
+    rect(padding + 1, counterClockwiseYPos, counterClockwiseWidth, heightForNoTextDescent, 5)
+
+    // clockwise
+    fill(0, 0, 25)
+    if (mouseX > padding && mouseX < clockwiseWidth + 5 &&
+        mouseY > clockwiseYPos && mouseY < clockwiseYPos + heightForNoTextDescent)
+        fill(0, 0, 15)
+    rect(padding + 1, clockwiseYPos, clockwiseWidth, heightForNoTextDescent, 5)
+
     fill(0, 0, 100)
     noStroke()
+    text("Rotate counterclockwise 90º", padding*2 + 1, counterClockwiseYPos + textAscent() - 1)
+    text("Rotate clockwise 90º", padding*2 + 1, clockwiseYPos + textAscent() - 1)
     text("Exaflares", padding*2 + 1, exaflareYPos + textAscent() - 1)
     // text("Fighting Spirits", padding*2 + 1, fightingSpiritsYPos + textAscent())
     // text("Malformed Reincarnation", padding*2 + 1, malformedReincarnationYPos + textAscent() - 1)
@@ -575,9 +602,20 @@ function draw() {
     text("Azure Auspice", padding*2 + 1, azureAuspiceYPos + textAscent())
     text("Analysis", padding*2 + 1, analysisYPos + textAscent())
 
-    stroke(0, 0, 0)
 
 
+
+    push()
+    if (boardRotationDegrees % 360 === 90) {
+        translate(1000, -400)
+        rotate(radians(90))
+    } if (boardRotationDegrees % 360 === 180) {
+        translate(1400, 600)
+        rotate(radians(180))
+    } if (boardRotationDegrees % 360 === 270) {
+        translate(400, 1000)
+        rotate(radians(270))
+    }
 
     // display a wooden chess board, basically
     // (with red stuff on the outside and a purple entrance on at the bottom)
@@ -1230,60 +1268,6 @@ function draw() {
             } if (bossFacing === 4) { // left
                 triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80,
                          bossPosY + 10, bossPosX - 96, bossPosY)
-            }
-
-            // Each cleave has a color and a direction. The direction is the
-            // open section of the cleave symbol. If the color is orange, you
-            // must be out the hitbox. If it's blue, then you must be in the
-            // hitbox.
-
-            // display the symbols for each cleave
-            if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 2000) { // cleave #1
-                fill(0, 0, 0)
-                rect(bossPosX - 15, bossPosY - 45, 30, 30)
-                if (cleaveOneColor === "orange") {
-                    fill(15, 100, 100)
-                } else {
-                    fill(180, 100, 100)
-                }
-                angleMode(DEGREES)
-
-                // display an arc with the cleaveOneSafeDirection not included
-                // (this is filled as a pie segment)
-                // not rotated towards boss facing!
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90,
-                    135 + cleaveOneSafeDirection*90)
-                angleMode(RADIANS)
-            } if (millis() - mechanicStarted > 2500 && millis() - mechanicStarted < 4500) { // cleave #2
-                fill(0, 0, 0)
-                rect(bossPosX - 15, bossPosY - 45, 30, 30)
-                if (cleaveTwoColor === "orange") {
-                    fill(15, 100, 100)
-                } else {
-                    fill(180, 100, 100)
-                }
-                angleMode(DEGREES)
-
-                // display an arc with the cleaveTwoSafeDirection not included
-                // (this is filled as a pie segment)
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90,
-                    135 + cleaveTwoSafeDirection*90)
-                angleMode(RADIANS)
-            } if (millis() - mechanicStarted > 5000 && millis() - mechanicStarted < 7000) { // cleave #2
-                fill(0, 0, 0)
-                rect(bossPosX - 15, bossPosY - 45, 30, 30)
-                if (cleaveThreeColor === "orange") {
-                    fill(15, 100, 100)
-                } else {
-                    fill(180, 100, 100)
-                }
-                angleMode(DEGREES)
-
-                // display an arc with the cleaveThreeSafeDirection not included
-                // (this is filled as a pie segment)
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90,
-                    135 + cleaveThreeSafeDirection*90)
-                angleMode(RADIANS)
             }
 
             // first cleave
@@ -2245,6 +2229,60 @@ function draw() {
     image(drgSymbol, drgPosX - 20, drgPosY - 20, 40, 40)
     image(rdmSymbol, posX - 20, posY - 20, 40, 40)
 
+    // red dot for boss
+    strokeWeight(30)
+    stroke(0, 100, 100)
+    point(bossPosX, bossPosY)
+
+    push()
+    translate(posX, posY)
+    yourFacing.rotateToDirection()
+    fill(45, 100, 100)
+    noStroke()
+    if (!yourFacing.onDiagonal) {
+        triangle(20, -10, 20, 10, 40, 0)
+    } else { // Display farther away for diagonal facings
+        triangle(25, -10, 25, 10, 45, 0)
+    }
+    pop()
+
+    push()
+    translate(drgPosX, drgPosY)
+    drgFacing.rotateToDirection()
+    fill(45, 100, 100)
+    noStroke()
+    if (!drgFacing.onDiagonal) {
+        triangle(20, -10, 20, 10, 40, 0)
+    } else { // Display farther away for diagonal facings
+        triangle(25, -10, 25, 10, 45, 0)
+    }
+    pop()
+
+    push()
+    translate(sgePosX, sgePosY)
+    sgeFacing.rotateToDirection()
+    fill(45, 100, 100)
+    noStroke()
+    if (!sgeFacing.onDiagonal) {
+        triangle(20, -10, 20, 10, 40, 0)
+    } else { // Display farther away for diagonal facings
+        triangle(25, -10, 25, 10, 45, 0)
+    }
+    pop()
+
+    push()
+    translate(warPosX, warPosY)
+    warFacing.rotateToDirection()
+    fill(45, 100, 100)
+    noStroke()
+    if (!warFacing.onDiagonal) {
+        triangle(20, -10, 20, 10, 40, 0)
+    } else { // Display farther away for diagonal facings
+        triangle(25, -10, 25, 10, 45, 0)
+    }
+    pop()
+    pop()
+
     // now display the party
     image(rdmSymbol, 10, 60, 40, 40)
     image(drgSymbol, 10, 110, 40, 40)
@@ -2260,10 +2298,320 @@ function draw() {
     textSize(30)
     text("YOU", 185, 90)
 
-    // red dot for boss
-    strokeWeight(30)
-    stroke(0, 100, 100)
-    point(bossPosX, bossPosY)
+    // and debuffs
+    switch (mechanic) {
+        case "Exoflares":
+            // display stacks and spreads (at correct time).
+            // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140.
+            let xPosStack = (stackFirst) ? 105 : 140
+            let xPosSpread = (stackFirst) ? 140 : 105
+
+            // all the spreads/stacks should be gone after 13.5 seconds
+            if (millis() < mechanicStarted + 13500) {
+                fill(0, 80, 50)
+                // here we display the red rectangles representing the spread
+                // and stack debuffs
+                // note that the first debuff resolves at 8.5 seconds.
+                if (!stackFirst || millis() < mechanicStarted + 8500) {
+                    // these are the stacks.
+                    rect(xPosStack - 15, 20 + whoGetsStack[0] * 50, 30, 30)
+                    rect(xPosStack - 15, 20 + whoGetsStack[1] * 50, 30, 30)
+                }
+                if (stackFirst || millis() < mechanicStarted + 8500) {
+                    // these are the spreads.
+                    rect(xPosSpread - 15, 70, 30, 30)
+                    rect(xPosSpread - 15, 120, 30, 30)
+                    rect(xPosSpread - 15, 170, 30, 30)
+                    rect(xPosSpread - 15, 220, 30, 30)
+                }
+
+                fill(0, 0, 100)
+                // display a "2" for stack
+                if (!stackFirst || millis() < mechanicStarted + 8500) {
+                    text("2", xPosStack - 10, 45 + whoGetsStack[0] * 50)
+                    text("2", xPosStack - 10, 45 + whoGetsStack[1] * 50)
+                }
+
+                // display a stroked un-filled circle for spread
+                if (stackFirst || millis() < mechanicStarted + 8500) {
+                    stroke(0, 0, 100)
+                    noFill()
+                    circle(xPosSpread, 85, 20)
+                    circle(xPosSpread, 135, 20)
+                    circle(xPosSpread, 185, 20)
+                    circle(xPosSpread, 235, 20)
+                }
+            }
+            break
+        case "Malformed Reincarnation":
+            // display the rodential and odder debuffs, as well as the tower-dropping
+            // ones
+            for (let player of [1, 2, 3, 4]) {
+                // each player is displayed on a different y-coordinate
+                let yPos = 45 + player*50
+                if (triplesGivenTo.includes(player)) {
+                    if (majorityRed.includes(player)) { // drop blue, soak red-red-red
+                        stroke(240, 100, 100)
+                        noFill()
+                        strokeWeight(2)
+                        if (millis() - mechanicStarted < 10000) {
+                            circle(70, yPos - 15, 20) // drop blue
+                        }
+                        noStroke()
+                        fill(15, 100, 100)
+                        if (millis() - mechanicStarted < 14600) {
+                            text("123", 100, yPos)
+                        } else if (millis() - mechanicStarted < 16000) {
+                            text("23", 117, yPos)
+                        } else if (millis() - mechanicStarted < 17400) {
+                            text("3", 136, yPos)
+                        }
+                    } else { // drop red, soak blue-blue-blue
+                        stroke(15, 100, 100)
+                        noFill()
+                        strokeWeight(2)
+                        if (millis() - mechanicStarted < 10000) {
+                            circle(70, yPos - 15, 20) // drop red
+                        }
+                        noStroke()
+                        fill(240, 100, 100)
+                        if (millis() - mechanicStarted < 14600) {
+                            text("123", 100, yPos - 5)
+                        } else if (millis() - mechanicStarted < 16000) {
+                            text("23", 117, yPos - 5)
+                        } else if (millis() - mechanicStarted < 17400) {
+                            text("3", 136, yPos - 5)
+                        }
+                    }
+                } else {
+                    if (majorityRed.includes(player)) { // drop red, soak red-red-blue
+                        stroke(15, 100, 100)
+                        noFill()
+                        strokeWeight(2)
+                        if (millis() - mechanicStarted < 10000) {
+                            circle(70, yPos - 15, 20) // drop red
+                        }
+                        noStroke()
+                        fill(15, 100, 100)
+                        if (millis() - mechanicStarted < 14600) {
+                            text("12", 100, yPos - 2)
+                        } else if (millis() - mechanicStarted < 16000) {
+                            text("2", 117, yPos - 2)
+                        }
+                        fill(240, 100, 100)
+                        if (millis() - mechanicStarted < 17400) {
+                            text("3", 137, yPos - 4.5)
+                        }
+                    } else { // drop blue, soak blue-blue-red
+                        stroke(240, 100, 100)
+                        noFill()
+                        strokeWeight(2)
+                        if (millis() - mechanicStarted < 10000) {
+                            circle(70, yPos - 15, 20) // drop blue
+                        }
+                        noStroke()
+                        fill(240, 100, 100)
+                        if (millis() - mechanicStarted < 14600) {
+                            text("12", 100, yPos - 7)
+                        } else if (millis() - mechanicStarted < 16000) {
+                            text("2", 117, yPos - 7)
+                        }
+                        fill(15, 100, 100)
+                        if (millis() - mechanicStarted < 17400) {
+                            text("3", 137, yPos - 4.5)
+                        }
+                    }
+                }
+            }
+            break
+        case "Triple Kasumi-Giri":
+            // Each cleave has a color and a direction. The direction is the
+            // open section of the cleave symbol. If the color is orange, you
+            // must be out the hitbox. If it's blue, then you must be in the
+            // hitbox.
+
+            // display the symbols for each cleave
+            if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 2000) { // cleave #1
+                fill(0, 0, 0)
+                rect(bossPosX - 15, bossPosY - 45, 30, 30)
+                if (cleaveOneColor === "orange") {
+                    fill(15, 100, 100)
+                } else {
+                    fill(180, 100, 100)
+                }
+                angleMode(DEGREES)
+
+                // display an arc with the cleaveOneSafeDirection not included
+                // (this is filled as a pie segment)
+                // not rotated towards boss facing!
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90,
+                    135 + cleaveOneSafeDirection*90)
+                angleMode(RADIANS)
+            } if (millis() - mechanicStarted > 2500 && millis() - mechanicStarted < 4500) { // cleave #2
+                fill(0, 0, 0)
+                rect(bossPosX - 15, bossPosY - 45, 30, 30)
+                if (cleaveTwoColor === "orange") {
+                    fill(15, 100, 100)
+                } else {
+                    fill(180, 100, 100)
+                }
+                angleMode(DEGREES)
+
+                // display an arc with the cleaveTwoSafeDirection not included
+                // (this is filled as a pie segment)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90,
+                    135 + cleaveTwoSafeDirection*90)
+                angleMode(RADIANS)
+            } if (millis() - mechanicStarted > 5000 && millis() - mechanicStarted < 7000) { // cleave #2
+                fill(0, 0, 0)
+                rect(bossPosX - 15, bossPosY - 45, 30, 30)
+                if (cleaveThreeColor === "orange") {
+                    fill(15, 100, 100)
+                } else {
+                    fill(180, 100, 100)
+                }
+                angleMode(DEGREES)
+
+                // display an arc with the cleaveThreeSafeDirection not included
+                // (this is filled as a pie segment)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90,
+                    135 + cleaveThreeSafeDirection*90)
+                angleMode(RADIANS)
+            }
+            break
+        case "Fleeting Lai-Giri":
+            // display stacks and spreads (at correct time).
+            // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140
+            // the debuffs only appear at 10000. The first debuff resolves at
+            // 32500 millis and the second resolves at 40000 millis.
+            if ((10000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 40000)) {
+                let xPosStackDisplay = (stackFirst) ? 105 : 140
+                let xPosSpreadDisplay = (stackFirst) ? 140 : 105
+                fill(0, 80, 50)
+                // display stack and spread rectangles
+                if (!stackFirst || millis() - mechanicStarted < 32500) {
+                    rect(xPosStackDisplay - 15, 20 + whoGetsStack[0] * 50, 30, 30)
+                    rect(xPosStackDisplay - 15, 20 + whoGetsStack[1] * 50, 30, 30)
+                }
+                if (stackFirst || millis() - mechanicStarted < 32500) {
+                    rect(xPosSpreadDisplay - 15, 70, 30, 30)
+                    rect(xPosSpreadDisplay - 15, 120, 30, 30)
+                    rect(xPosSpreadDisplay - 15, 170, 30, 30)
+                    rect(xPosSpreadDisplay - 15, 220, 30, 30)
+                }
+
+                fill(0, 0, 100)
+                // display a "2" for stack
+                if (!stackFirst || millis() - mechanicStarted < 32500) {
+                    text("2", xPosStackDisplay - 10, 45 + whoGetsStack[0] * 50)
+                    text("2", xPosStackDisplay - 10, 45 + whoGetsStack[1] * 50)
+                }
+
+                // display a circle for spread
+                if (stackFirst || millis() - mechanicStarted < 32500) {
+                    stroke(0, 0, 100)
+                    strokeWeight(3)
+                    noFill()
+                    circle(xPosSpreadDisplay, 85, 20)
+                    circle(xPosSpreadDisplay, 135, 20)
+                    circle(xPosSpreadDisplay, 185, 20)
+                    circle(xPosSpreadDisplay, 235, 20)
+                }
+            }
+
+            // display the shadow cleave safe direction
+            if ((12500 < millis() - mechanicStarted) && (millis() - mechanicStarted < 30000)) {
+                noStroke()
+                fill(0, 0, 0)
+                rect(bossPosX - 20, bossPosY - 60, 40, 40)
+                fill(300, 100, 30) // purple-ish color for shadow cleave
+                angleMode(DEGREES)
+                arc(bossPosX, bossPosY - 40, 30, 30, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
+                angleMode(RADIANS)
+            }
+            break
+        case "Analysis":
+            // display your rotation number debuff
+            fill(180, 100, 30)
+            rect(120, 60, 40, 40)
+            stroke(0, 0, 70)
+            strokeWeight(2)
+            // III: display top/bottom lines, then 3 lines in the middle
+            if (yourDebuffNumber === 3) {
+                line(130, 65, 150, 65)
+                line(130, 80, 150, 80)
+                line(133, 65, 133, 80)
+                line(140, 65, 140, 80)
+                line(147, 65, 147, 80)
+            } else {
+                // V: display top/bottom lines, then a V shape in the imddle
+                line(132, 65, 148, 65)
+                line(132, 80, 148, 80)
+                line(135, 65, 140, 80)
+                line(145, 65, 140, 80)
+            }
+
+            // display the boss's one
+            fill(180, 100, 30)
+            noStroke()
+            rect(340, 310, 40, 40)
+            stroke(0, 0, 70)
+            strokeWeight(2)
+            // III: display top/bottom lines, then 3 lines in the middle
+            if (bossBuffNumber === 3) {
+                line(350, 315, 370, 315)
+                line(350, 330, 370, 330)
+                line(353, 315, 353, 330)
+                line(360, 315, 360, 330)
+                line(367, 315, 367, 330)
+            } else {
+                // V: display top/bottom lines, then a V shape in the middle
+                line(352, 315, 368, 315)
+                line(352, 330, 368, 330)
+                line(355, 315, 360, 330)
+                line(365, 315, 360, 330)
+            }
+            break
+    }
+
+    // to the right of the buttons is a microscope displaying your facing
+    // add microscope "handle"
+    fill(20, 100, 30)
+    noStroke()
+    rect(350, 190, 50, 20) // wood handle
+    // then just add a few steel dots
+    fill(240, 8, 65)
+    rect(350, 190, 10, 20)
+    circle(370, 200, 10)
+    circle(390, 200, 10)
+
+    // then the microscope glass
+    stroke(70, 50, 50)
+    strokeWeight(2)
+    noFill()
+    circle(300, 200, 100)
+    image(rdmSymbol, 280, 180, 40, 40)
+
+    push()
+    // display your facing
+    translate(300, 200)
+    yourFacing.rotateToDirection()
+    fill(45, 100, 100)
+    triangle(25, -10, 25, 10, 45, 0)
+    pop()
+
+    // if your mouse is in the microscope, highlight your facing if your self in
+    // the microscope would turn to the mouse
+    if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
+        angleMode(DEGREES)
+        push()
+        translate(300, 200)
+        rotate(-atan2(mouseX - 300, mouseY - 200) + 90)
+        fill(45, 100, 100, 50)
+        triangle(25, -10, 25, 10, 45, 0)
+        pop()
+        angleMode(RADIANS)
+    }
 
     if ((posX < 432 || posY < 32 ||
         posX > 978 || posY > 578) ||
@@ -2337,93 +2685,6 @@ function draw() {
         text(logWindowRow1["text"], 25, height - 25)
     }
 
-    push()
-    translate(posX, posY)
-    yourFacing.rotateToDirection()
-    fill(45, 100, 100)
-    noStroke()
-    if (!yourFacing.onDiagonal) {
-        triangle(20, -10, 20, 10, 40, 0)
-    } else { // Display farther away for diagonal facings
-        triangle(25, -10, 25, 10, 45, 0)
-    }
-    pop()
-
-    push()
-    translate(drgPosX, drgPosY)
-    drgFacing.rotateToDirection()
-    fill(45, 100, 100)
-    noStroke()
-    if (!drgFacing.onDiagonal) {
-        triangle(20, -10, 20, 10, 40, 0)
-    } else { // Display farther away for diagonal facings
-        triangle(25, -10, 25, 10, 45, 0)
-    }
-    pop()
-
-    push()
-    translate(sgePosX, sgePosY)
-    sgeFacing.rotateToDirection()
-    fill(45, 100, 100)
-    noStroke()
-    if (!sgeFacing.onDiagonal) {
-        triangle(20, -10, 20, 10, 40, 0)
-    } else { // Display farther away for diagonal facings
-        triangle(25, -10, 25, 10, 45, 0)
-    }
-    pop()
-
-    push()
-    translate(warPosX, warPosY)
-    warFacing.rotateToDirection()
-    fill(45, 100, 100)
-    noStroke()
-    if (!warFacing.onDiagonal) {
-        triangle(20, -10, 20, 10, 40, 0)
-    } else { // Display farther away for diagonal facings
-        triangle(25, -10, 25, 10, 45, 0)
-    }
-    pop()
-
-    // to the right of the buttons is a microscope displaying your facing
-    // add microscope "handle"
-    fill(20, 100, 30)
-    noStroke()
-    rect(350, 190, 50, 20) // wood handle
-    // then just add a few steel dots
-    fill(240, 8, 65)
-    rect(350, 190, 10, 20)
-    circle(370, 200, 10)
-    circle(390, 200, 10)
-
-    // then the microscope glass
-    stroke(70, 50, 50)
-    strokeWeight(2)
-    noFill()
-    circle(300, 200, 100)
-    image(rdmSymbol, 280, 180, 40, 40)
-
-    push()
-    // display your facing
-    translate(300, 200)
-    yourFacing.rotateToDirection()
-    fill(45, 100, 100)
-    triangle(25, -10, 25, 10, 45, 0)
-    pop()
-
-    // if your mouse is in the microscope, highlight your facing if your self in
-    // the microscope would turn to the mouse
-    if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
-        angleMode(DEGREES)
-        push()
-        translate(300, 200)
-        rotate(-atan2(mouseX - 300, mouseY - 200) + 90)
-        fill(45, 100, 100, 50)
-        triangle(25, -10, 25, 10, 45, 0)
-        pop()
-        angleMode(RADIANS)
-    }
-
     /* debugCorner needs to be last so its z-index is highest */
     debugCorner.setText(`frameCount: ${frameCount}`, 2)
     debugCorner.setText(`fps: ${frameRate().toFixed(0)}`, 1)
@@ -2443,7 +2704,13 @@ function mousePressed() {
         logWindowRow2 = logWindowRow1
         logWindowRow1 = {"text": "Helper enabled.", "color": [144, 80, 80]}
     }
-
+    if (mouseX > padding && mouseX < counterClockwiseWidth + 5 &&
+        mouseY > counterClockwiseYPos && mouseY < counterClockwiseYPos + heightForNoTextDescent) {
+        boardRotationDegrees += 90.00000000
+    } if (mouseX > padding && mouseX < clockwiseWidth + 5 &&
+        mouseY > clockwiseYPos && mouseY < clockwiseYPos + heightForNoTextDescent) {
+        boardRotationDegrees += 270.0000000
+    }
     if (mouseX > padding && mouseX < exaflareWidth + 5 &&
         mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent) {
         logWindowRow6 = logWindowRow5
