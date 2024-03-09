@@ -822,9 +822,21 @@ function draw() {
         }
     }
 
+    // display N, S, W, and E
+    textSize(15)
+
+    // red color for north
+    fill(0, 100, 100)
+    noStroke()
+    text("N", 700 - textWidth("N")/2, textAscent())
+
+    // creamy color for south, west, and east
+    fill(45, 20, 100)
+    text("E", 1000 - textWidth("E") - 5, 300 + textAscent()/2)
+    text("W", 402, 300 + textAscent()/2)
+    text("S", 700 - textWidth("S")/2, 598)
 
     textSize(30)
-    noStroke()
     switch (mechanic) {
         case "Exoflares":
             // update so that people can dodge exoflares!
