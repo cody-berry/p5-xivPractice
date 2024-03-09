@@ -606,62 +606,53 @@ function draw() {
 
 
     push()
-    if (boardRotationDegrees % 360 === 90) {
-        translate(1000, -400)
-        rotate(radians(90))
-    } if (boardRotationDegrees % 360 === 180) {
-        translate(1400, 600)
-        rotate(radians(180))
-    } if (boardRotationDegrees % 360 === 270) {
-        translate(400, 1000)
-        rotate(radians(270))
-    }
+    translate(700, 300)
+    rotate(radians(boardRotationDegrees))
 
     // display a wooden chess board, basically
     // (with red stuff on the outside and a purple entrance on at the bottom)
     if (mechanic === "Exoflares" || mechanic === "Fighting Spirits" || mechanic === "Malformed Reincarnation") { // Gorai
         // draw the red stuff on the outside
         fill(0, 80, 75)
-        rect(400, 0, 600, 600)
+        rect(-300, -300, 600, 600)
 
         // display the purple entrance
         stroke(300, 50, 50)
         strokeWeight(2)
-        line(650, 600, 750, 600)
+        line(-50, 300, 50, 300)
         fill(20, 50, 40)
 
         // now display the chess board
         noStroke()
-        rect(420, 20, 560, 560)
+        rect(-280, -280, 560, 560)
         // display the darker parts of the chess board (just a little darker)
         for (let xIncrements = 0; xIncrements < 8; xIncrements++) {
             for (let yIncrements = 0; yIncrements < 8; yIncrements++) {
                 if ((xIncrements + yIncrements) % 2 === 0) {
                     fill(20, 50, 38)
-                    rect(421 + xIncrements * 70, 21 + yIncrements * 70, 68, 68)
+                    rect(-279 + xIncrements * 70, -279 + yIncrements * 70, 68, 68)
                 }
             }
             stroke(0, 0, 0)
             strokeWeight(1)
-            line(420 + xIncrements * 70, 20, 420 + xIncrements * 70, 580) // x line
-            line(420, 20 + xIncrements * 70, 980, 20 + xIncrements * 70) // y line
+            line(-280 + xIncrements * 70, -280, -280 + xIncrements * 70, 280) // x line
+            line(-280, -280 + xIncrements * 70, 280, -280 + xIncrements * 70) // y line
             noStroke()
         }
         stroke(0, 0, 0)
         strokeWeight(1)
-        line(980, 20, 980, 580) // total bottom x line
-        line(420, 580, 980, 580) // total right y line
+        line(280, -280, 280, 280) // total bottom x line
+        line(-280, 280, 280, 280) // total right y line
     } if (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri" || mechanic === "Azure Auspice") { // Moko
         let rowHeight = 600/19 // there are 19 rows and 20 columns
         let columnWidth = 600/20
         fill(0, 0, 50)
-        rect(400, 0, 600, 600)
+        rect(-300, -300, 600, 600)
 
         // display the purple entrance
         stroke(300, 50, 50)
         strokeWeight(2)
-        line(650, 600, 750, 600)
-        fill(20, 50, 40)
+        line(-50, 300, 50, 300)
 
         stroke(0, 0, 0)
 
@@ -689,13 +680,13 @@ function draw() {
             // these are all the horizontal lines
             if ([1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19].includes(yIncrements)) {
 
-                line(400, rowHeight*yIncrements, 1000, rowHeight*yIncrements) // straight line across
+                line(-300, -300 + rowHeight*yIncrements, 300, -300 + rowHeight*yIncrements) // straight line across
             } else { // many fragmented lines across
-                line(400 + columnWidth, rowHeight * yIncrements, 400 + columnWidth * 3, rowHeight * yIncrements)
-                line(400 + columnWidth * 5, rowHeight * yIncrements, 400 + columnWidth * 7, rowHeight * yIncrements)
-                line(400 + columnWidth * 9, rowHeight * yIncrements, 400 + columnWidth * 11, rowHeight * yIncrements)
-                line(400 + columnWidth * 13, rowHeight * yIncrements, 400 + columnWidth * 15, rowHeight * yIncrements)
-                line(400 + columnWidth * 17, rowHeight * yIncrements, 400 + columnWidth * 19, rowHeight * yIncrements)
+                line(-300 + columnWidth, -300 + rowHeight * yIncrements, -300 + columnWidth * 3, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth * 5, -300 + rowHeight * yIncrements, -300 + columnWidth * 7, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth * 9, -300 + rowHeight * yIncrements, -300 + columnWidth * 11, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth * 13, -300 + rowHeight * yIncrements, -300 + columnWidth * 15, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth * 17, -300 + rowHeight * yIncrements, -300 + columnWidth * 19, -300 + rowHeight * yIncrements)
             }
 
 
@@ -721,34 +712,34 @@ function draw() {
             // | ||| ||| ||| ||| | 18
             //                     19
             if ([1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17].includes(yIncrements)) {
-                line(400 + columnWidth, rowHeight * yIncrements,
-                     400 + columnWidth, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 3, rowHeight * yIncrements,
-                     400 + columnWidth * 3, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 4, rowHeight * yIncrements,
-                     400 + columnWidth * 4, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 5, rowHeight * yIncrements,
-                     400 + columnWidth * 5, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 7, rowHeight * yIncrements,
-                     400 + columnWidth * 7, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 8, rowHeight * yIncrements,
-                     400 + columnWidth * 8, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 9, rowHeight * yIncrements,
-                     400 + columnWidth * 9, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 11, rowHeight * yIncrements,
-                     400 + columnWidth * 11, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 12, rowHeight * yIncrements,
-                     400 + columnWidth * 12, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 13, rowHeight * yIncrements,
-                     400 + columnWidth * 13, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 15, rowHeight * yIncrements,
-                     400 + columnWidth * 15, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 16, rowHeight * yIncrements,
-                     400 + columnWidth * 16, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 17, rowHeight * yIncrements,
-                     400 + columnWidth * 17, rowHeight * (yIncrements + 1))
-                line(400 + columnWidth * 19, rowHeight * yIncrements,
-                     400 + columnWidth * 19, rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 3, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 3, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 4, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 4, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 5, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 5, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 7, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 7, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 8, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 8, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 9, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 9, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 11, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 11, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 12, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 12, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 13, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 13, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 15, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 15, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 16, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 16, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 17, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 17, -300 + rowHeight * (yIncrements + 1))
+                line(-300 + columnWidth * 19, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 19, -300 + rowHeight * (yIncrements + 1))
             }
         }
 
@@ -757,15 +748,15 @@ function draw() {
         fill(120, 80, 50, 20)
         noStroke()
         beginShape()
-        vertex(400, 0)
-        vertex(400, 600)
-        vertex(1000, 600)
-        vertex(1000, 0)
+        vertex(-300, -300)
+        vertex(-300, 300)
+        vertex(300, 300)
+        vertex(300, -300)
         beginContour()
-        vertex(400 + columnWidth*2, rowHeight*2 - 3)
-        vertex(1000 - columnWidth*2, rowHeight*2 - 3)
-        vertex(1000 - columnWidth*2, 600 - rowHeight*2 + 3)
-        vertex(400 + columnWidth*2, 600 - rowHeight*2 + 3)
+        vertex(-300 + columnWidth*2, -300 + rowHeight*2 - 3)
+        vertex(700 - columnWidth*2, -300 + rowHeight*2 - 3)
+        vertex(700 - columnWidth*2, 300 - rowHeight*2 + 3)
+        vertex(-300 + columnWidth*2, 300 - rowHeight*2 + 3)
         endContour()
         endShape()
     } if (mechanic === "Analysis") { // Lala background
@@ -776,14 +767,14 @@ function draw() {
         // then we draw the stone board on top
         fill(180, 100, 70)
         noStroke()
-        rect(400, 0, 600, 600)
+        rect(-300, -300, 600, 600)
         fill(20, 20, 20)
-        rect(420, 20, 560, 560)
+        rect(-280, -280, 560, 560)
 
         // display the purple entrance
         stroke(300, 50, 50)
         strokeWeight(2)
-        line(650, 600, 750, 600)
+        line(-50, 300, 50, 300)
         fill(20, 50, 40)
 
         // now we display the lines
@@ -791,12 +782,12 @@ function draw() {
         strokeWeight(3)
         let squareSize = 112
         // vertical first
-        for (let xPos = 420; xPos < 1000; xPos += squareSize) {
-            line(xPos, 20, xPos, 580)
+        for (let xPos = -280; xPos < 300; xPos += squareSize) {
+            line(xPos, -280, xPos, 280)
         }
         // then horizontal
-        for (let yPos = 20; yPos < 600; yPos += squareSize) {
-            line(420, yPos, 980, yPos)
+        for (let yPos = -280; yPos < 300; yPos += squareSize) {
+            line(-280, yPos, 280, yPos)
         }
 
         // display the persisting rects
