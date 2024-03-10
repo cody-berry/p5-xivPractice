@@ -611,7 +611,25 @@ function draw() {
 
 
     push()
+
+    // translate to the center of the board
     translate(700, 300)
+
+    // if the mouse is pressed, then set the arriving number's target to that
+    if (mouseIsPressed &&
+        mouseX > 400 && mouseX < 1000 &&
+        mouseY > 0 && mouseY < 700) {
+        boardRotationDegrees.target = degrees(atan2(mouseY - 300, mouseX - 700)) + 90
+        boardRotationDegrees.target = boardRotationDegrees.target % 360
+    } else {
+        // otherwise, set it to the nearest corner
+        if (boardRotationDegrees.target % 360 > 45 && boardRotationDegrees.target % 360 < 135) boardRotationDegrees.target = 90
+        if (boardRotationDegrees.target % 360 > 135 && boardRotationDegrees.target % 360 < 225) boardRotationDegrees.target = 180
+        if (boardRotationDegrees.target % 360 > 225 && boardRotationDegrees.target % 360 < 315) boardRotationDegrees.target = 270
+        if (boardRotationDegrees.target % 360 < 45 || boardRotationDegrees.target % 360 > 315) boardRotationDegrees.target = 0
+    }
+
+    // update the arriving number, then rotate to it
     boardRotationDegrees.arrive()
     boardRotationDegrees.update()
     rotate(radians(boardRotationDegrees.pos))
