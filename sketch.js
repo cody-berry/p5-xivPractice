@@ -682,11 +682,16 @@ function draw() {
 
                 line(-300, -300 + rowHeight*yIncrements, 300, -300 + rowHeight*yIncrements) // straight line across
             } else { // many fragmented lines across
-                line(-300 + columnWidth, -300 + rowHeight * yIncrements, -300 + columnWidth * 3, -300 + rowHeight * yIncrements)
-                line(-300 + columnWidth * 5, -300 + rowHeight * yIncrements, -300 + columnWidth * 7, -300 + rowHeight * yIncrements)
-                line(-300 + columnWidth * 9, -300 + rowHeight * yIncrements, -300 + columnWidth * 11, -300 + rowHeight * yIncrements)
-                line(-300 + columnWidth * 13, -300 + rowHeight * yIncrements, -300 + columnWidth * 15, -300 + rowHeight * yIncrements)
-                line(-300 + columnWidth * 17, -300 + rowHeight * yIncrements, -300 + columnWidth * 19, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 3, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth * 5, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 7, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth * 9, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 11, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth * 13, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 15, -300 + rowHeight * yIncrements)
+                line(-300 + columnWidth * 17, -300 + rowHeight * yIncrements,
+                     -300 + columnWidth * 19, -300 + rowHeight * yIncrements)
             }
 
 
@@ -921,53 +926,6 @@ function draw() {
                 }
             }
 
-            strokeWeight(3)
-
-            // display stacks and spreads (at correct time).
-            // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140.
-            let xPosStack = (stackFirst) ? 105 : 140
-            let xPosSpread = (stackFirst) ? 140 : 105
-
-            // all the spreads/stacks should be gone after 13.5 seconds
-            if (millis() < mechanicStarted + 13500) {
-                fill(0, 80, 50)
-                // here we display the red rectangles representing the spread
-                // and stack debuffs
-                // note that the first debuff resolves at 8.5 seconds.
-                if (!stackFirst || millis() < mechanicStarted + 8500) {
-                    // these are the stacks.
-                    rect(xPosStack - 15, 20 + whoGetsStack[0] * 50, 30, 30)
-                    rect(xPosStack - 15, 20 + whoGetsStack[1] * 50, 30, 30)
-                }
-                if (stackFirst || millis() < mechanicStarted + 8500) {
-                    // these are the spreads.
-                    rect(xPosSpread - 15, 70, 30, 30)
-                    rect(xPosSpread - 15, 120, 30, 30)
-                    rect(xPosSpread - 15, 170, 30, 30)
-                    rect(xPosSpread - 15, 220, 30, 30)
-                }
-
-                fill(0, 0, 100)
-                // display a "2" for stack
-                if (!stackFirst || millis() < mechanicStarted + 8500) {
-                    text("2", xPosStack - 10, 45 + whoGetsStack[0] * 50)
-                    text("2", xPosStack - 10, 45 + whoGetsStack[1] * 50)
-                }
-
-                // display a stroked un-filled circle for spread
-                if (stackFirst || millis() < mechanicStarted + 8500) {
-                    stroke(0, 0, 100)
-                    noFill()
-                    circle(xPosSpread, 85, 20)
-                    circle(xPosSpread, 135, 20)
-                    circle(xPosSpread, 185, 20)
-                    circle(xPosSpread, 235, 20)
-                }
-            }
-
-
-            noStroke()
-
             // display exaflares and spreads/stack AoEs
             for (let exoflare of exoflares) {
                 exoflare.update()
@@ -983,7 +941,7 @@ function draw() {
             // adding a rectangle colored the background color to the left
             fill(234, 34, 24)
             noStroke()
-            rect(350, 0, 50, height)
+            rect(-350, -300, 50, height)
 
             // now if you performed the mechanic correctly you can pass
             if (doneWithMechanic === false && millis() - mechanicStarted > 15000 && !partyWiped) {
@@ -999,278 +957,28 @@ function draw() {
                 }
             }
             break
-        case "Malformed Reincarnation":
-            // display the blue and odrange soak towers
-            for (let soakTower of blueSoakTowers) {
-                soakTower.update()
-                soakTower.displayTower()
-            }
-            for (let soakTower of orangeSoakTowers) {
-                soakTower.update()
-                soakTower.displayTower()
-            }
-
-            // display the rodential and odder debuffs, as well as the tower-dropping
-            // ones
-            for (let player of [1, 2, 3, 4]) {
-                // each player is displayed on a different y-coordinate
-                let yPos = 45 + player*50
-                if (triplesGivenTo.includes(player)) {
-                    if (majorityRed.includes(player)) { // drop blue, soak red-red-red
-                        stroke(240, 100, 100)
-                        noFill()
-                        strokeWeight(2)
-                        if (millis() - mechanicStarted < 10000) {
-                            circle(70, yPos - 15, 20) // drop blue
-                        } else {
-                            // drop a blue tower
-                            // since everything triggers at the same time, it's
-                            // guaranteed that if we stop dropping towers once
-                            // we hit the last player, everyone will drop a
-                            // tower
-                            if (!droppedTowers) {
-                                if (player === 4) {
-                                    droppedTowers = true
-                                }
-                                let playerPosX = 0
-                                let playerPosY = 0
-                                if (player === 1) {
-                                    playerPosX = posX
-                                    playerPosY = posY
-                                } if (player === 2) {
-                                    playerPosX = drgPosX
-                                    playerPosY = drgPosY
-                                } if (player === 3) {
-                                    playerPosX = sgePosX
-                                    playerPosY = sgePosY
-                                } if (player === 4) {
-                                    playerPosX = warPosX
-                                    playerPosY = warPosY
-                                }
-                                blueSoakTowers.push(
-                                    new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
-                                )
-                            }
-                        }
-                        noStroke()
-                        fill(15, 100, 100)
-                        if (millis() - mechanicStarted < 14600) {
-                            text("123", 100, yPos)
-                        } else if (millis() - mechanicStarted < 16000) {
-                            text("23", 117, yPos)
-                        } else if (millis() - mechanicStarted < 17400) {
-                            text("3", 136, yPos)
-                        }
-                    } else { // drop red, soak blue-blue-blue
-                        stroke(15, 100, 100)
-                        noFill()
-                        strokeWeight(2)
-                        if (millis() - mechanicStarted < 10000) {
-                            circle(70, yPos - 15, 20) // drop red
-                        } else {
-                            if (!droppedTowers) {
-                                // drop red
-                                // since everything triggers at the same time, it's
-                                // guaranteed that if we stop dropping towers once
-                                // we hit the last player, everyone will drop a
-                                // tower
-                                if (player === 4) {
-                                    droppedTowers = true
-                                }
-                                let playerPosX = 0
-                                let playerPosY = 0
-                                if (player === 1) {
-                                    playerPosX = posX
-                                    playerPosY = posY
-                                } if (player === 2) {
-                                    playerPosX = drgPosX
-                                    playerPosY = drgPosY
-                                } if (player === 3) {
-                                    playerPosX = sgePosX
-                                    playerPosY = sgePosY
-                                } if (player === 4) {
-                                    playerPosX = warPosX
-                                    playerPosY = warPosY
-                                }
-                                orangeSoakTowers.push(
-                                    new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
-                                )
-                            }
-                        }
-                        noStroke()
-                        fill(240, 100, 100)
-                        if (millis() - mechanicStarted < 14600) {
-                            text("123", 100, yPos - 5)
-                        } else if (millis() - mechanicStarted < 16000) {
-                            text("23", 117, yPos - 5)
-                        } else if (millis() - mechanicStarted < 17400) {
-                            text("3", 136, yPos - 5)
-                        }
-                    }
-                } else {
-                    if (majorityRed.includes(player)) { // drop red, soak red-red-blue
-                        stroke(15, 100, 100)
-                        noFill()
-                        strokeWeight(2)
-                        if (millis() - mechanicStarted < 10000) {
-                            circle(70, yPos - 15, 20) // drop red
-                        } else {
-                            if (!droppedTowers) {
-                                // drop red
-                                // since everything triggers at the same time, it's
-                                // guaranteed that if we stop dropping towers once
-                                // we hit the last player, everyone will drop a
-                                // tower
-                                if (player === 4) {
-                                    droppedTowers = true
-                                }
-                                let playerPosX = 0
-                                let playerPosY = 0
-                                if (player === 1) {
-                                    playerPosX = posX
-                                    playerPosY = posY
-                                } if (player === 2) {
-                                    playerPosX = drgPosX
-                                    playerPosY = drgPosY
-                                } if (player === 3) {
-                                    playerPosX = sgePosX
-                                    playerPosY = sgePosY
-                                } if (player === 4) {
-                                    playerPosX = warPosX
-                                    playerPosY = warPosY
-                                }
-                                orangeSoakTowers.push(
-                                    new SoakTower([15, 100, 100], playerPosX, playerPosY, 65, 7400)
-                                )
-                            }
-                        }
-                        noStroke()
-                        fill(15, 100, 100)
-                        if (millis() - mechanicStarted < 14600) {
-                            text("12", 100, yPos - 2)
-                        } else if (millis() - mechanicStarted < 16000) {
-                            text("2", 117, yPos - 2)
-                        }
-                        fill(240, 100, 100)
-                        if (millis() - mechanicStarted < 17400) {
-                            text("3", 137, yPos - 4.5)
-                        }
-                    } else { // drop blue, soak blue-blue-red
-                        stroke(240, 100, 100)
-                        noFill()
-                        strokeWeight(2)
-                        if (millis() - mechanicStarted < 10000) {
-                            circle(70, yPos - 15, 20) // drop blue
-                        } else {
-                            if (!droppedTowers) {
-                                // drop blue
-                                // since everything triggers at the same time, it's
-                                // guaranteed that if we stop dropping towers once
-                                // we hit the last player, everyone will drop a
-                                // tower
-                                if (player === 4) {
-                                    droppedTowers = true
-                                }
-                                let playerPosX = 0
-                                let playerPosY = 0
-                                if (player === 1) {
-                                    playerPosX = posX
-                                    playerPosY = posY
-                                } if (player === 2) {
-                                    playerPosX = drgPosX
-                                    playerPosY = drgPosY
-                                } if (player === 3) {
-                                    playerPosX = sgePosX
-                                    playerPosY = sgePosY
-                                } if (player === 4) {
-                                    playerPosX = warPosX
-                                    playerPosY = warPosY
-                                }
-                                blueSoakTowers.push(
-                                    new SoakTower([240, 100, 100], playerPosX, playerPosY, 65, 7400)
-                                )
-                            }
-                        }
-                        noStroke()
-                        fill(240, 100, 100)
-                        if (millis() - mechanicStarted < 14600) {
-                            text("12", 100, yPos - 7)
-                        } else if (millis() - mechanicStarted < 16000) {
-                            text("2", 117, yPos - 7)
-                        }
-                        fill(15, 100, 100)
-                        if (millis() - mechanicStarted < 17400) {
-                            text("3", 137, yPos - 4.5)
-                        }
-                    }
-                }
-            }
-
-            // automate everyone
-            if (millis() - mechanicStarted < 5500) {
-                if (triplesGivenTo.includes(2)) { // 2 is the dragoon
-                    // we want to get north if triples are given here
-                    drgPosY -= 1.3
-                    drgFacing = Direction.Up
-                }
-            } if (millis() - mechanicStarted > 0 && millis() - mechanicStarted < 4000 && rotatePlayers) {
-                if (triplesGivenTo.includes(2)) { // 2 is the dragoon
-                    // rotate from top to right
-                    drgPosY += 0.92
-                    drgPosX += 0.92
-                    drgFacing = Direction.BottomRight
-                } else {
-                    // rotate from down to left
-                    drgPosY -= 0.86
-                    drgPosX -= 0.92
-                    drgFacing = Direction.TopLeft
-                }
-            } if (millis() - mechanicStarted > 5500 && millis() - mechanicStarted < 6500) {
-                // now we want to drop our tower
-                // up, down, left, or right depending on what tower we want to
-                // drop behind
-                if (rotatePlayers) {
-                    drgPosY += (directionOfBlue === 3 ^ majorityRed.includes(2)) ? -1.3 : 1.3
-                    drgFacing = (directionOfBlue === 3 ^ majorityRed.includes(2))
-                        ? Direction.Up : Direction.Down
-                } else {
-                    drgPosX += (directionOfBlue === 2 ^ majorityRed.includes(2)) ? -1.3 : 1.3
-                    drgFacing = (directionOfBlue === 2 ^ majorityRed.includes(2))
-                        ? Direction.Left : Direction.Right
-                }
-            }
-            // now we need to soak our towers
-            // start with the first
-            if (millis() - mechanicStarted > 10000 && millis() - mechanicStarted < 13000) {
-                // Have yet to implement
-            } if (millis() - mechanicStarted > 14600 && millis() - mechanicStarted < 16000) {
-                // Have yet to implement
-            } if (millis() - mechanicStarted > 16000 && millis() - mechanicStarted < 17000) {
-                // Have yet to implement
-            }
-            break
         case "Triple Kasumi-Giri":
             // add the ring that represents facing
             stroke(0, 0, 100)
             strokeWeight(1)
             noFill()
-            circle(bossPosX, bossPosY, 160) // note: this is 160 diameter, not 160 radius
+            circle(bossPosX - 700, bossPosY - 300, 160) // note: this is 160 diameter, not 160 radius
             fill(0, 0, 100)
             noStroke()
 
             // along with the triangle pointing the way that the boss is facing
             if (bossFacing === 1) { // up
-                triangle(bossPosX - 10, bossPosY - 80, bossPosX + 10,
-                         bossPosY - 80, bossPosX, bossPosY - 96)
+                triangle(bossPosX - 710, bossPosY - 380, bossPosX - 690,
+                         bossPosY - 380, bossPosX - 700, bossPosY - 396)
             } if (bossFacing === 2) { // right
-                triangle(bossPosX + 80, bossPosY - 10, bossPosX + 80,
-                         bossPosY + 10, bossPosX + 96, bossPosY)
+                triangle(bossPosX - 620, bossPosY - 310, bossPosX - 620,
+                         bossPosY - 290, bossPosX - 604, bossPosY - 300)
             } if (bossFacing === 3) { // down
-                triangle(bossPosX - 10, bossPosY + 80, bossPosX + 10,
-                         bossPosY + 80, bossPosX, bossPosY + 96)
+                triangle(bossPosX - 710, bossPosY - 220, bossPosX - 690,
+                         bossPosY - 220, bossPosX - 700, bossPosY - 204)
             } if (bossFacing === 4) { // left
-                triangle(bossPosX - 80, bossPosY - 10, bossPosX - 80,
-                         bossPosY + 10, bossPosX - 96, bossPosY)
+                triangle(bossPosX - 780, bossPosY - 310, bossPosX - 780,
+                         bossPosY - 290, bossPosX - 796, bossPosY - 300)
             }
 
             // first cleave
@@ -1354,376 +1062,6 @@ function draw() {
                 AoE.displayAoE()
             }
             break
-        case "Fleeting Lai-Giri":
-            // at 2000 milliseconds, there's a hidden circle AoE
-            if (millis() - mechanicStarted > 2000 && !circleResolved) {
-                circleResolved = true
-                AoEs.push(
-                    new CircleAOE(bossPosX, bossPosY, 160, 0)
-                )
-                AoEs[AoEs.length - 1].opacity = 5
-                // now add the Boundless Scarlet lines
-                AoEs.push(
-                    new LineAOE(400, 170, 1000, 170, 140, 4000),
-                    new LineAOE(400, 430, 1000, 430, 140, 4000),
-                    new LineAOE(400, 0, 1000, 600, 140, 4000),
-                    new LineAOE(400, 600, 1000, 0, 140, 4000)
-                )
-            }
-
-            // display stacks and spreads (at correct time).
-            // the slot for debuff 1 is xPos 105. debuff 2 is xPos 140
-            // the debuffs only appear at 10000. The first debuff resolves at
-            // 32500 millis and the second resolves at 40000 millis.
-            if ((10000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 40000)) {
-                let xPosStackDisplay = (stackFirst) ? 105 : 140
-                let xPosSpreadDisplay = (stackFirst) ? 140 : 105
-                fill(0, 80, 50)
-                // display stack and spread rectangles
-                if (!stackFirst || millis() - mechanicStarted < 32500) {
-                    rect(xPosStackDisplay - 15, 20 + whoGetsStack[0] * 50, 30, 30)
-                    rect(xPosStackDisplay - 15, 20 + whoGetsStack[1] * 50, 30, 30)
-                }
-                if (stackFirst || millis() - mechanicStarted < 32500) {
-                    rect(xPosSpreadDisplay - 15, 70, 30, 30)
-                    rect(xPosSpreadDisplay - 15, 120, 30, 30)
-                    rect(xPosSpreadDisplay - 15, 170, 30, 30)
-                    rect(xPosSpreadDisplay - 15, 220, 30, 30)
-                }
-
-                fill(0, 0, 100)
-                // display a "2" for stack
-                if (!stackFirst || millis() - mechanicStarted < 32500) {
-                    text("2", xPosStackDisplay - 10, 45 + whoGetsStack[0] * 50)
-                    text("2", xPosStackDisplay - 10, 45 + whoGetsStack[1] * 50)
-                }
-
-                // display a circle for spread
-                if (stackFirst || millis() - mechanicStarted < 32500) {
-                    stroke(0, 0, 100)
-                    strokeWeight(3)
-                    noFill()
-                    circle(xPosSpreadDisplay, 85, 20)
-                    circle(xPosSpreadDisplay, 135, 20)
-                    circle(xPosSpreadDisplay, 185, 20)
-                    circle(xPosSpreadDisplay, 235, 20)
-                }
-            }
-
-            // display the shadow cleave safe direction
-            if ((12500 < millis() - mechanicStarted) && (millis() - mechanicStarted < 30000)) {
-                noStroke()
-                fill(0, 0, 0)
-                rect(bossPosX - 20, bossPosY - 60, 40, 40)
-                fill(300, 100, 30) // purple-ish color for shadow cleave
-                angleMode(DEGREES)
-                arc(bossPosX, bossPosY - 40, 30, 30, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
-                angleMode(RADIANS)
-            }
-
-            for (let AoE of AoEs) {
-                AoE.update()
-                AoE.displayAoE()
-            }
-
-            // display the tether
-            let x1 = bossPosX
-            let y1 = bossPosY
-            let x2 // the x position of the tethered player
-            let y2 // the y position of the tethered player
-            let direction
-            switch (tetheredPlayer) {
-                case 1: // you
-                    x2 = posX
-                    y2 = posY
-                    direction = yourFacing
-                    break
-                case 2: // dragoon
-                    x2 = drgPosX
-                    y2 = drgPosY
-                    direction = drgFacing
-                    break
-                case 3: // sage
-                    x2 = sgePosX
-                    y2 = sgePosY
-                    direction = sgeFacing
-                    break
-                case 4: // warrior
-                    x2 = warPosX
-                    y2 = warPosY
-                    direction = warFacing
-                    break
-            }
-            // display the tether
-            if ((12000 < millis() - mechanicStarted) && (millis() - mechanicStarted < 31000)) {
-                stroke(45, 100, 100)
-                strokeWeight(1)
-                noFill()
-                line(x1, y1, x2, y2)
-            }
-
-            // make the boss jump
-            if (millis() - mechanicStarted > 31000 && !jumpResolved) {
-                angleMode(DEGREES)
-                // lands 30 units behind you. use sin and cosine to calculate
-                // direction.angle is the exact angle in degrees. we just
-                // need to reverse it so that the boss lands behind you
-                bossPosX = x2 + 30*cos(180 + direction.angle)
-                bossPosY = y2 + 30*sin(180 + direction.angle)
-                angleMode(RADIANS)
-                jumpResolved = true
-
-                // now add the conal AoE after the jump
-                AoEs.push(
-                    new ConeAOE(bossPosX, bossPosY, 400,
-                                315 + direction.angle + cleaveOneSafeDirection*90,
-                                225 + direction.angle + cleaveOneSafeDirection*90, 1500)
-                )
-            }
-
-
-            fill(234, 34, 24)
-            noStroke()
-            rect(300, 0, 100, height)
-
-            // now automate
-            // start with moving players east and west
-            if (millis() - mechanicStarted < 1040) {
-                // sage needs to go right and up
-                sgePosX += 0.92
-                sgePosY -= 0.92
-                sgeFacing = Direction.TopRight
-
-                // dragoon needs to go left and up
-                drgPosX -= 0.92
-                drgPosY -= 0.92
-                drgFacing = Direction.TopLeft
-            } if (millis() - mechanicStarted < 1700) {
-                // warrior needs to go left and down
-                warPosX -= 0.92
-                warPosY += 0.92
-                warFacing = Direction.BottomLeft
-            } if (millis() - mechanicStarted > 1700 && millis() - mechanicStarted < 2320) {
-                // the warrior needs to go a little left after this
-                warPosX -= 1.3
-                warFacing = Direction.Left
-            } if (millis() - mechanicStarted > 6000 && millis() - mechanicStarted < 7900) {
-                // move back into the center to prepare to move
-                sgePosX -= 1.3
-                sgeFacing = Direction.Left
-                drgPosX += 1.3
-                drgFacing = Direction.Right
-                warPosX += 1.3
-                warFacing = Direction.Right
-            }
-            if (millis() - mechanicStarted > 11900 && millis() - mechanicStarted < 12000) {
-                // just correct everyone into the center
-                sgePosX = 700
-                sgePosY = 300
-                drgPosX = 700
-                drgPosY = 300
-                warPosX = 700
-                warPosY = 300
-            }
-            // now move players to correct corner.
-            // determine which corner is safe.
-            let safeCorner = (northLineExpandsFirst) ?
-                (topLeftCrossExpandsFirst) ?
-                    Direction.BottomLeft : // top-left and top means only bottom-left is safe
-                    Direction.BottomRight : // top-right and top means only bottom-right is safe
-                (topLeftCrossExpandsFirst) ?
-                    Direction.TopRight : // top-left and bottom means only top-right is safe
-                    Direction.TopLeft // top-right and bottom means only top-left is safe
-            if (millis() - mechanicStarted > 12000 && millis() - mechanicStarted < 15000) {
-                if (safeCorner === Direction.BottomLeft || safeCorner ===
-                    Direction.TopLeft) { // everyone move left
-                    sgePosX -= 0.92
-                    drgPosX -= 1.02
-                    warPosX -= 0.82
-                } if (safeCorner === Direction.BottomRight || safeCorner ===
-                    Direction.TopRight) { // everyone move right
-                    sgePosX += 0.92
-                    drgPosX += 1.02
-                    warPosX += 0.82
-                } if (safeCorner === Direction.BottomLeft || safeCorner ===
-                    Direction.BottomRight) { // everyone move down
-                    sgePosY += 0.92
-                    drgPosY += 0.82
-                    warPosY += 1.02
-                } if (safeCorner === Direction.TopLeft || safeCorner ===
-                    Direction.TopRight) { // everyone move up
-                    sgePosY -= 0.92
-                    drgPosY -= 0.82
-                    warPosY -= 1.02
-                }
-                // and we're all moving towards thes afe corner
-                sgeFacing = safeCorner
-                drgFacing = safeCorner
-                warFacing = safeCorner
-            }
-            if (millis() - mechanicStarted > 16900 && millis() - mechanicStarted < 17000) {
-                // Everyone was a little offset in order to make sure you know
-                // who has the tether. Just correct now
-                drgPosX = sgePosX
-                drgPosY = sgePosY
-                warPosX = sgePosX
-                warPosY = sgePosY
-            }
-            // now put everyone in their correct positions
-            // facing towards the center, drg goes right, sge goes left, you
-            // go back, Mommy goes front
-            if (millis() - mechanicStarted > 20000 && millis() - mechanicStarted < 20800) {
-                if (safeCorner === Direction.TopLeft) { // top-left
-                    // You     Sge
-                    //
-                    //
-                    // Drg     War
-                    drgPosX += 0.92
-                    drgPosY -= 0.92
-                    sgePosX -= 0.92
-                    sgePosY += 0.92
-                    warPosX += 0.92
-                    warPosY += 0.92
-                    warFacing = Direction.BottomRight
-                } if (safeCorner === Direction.TopRight) { // top-right
-                    // Sge     You
-                    //
-                    //
-                    // War     Drg
-                    drgPosX -= 0.92
-                    drgPosY -= 0.92
-                    sgePosX += 0.92
-                    sgePosY += 0.92
-                    warPosX -= 0.92
-                    warPosY += 0.92
-                    warFacing = Direction.BottomLeft
-                } if (safeCorner === Direction.BottomRight) { // bottom-right
-                    // War     Drg
-                    //
-                    //
-                    // Sge     You
-                    drgPosX -= 0.92
-                    drgPosY += 0.92
-                    sgePosX += 0.92
-                    sgePosY -= 0.92
-                    warPosX -= 0.92
-                    warPosY -= 0.92
-                    warFacing = Direction.TopLeft
-                } if (safeCorner === Direction.BottomLeft) { // bottom-left
-                    // Drg     War
-                    //
-                    //
-                    // You     Sge
-                    drgPosX += 0.92
-                    drgPosY += 0.92
-                    sgePosX -= 0.92
-                    sgePosY -= 0.92
-                    warPosX += 0.92
-                    warPosY -= 0.92
-                    warFacing = Direction.TopRight
-                }
-            }
-
-            // put the tethered person in their correct position
-            if (millis() - mechanicStarted > 21000 && millis() - mechanicStarted < 22500) {
-                switch (tetheredPlayer) {
-                    case 1: // you
-                        // the warrior goes to your spot towards the corner
-                        if (safeCorner === Direction.TopLeft) { // top-left
-                            warPosX -= 0.92
-                            warPosY -= 0.92
-                            warFacing = Direction.TopLeft
-                        } if (safeCorner === Direction.TopRight) { // top-right
-                            warPosX += 0.92
-                            warPosY -= 0.92
-                            warFacing = Direction.TopRight
-                        } if (safeCorner === Direction.BottomRight) { // bottom-right
-                            warPosX += 0.92
-                            warPosY += 0.92
-                            warFacing = Direction.BottomRight
-                        } if (safeCorner === Direction.BottomLeft) { // bottom-left
-                            warPosX -= 0.92
-                            warPosY += 0.92
-                            warFacing = Direction.BottomLeft
-                        }
-                        break
-                    case 2: // dragoon
-                        // drg and warrior swap places
-                        if (safeCorner === Direction.TopLeft) { // top-left
-                            drgPosY += 0.92
-                            drgFacing = Direction.Down
-                            warPosY -= 0.92
-                            warFacing = Direction.Up
-                        } if (safeCorner === Direction.TopRight) { // top-right
-                            drgPosY += 0.92
-                            drgFacing = Direction.Down
-                            warPosY -= 0.92
-                            warFacing = Direction.Up
-                        } if (safeCorner === Direction.BottomRight) { // bottom-right
-                            drgPosY -= 0.92
-                            drgFacing = Direction.Up
-                            warPosY += 0.92
-                            warFacing = Direction.Down
-                        } if (safeCorner === Direction.BottomLeft) { // bottom-left
-                            drgPosY -= 0.92
-                            drgFacing = Direction.Up
-                            warPosY += 0.92
-                            warFacing = Direction.Down
-                        }
-                        break
-                    case 3: // sage
-                        // sage and warrior swap places
-                        if (safeCorner === Direction.TopLeft) { // top-left
-                            sgePosX += 0.92
-                            sgeFacing = Direction.Right
-                            warPosX -= 0.92
-                            warFacing = Direction.Left
-                        } if (safeCorner === Direction.TopRight) { // top-right
-                            sgePosX -= 0.92
-                            sgeFacing = Direction.Left
-                            warPosX += 0.92
-                            warFacing = Direction.Right
-                        } if (safeCorner === Direction.BottomRight) { // bottom-right
-                            sgePosX -= 0.92
-                            sgeFacing = Direction.Left
-                            warPosX += 0.92
-                            warFacing = Direction.Right
-                        } if (safeCorner === Direction.BottomLeft) { // bottom-left
-                            sgePosX += 0.92
-                            sgeFacing = Direction.Right
-                            warPosX -= 0.92
-                            warFacing = Direction.Left
-                        }
-                        break
-                }
-            }
-
-            // put the tethered player in their correct position.
-            // snap to the intersection
-            if (millis() - mechanicStarted > 22500 && millis() - mechanicStarted < 23000) {
-                print(safeCorner)
-                switch (tetheredPlayer) {
-                    case 2: // dragoon
-                        if (safeCorner === Direction.TopRight) drgPosX = 575; drgPosY = 175
-                        if (safeCorner === Direction.TopLeft) drgPosX = 825; drgPosY = 175
-                        if (safeCorner === Direction.BottomLeft) drgPosX = 825; drgPosY = 425
-                        if (safeCorner === Direction.BottomRight) drgPosX = 575; drgPosY = 425
-                        break
-                    case 3: // sage
-                        if (safeCorner === Direction.TopRight) sgePosX = 575; sgePosY = 175
-                        if (safeCorner === Direction.TopLeft) sgePosX = 825; sgePosY = 175
-                        if (safeCorner === Direction.BottomLeft) sgePosX = 825; sgePosY = 425
-                        if (safeCorner === Direction.BottomRight) sgePosX = 575; sgePosY = 425
-                        break
-                    case 4: // warrior
-                        if (safeCorner === Direction.TopRight) warPosX = 575; warPosY = 175
-                        if (safeCorner === Direction.TopLeft) warPosX = 825; warPosY = 175
-                        if (safeCorner === Direction.BottomLeft) warPosX = 825; warPosY = 425
-                        if (safeCorner === Direction.BottomRight) warPosX = 575; warPosY = 425
-                        break
-                }
-            }
-            break
         case "Azure Auspice":
             // since there's no other people involved and there's no special
             // symbols, unlike in Triple Kasumi-Giri, we can just display all
@@ -1738,7 +1076,7 @@ function draw() {
             // it's just a bright 270º arc around you with the safe spot
             // being the empty spot
             push()
-            translate(posX, posY)
+            translate(posX - 700, posY - 300)
             yourFacing.rotateToDirection()
             debuffDirection.rotateToDirection()
             stroke(0, 0, 100)
@@ -1751,7 +1089,7 @@ function draw() {
 
             // display debuff direction over a very-dark brown background
             fill(20, 100, 20)
-            rect(60, 60, 40, 40)
+            rect(-640, -240, 40, 40)
 
             // display arcs for each direction
             fill(20, 100, 40) // up
@@ -1759,77 +1097,42 @@ function draw() {
                 fill(180, 100, 90)
             }
             angleMode(DEGREES)
-            arc(80, 78, 28, 28, 225, 315)
+            arc(-620, -222, 28, 28, 225, 315)
 
             fill(20, 100, 40) // right
             if ((320 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 360) ||
                 (0 <= debuffDirection.angle % 360 && debuffDirection.angle % 360 < 40)) {
                 fill(180, 100, 90)
             }
-            arc(82, 80, 28, 28, -45, 45)
+            arc(-618, -220, 28, 28, -45, 45)
 
             fill(20, 100, 40) // down
             if (50 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 130) {
                 fill(180, 100, 90)
             }
-            arc(80, 82, 28, 28, 45, 135)
+            arc(-620, -218, 28, 28, 45, 135)
 
             fill(20, 100, 40) // left
             if (140 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 220) {
                 fill(180, 100, 90)
             }
-            arc(78, 80, 28, 28, 135, 225)
+            arc(-622, -220, 28, 28, 135, 225)
             angleMode(RADIANS)
 
             // now since we drew filled arcs, draw a circle in the middle
             fill(20, 100, 20)
-            circle(80, 80, 20)
+            circle(-620, -220, 15)
 
             // note: we drew filled arcs so that it wouldn't have rounded edges
 
 
-            // then display your rotation number debuff
-            fill(180, 100, 30)
-            rect(120, 60, 40, 40)
-            stroke(0, 0, 70)
-            strokeWeight(2)
-            // III: display top/bottom lines, then 3 lines in the middle
-            if (yourDebuffNumber === 3) {
-                line(130, 65, 150, 65)
-                line(130, 80, 150, 80)
-                line(133, 65, 133, 80)
-                line(140, 65, 140, 80)
-                line(147, 65, 147, 80)
-            } else {
-                // V: display top/bottom lines, then a V shape in the imddle
-                line(132, 65, 148, 65)
-                line(132, 80, 148, 80)
-                line(135, 65, 140, 80)
-                line(145, 65, 140, 80)
-            }
+            // timings:
+            // the initial arrows are activated at 5s
+            // the rectangle AoEs will move to the second arrows at 9.4s
+            // they will move to the third arrows at 10.5s
 
-            // display the boss's one
-            fill(180, 100, 30)
-            noStroke()
-            rect(340, 310, 40, 40)
-            stroke(0, 0, 70)
-            strokeWeight(2)
-            // III: display top/bottom lines, then 3 lines in the middle
-            if (bossBuffNumber === 3) {
-                line(350, 315, 370, 315)
-                line(350, 330, 370, 330)
-                line(353, 315, 353, 330)
-                line(360, 315, 360, 330)
-                line(367, 315, 367, 330)
-            } else {
-                // V: display top/bottom lines, then a V shape in the middle
-                line(352, 315, 368, 315)
-                line(352, 330, 368, 330)
-                line(355, 315, 360, 330)
-                line(365, 315, 360, 330)
-            }
-
-
+            // now display the arrows
+            // N&S (!rotatePlayers): NE pointing S and SW pointing N
             // timings:
             // the initial arrows are activated at 5s
             // the rectangle AoEs will move to the second arrows at 9.4s
@@ -1844,13 +1147,13 @@ function draw() {
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(924, 76, Direction.Down)
+                    displayArrow(224, -224, Direction.Down)
 
                     // SW pointing N
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(476, 524, Direction.Up)
+                    displayArrow(-224, 224, Direction.Up)
                 }
 
                 // then it comes around to SE pointing W and NW pointing E
@@ -1859,13 +1162,13 @@ function draw() {
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(924, 524, Direction.Left)
+                    displayArrow(224, 224, Direction.Left)
 
                     // NW pointing E
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(476, 76, Direction.Right)
+                    displayArrow(-224, -224, Direction.Right)
                 }
 
                 // one cell after that, we get more N/S things
@@ -1874,13 +1177,13 @@ function draw() {
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(812, 524, Direction.Up)
+                    displayArrow(112, 224, Direction.Up)
 
                     // NW pointing S
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(588, 76, Direction.Down)
+                    displayArrow(-112, -224, Direction.Down)
                 }
             }
             // E&W (rotatePlayers): NW pointing E and SE pointing W
@@ -1891,13 +1194,13 @@ function draw() {
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(924, 524, Direction.Left)
+                    displayArrow(224, 224, Direction.Left)
 
                     // NW pointing E
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(476, 76, Direction.Right)
+                    displayArrow(-224, -224, Direction.Right)
                 }
 
                 // then it comes around to NE pointing S and SW pointing N
@@ -1906,13 +1209,13 @@ function draw() {
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(924, 76, Direction.Down)
+                    displayArrow(224, -224, Direction.Down)
 
                     // SW pointing N
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(476, 524, Direction.Up)
+                    displayArrow(-224, 224, Direction.Up)
                 }
 
                 // one cell after that, we get more E/W things
@@ -1921,13 +1224,13 @@ function draw() {
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(924, 188, Direction.Left)
+                    displayArrow(224, -112, Direction.Left)
 
                     // SW pointing E
                     fill(0, 0, 0)
                     stroke(0, 0, 50)
                     strokeWeight(2)
-                    displayArrow(476, 412, Direction.Right)
+                    displayArrow(-224, 112, Direction.Right)
                 }
             }
 
@@ -1937,7 +1240,7 @@ function draw() {
             stroke(0, 0, 50)
             strokeWeight(30)
             if (millis() - mechanicStarted < 6100) {
-                point(orbOnePosition[0], orbOnePosition[1])
+                point(orbOnePosition[0] - 700, orbOnePosition[1] - 300)
                 if (helper) {
                     // check if angle is correct
                     angleMode(DEGREES)
@@ -1955,7 +1258,7 @@ function draw() {
                         stroke(0, 100, 100)
                     }
                     strokeWeight(3)
-                    line(posX, posY, orbOnePosition[0], orbOnePosition[1])
+                    line(posX - 700, posY - 300, orbTwoPosition[0] - 700, orbTwoPosition[1] - 300)
                     angleMode(RADIANS)
                 }
             } else {
@@ -2000,11 +1303,11 @@ function draw() {
                 strokeWeight(4)
                 // display an X or a check mark
                 if (gotHitByFirstOrb) {
-                    line(posX - 10, posY - 60, posX + 10, posY - 40)
-                    line(posX - 10, posY - 40, posX + 10, posY - 60)
+                    line(posX - 710, posY - 360, posX - 690, posY - 340)
+                    line(posX - 710, posY - 340, posX - 690, posY - 360)
                 } else {
-                    line(posX - 10, posY - 48, posX - 3, posY - 40)
-                    line(posX - 3, posY - 40, posX + 10, posY - 60)
+                    line(posX - 710, posY - 348, posX - 703, posY - 340)
+                    line(posX - 703, posY - 340, posX - 690, posY - 360)
                 }
             }
 
@@ -2012,7 +1315,7 @@ function draw() {
                  (millis() - mechanicStarted < 14900 && possibility % 2 === 0)) {
                 stroke(0, 0, 50)
                 strokeWeight(30)
-                point(orbTwoPosition[0], orbTwoPosition[1])
+                point(orbTwoPosition[0] - 700, orbTwoPosition[1] - 300)
                 if (helper) {
                     // check if angle is correct
                     angleMode(DEGREES)
@@ -2030,7 +1333,7 @@ function draw() {
                         stroke(0, 100, 100)
                     }
                     strokeWeight(3)
-                    line(posX, posY, orbTwoPosition[0], orbTwoPosition[1])
+                    line(posX - 700, posY - 300, orbTwoPosition[0] - 700, orbTwoPosition[1] - 300)
                     angleMode(RADIANS)
                 }
             } else {
@@ -2075,11 +1378,11 @@ function draw() {
                 strokeWeight(4)
                 // display an X or a check mark
                 if (gotHitBySecondOrb) {
-                    line(posX - 10, posY - 60, posX + 10, posY - 40)
-                    line(posX - 10, posY - 40, posX + 10, posY - 60)
+                    line(posX - 710, posY - 360, posX - 690, posY - 340)
+                    line(posX - 710, posY - 340, posX - 690, posY - 360)
                 } else {
-                    line(posX - 10, posY - 48, posX - 3, posY - 40)
-                    line(posX - 3, posY - 40, posX + 10, posY - 60)
+                    line(posX - 710, posY - 348, posX - 703, posY - 340)
+                    line(posX - 703, posY - 340, posX - 690, posY - 360)
                 }
             }
 
@@ -2088,7 +1391,6 @@ function draw() {
             if (6000 < millis() - mechanicStarted &&
                 millis() - mechanicStarted < 11000) {
                 push()
-                translate(700, 300)
                 cleaveOneSafeDirection.rotateToDirection()
                 fill(20, 100, 50, 10)
                 stroke(20, 100, 50)
@@ -2106,7 +1408,6 @@ function draw() {
             if (11000 < millis() - mechanicStarted &&
                 millis() - mechanicStarted < 12000) {
                 push()
-                translate(700, 300)
                 cleaveOneSafeDirection.rotateToDirection()
                 fill(0, 100, 50, map(millis() - mechanicStarted,
                     11000, 12000, 100, 0)) // map the millis to the opacity
@@ -2118,8 +1419,8 @@ function draw() {
             }
 
 
-            drawRotationSymbol(700, 240, mechanicStarted + 10900, bossRotationClockwise)
-            drawRotationSymbol(posX, posY - 60, mechanicStarted + 19900, yourRotationClockwise)
+            drawRotationSymbol(0, -60, mechanicStarted + 10900, bossRotationClockwise)
+            drawRotationSymbol(posX - 700, posY - 360, mechanicStarted + 19900, yourRotationClockwise)
             if (millis() - mechanicStarted > 10900) {
                 if (!bossRotationWentOff) {
                     bossRotationWentOff = true
