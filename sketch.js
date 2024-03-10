@@ -1498,40 +1498,60 @@ function draw() {
     if ((keyIsDown(87) || keyIsDown(38)) && posY > 16) directions.push(Direction.Up) // W or ↑ = up
     if ((keyIsDown(68) || keyIsDown(39)) && posX < 984) directions.push(Direction.Right) // D or → = right
     if ((keyIsDown(83) || keyIsDown(40)) && posY < 584) directions.push(Direction.Down) // S or ↓ = down
+
+    // we'll need to store this to rotate the direction
+    let posXDiff = 0
+    let posYDiff = 0
     switch (directions.length) {
         case 1: // move the full 1.3
-            if (directions[0] === Direction.Left) posX -= 1.3
-            if (directions[0] === Direction.Up) posY -= 1.3
-            if (directions[0] === Direction.Right) posX += 1.3
-            if (directions[0] === Direction.Down) posY += 1.3
+            if (directions[0] === Direction.Left) posXDiff -= 1.3
+            if (directions[0] === Direction.Up) posYDiff -= 1.3
+            if (directions[0] === Direction.Right) posXDiff += 1.3
+            if (directions[0] === Direction.Down) posYDiff += 1.3
             break
         case 2: // move 0.92 both directions. They still cancel out each other if they're opposite
-            if (directions[0] === Direction.Left) posX -= 0.92
-            if (directions[0] === Direction.Up) posY -= 0.92
-            if (directions[0] === Direction.Right) posX += 0.92
-            if (directions[0] === Direction.Down) posX -= 0.92
-            if (directions[1] === Direction.Up) posY -= 0.92
-            if (directions[1] === Direction.Right) posX += 0.92
-            if (directions[1] === Direction.Down) posY += 0.92
+            if (directions[0] === Direction.Left) posXDiff -= 0.92
+            if (directions[0] === Direction.Up) posYDiff -= 0.92
+            if (directions[0] === Direction.Right) posXDiff += 0.92
+            if (directions[0] === Direction.Down) posYDiff += 0.92
+            if (directions[1] === Direction.Up) posYDiff -= 0.92
+            if (directions[1] === Direction.Right) posXDiff += 0.92
+            if (directions[1] === Direction.Down) posYDiff += 0.92
             break
         case 3: // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
-            if (directions[0] === Direction.Left) posX -= 1.3
-            if (directions[0] === Direction.Up) posY -= 1.3
-            if (directions[0] === Direction.Right) posX += 1.3
-            if (directions[0] === Direction.Down) posY += 1.3
-            if (directions[1] === Direction.Up) posY -= 1.3
-            if (directions[1] === Direction.Right) posX += 1.3
-            if (directions[1] === Direction.Down) posY += 1.3
-            if (directions[2] === Direction.Right) posX += 1.3
-            if (directions[2] === Direction.Down) posY += 1.3
+            if (directions[0] === Direction.Left) posXDiff -= 1.3
+            if (directions[0] === Direction.Up) posYDiff -= 1.3
+            if (directions[0] === Direction.Right) posXDiff += 1.3
+            if (directions[0] === Direction.Down) posYDiff += 1.3
+            if (directions[1] === Direction.Up) posYDiff -= 1.3
+            if (directions[1] === Direction.Right) posXDiff += 1.3
+            if (directions[1] === Direction.Down) posYDiff += 1.3
+            if (directions[2] === Direction.Right) posXDiff += 1.3
+            if (directions[2] === Direction.Down) posYDiff += 1.3
             break
     } if (directions.length > 0) {
         yourFacing = mixDirections(directions)
+        yourFacing = new Direction(yourFacing.angle - boardRotationDegrees)
+
+        // we modify the directions differently based on the board rotation angle
+        if (boardRotationDegrees % 360 === 0) {
+            posX += posXDiff
+            posY += posYDiff
+        } if (boardRotationDegrees % 360 === 90) {
+            posX += posYDiff
+            posY -= posXDiff
+        } if (boardRotationDegrees % 360 === 180) {
+            posX -= posXDiff
+            posY -= posYDiff
+        } if (boardRotationDegrees % 360 === 270) {
+            posX -= posYDiff
+            posY += posXDiff
+        }
     }
-    image(sgeSymbol, sgePosX - 20, sgePosY - 20, 40, 40)
-    image(warSymbol, warPosX - 20, warPosY - 20, 40, 40)
-    image(drgSymbol, drgPosX - 20, drgPosY - 20, 40, 40)
-    image(rdmSymbol, posX - 20, posY - 20, 40, 40)
+    image(sgeSymbol, sgePosX - 720, sgePosY - 320, 40, 40)
+    image(warSymbol, warPosX - 720, warPosY - 320, 40, 40)
+    image(drgSymbol, drgPosX - 720, drgPosY - 320, 40, 40)
+    image(rdmSymbol, posX - 720, posY - 320, 40, 40)
 
     // red dot for boss
     strokeWeight(30)
@@ -1539,7 +1559,7 @@ function draw() {
     point(bossPosX, bossPosY)
 
     push()
-    translate(posX, posY)
+    translate(posX - 700, posY - 300)
     yourFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
@@ -1551,7 +1571,7 @@ function draw() {
     pop()
 
     push()
-    translate(drgPosX, drgPosY)
+    translate(drgPosX - 700, drgPosY - 300)
     drgFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
@@ -1563,7 +1583,7 @@ function draw() {
     pop()
 
     push()
-    translate(sgePosX, sgePosY)
+    translate(sgePosX - 700, sgePosY - 300)
     sgeFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
@@ -1575,7 +1595,7 @@ function draw() {
     pop()
 
     push()
-    translate(warPosX, warPosY)
+    translate(warPosX - 700, warPosY - 300)
     warFacing.rotateToDirection()
     fill(45, 100, 100)
     noStroke()
