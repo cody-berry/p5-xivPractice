@@ -36,8 +36,8 @@ function updateOpacity(AoE) {
 // Displays a circle-shaped AoE on the screen
 class CircleAOE {
     constructor(posX, posY, size, goesOffInMillis) {
-        this.x = posX
-        this.y = posY
+        this.x = posX - 700
+        this.y = posY - 300
         this.diameter = size
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
@@ -79,8 +79,8 @@ class CircleAOE {
 
 class RectAOE {
     constructor(posX, posY, width, height, goesOffInMillis) {
-        this.x = posX
-        this.y = posY
+        this.x = posX - 700
+        this.y = posY - 300
         this.width = width
         this.height = height
         this.goesOffAt = millis() + goesOffInMillis
@@ -123,10 +123,10 @@ class RectAOE {
 
 class LineAOE {
     constructor(x1, y1, x2, y2, thickness, goesOffInMillis) {
-        this.x1 = x1
-        this.y1 = y1
-        this.x2 = x2
-        this.y2 = y2
+        this.x1 = x1 - 700
+        this.y1 = y1 - 300
+        this.x2 = x2 - 700
+        this.y2 = y2 - 300
         this.angleOfLine = atan2(this.y2 - this.y1, this.x2 - this.x1)
         this.thickness = thickness
         this.goesOffAt = millis() + goesOffInMillis
@@ -158,8 +158,8 @@ class LineAOE {
 
 class DonutAOE {
     constructor(posX, posY, size, goesOffInMillis) {
-        this.x = posX
-        this.y = posY
+        this.x = posX - 700
+        this.y = posY - 300
         this.size = size
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
@@ -225,8 +225,8 @@ class DonutAOE {
 
 class ConeAOE {
     constructor(posX, posY, size, startingAngle, endingAngle, goesOffInMillis) {
-        this.x = posX
-        this.y = posY
+        this.x = posX - 700
+        this.y = posY - 300
         this.size = size
         this.startAngle = startingAngle
         this.endAngle = endingAngle
@@ -269,11 +269,11 @@ class ConeAOE {
 
 class Exaflare {
     constructor(startingPosX, startingPosY, startingSize, goesOffInMillis, xDelta, yDelta, sizeDelta, timeDelta) {
-        this.prevX = startingPosX
-        this.prevY = startingPosY
+        this.prevX = startingPosX - 700
+        this.prevY = startingPosY - 300
         this.prevCircleOpacity = 10
-        this.x = startingPosX
-        this.y = startingPosY
+        this.x = startingPosX - 700
+        this.y = startingPosY - 300
         this.size = startingSize
         this.goesOffAt = millis() + goesOffInMillis
         this.xDiff = xDelta
@@ -296,7 +296,7 @@ class Exaflare {
             this.wentOff = true
             this.opacity = 50
 
-            if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2 + 16) {
+            if (sqrt(abs(this.x - posX + 700)**2 + abs(this.y - posY + 300)**2) < this.size/2 + 16) {
                 partyWiped = true
                 causeOfWipe = "You got hit by an exaflare."
                 logWindowRow6 = logWindowRow5
@@ -313,15 +313,10 @@ class Exaflare {
             this.prevX = this.x
             this.prevY = this.y
             this.x += this.xDiff
-            if (this.x + this.size <= 400 || this.x - this.size >= 1000) {
-                this.x = -10000
-            } if (this.y + this.size <= 0 || this.y - this.size >= 600) {
-                this.y = -10000
-            }
             this.y += this.yDiff
             this.size += this.sizeDiff
 
-            if (sqrt(abs(this.x - posX)**2 + abs(this.y - posY)**2) < this.size/2 + 16) {
+            if (sqrt(abs(this.x - posX + 700)**2 + abs(this.y - posY + 300)**2) < this.size/2 + 16) {
                 partyWiped = true
                 causeOfWipe = "You got hit by an exaflare."
                 logWindowRow6 = logWindowRow5
@@ -403,17 +398,17 @@ class SpreadCircle {
                 let executedCorrectly = true
                 // set the
                 if (this.player === 1) { // 1 is you
-                    this.x = posX
-                    this.y = posY
+                    this.x = posX - 700
+                    this.y = posY - 300
                 } if (this.player === 2) { // 2 is the dragoon
-                    this.x = drgPosX
-                    this.y = drgPosY
+                    this.x = drgPosX - 700
+                    this.y = drgPosY - 300
                 } if (this.player === 3) { // 3 is the sage
-                    this.x = sgePosX
-                    this.y = sgePosY
+                    this.x = sgePosX - 700
+                    this.y = sgePosY - 300
                 } if (this.player === 4) { // 4 is the warrior
-                    this.x = warPosX
-                    this.y = warPosY
+                    this.x = warPosX - 700
+                    this.y = warPosY - 300
                 }
                 for (let position of [
                     [posX, posY, 1],
@@ -422,7 +417,7 @@ class SpreadCircle {
                     [warPosX, warPosY, 4]
                 ]) {
                     // if anyone clips anyone else with spread, the party wipes
-                    if (sqrt((this.x - position[0])**2 + (this.y - position[1])**2) < this.size/2) {
+                    if (sqrt((this.x - position[0] + 700)**2 + (this.y - position[1] + 300)**2) < this.size/2) {
                         lastHitBy[position[2]] = ["spread", millis()]
                         print(lastHitBy)
                         if (position[2] !== this.player) {
@@ -480,20 +475,20 @@ class StackCircle {
                 let executedCorrectly = true
                 // have the stack circle leap to the player needed
                 if (this.player === 1) { // 1 is you
-                    this.x = posX
-                    this.y = posY
+                    this.x = posX - 700
+                    this.y = posY - 300
                 }
                 if (this.player === 2) { // 2 is the dragoon
-                    this.x = drgPosX
-                    this.y = drgPosY
+                    this.x = drgPosX - 700
+                    this.y = drgPosY - 300
                 }
                 if (this.player === 3) { // 3 is the sage
-                    this.x = sgePosX
-                    this.y = sgePosY
+                    this.x = sgePosX - 700
+                    this.y = sgePosY - 300
                 }
                 if (this.player === 4) { // 4 is the warrior
-                    this.x = warPosX
-                    this.y = warPosY
+                    this.x = warPosX - 700
+                    this.y = warPosY - 300
                 }
                 let playersHit = 0
                 for (let position of [
@@ -505,7 +500,7 @@ class StackCircle {
                     // check for anyone in the vicinity
                     // if someone has been hit in the last second by spread/stack,
                     // then boom, dead
-                    if (sqrt((this.x - position[0]) ** 2 + (this.y - position[1]) ** 2) < this.size / 2) {
+                    if (sqrt((this.x - position[0] + 700) ** 2 + (this.y - position[1] + 300) ** 2 + 300) < this.size / 2) {
                         if (lastHitBy[position[2]][1] > millis() - 1000) {
                             partyWiped = true
                             executedCorrectly = false
@@ -564,339 +559,12 @@ class StackCircle {
     }
 }
 
-class SoakTower {
-    constructor(color, xPos, yPos, radius, goesOffIn) {
-        this.color = color
-        this.x = xPos
-        this.y = yPos
-        this.size = radius
-        this.goesOffAt = goesOffIn + millis()
-        this.wentOff = false
-        this.soaked = false
-        this.opacity = 100
-    }
-
-    update() {
-        if (millis() > this.goesOffAt) {
-            this.opacity -= 5
-            // if this is the first time it's been updated since it's been
-            // supposed to go off, check if the tower was soaked
-            if (this.wentOff === false) {
-                // iterate through every person to see if they soaked the tower
-                for (let position of [
-                    [posX, posY],
-                    [drgPosX, drgPosY],
-                    [warPosX, warPosY],
-                    [sgePosX, sgePosY]
-                ]) {
-                    // if the tower wasn't soaked, the party wipes
-                    if (sqrt((position[0] - this.x) ** 2 + (position[1] - this.y)
-                        ** 2) < this.size) {
-                        this.soaked = true
-                    }
-                }
-
-                if (!this.soaked) {
-                    partyWiped = true
-                    causeOfWipe = "A tower went unsoaked."
-                    logWindowRow6 = logWindowRow5
-                    logWindowRow5 = logWindowRow4
-                    logWindowRow4 = logWindowRow3
-                    logWindowRow3 = logWindowRow2
-                    logWindowRow2 = logWindowRow1
-                    logWindowRow1 = {"text": "A tower went unsoaked.", "color": [0, 80, 80]}
-                    this.opacity = 150
-                } else {
-                    logWindowRow1 = {"text": "A tower was soaked.", "color": [144, 80, 80]}
-                }
-            }
-
-            // at the end of the day, just make sure we know that it went off
-            this.wentOff = true
-        }
-    }
-
-    displayTower() {
-        if (!this.wentOff) {
-            // display a small soak tower
-            stroke(this.color[0], this.color[1], this.color[2])
-            strokeWeight(1)
-            noFill()
-            circle(this.x, this.y, this.size*2)
-
-            // display how many seconds left
-            fill(this.color[0], this.color[1], this.color[2])
-            noStroke()
-            text(ceil((this.goesOffAt - millis())/1000), this.x - 10, this.y + 10)
-        } if (this.wentOff && this.soaked) {
-            // if it has been soaked, then display it as a thick soak tower to
-            // show that it's been soaked
-            stroke(this.color[0], this.color[1], this.color[2], this.opacity)
-            strokeWeight(5)
-            noFill()
-            circle(this.x, this.y, this.size*2)
-        } if (this.wentOff && !this.soaked) {
-            // if it hasn't been soaked, then display a thick expanding circle
-            // telling you that it wasn't soaked
-            stroke(this.color[0], this.color[1], this.color[2], this.opacity)
-            strokeWeight(10)
-            noFill()
-            circle(this.x, this.y, this.size*2 + (150 - this.opacity)*8)
-
-            // a thin expanding circle as well that expands a little faster
-            strokeWeight(1)
-            circle(this.x, this.y, max(this.size*2 + (150 - this.opacity)*10, 0))
-        }
-    }
-}
-
-class FlameLine {
-    constructor(x1, y1, x2, y2, growingTimes) {
-        this.x1 = x1
-        this.y1 = y1
-        this.x2 = x2
-        this.y2 = y2
-        this.growingTimes = growingTimes
-        this.initiatedAt = millis()
-        this.stage = 0 // not displayed
-        this.wentOff = false
-    }
-
-    update() {
-        if (millis() - this.initiatedAt > this.growingTimes[0]) {
-            this.stage = 1 // displayed as red line
-        } if (millis() - this.initiatedAt > this.growingTimes[1]) {
-            this.stage = 2 // slightly glowing
-        } if (millis() - this.initiatedAt > this.growingTimes[2]) {
-            this.stage = 3 // moderately glowing
-        } if (millis() - this.initiatedAt > this.growingTimes[3]) {
-            this.stage = 4 // heavily glowing
-        } if (millis() - this.initiatedAt > this.growingTimes[4]) {
-            this.stage = 0
-            if (!this.wentOff) {
-                AoEs.push(new LineAOE(this.x1, this.y1, this.x2, this.y2, 310, 1000))
-                this.wentOff = true
-            }
-        }
-    }
-
-    displayAoE() {
-        // each stage is displayed their own way, with multiple lines (thinner
-        // ones displayed on top of the thicker ones, all drawn in the same
-        // place). The following is the stage one data.
-        let flameLineStageOneData = [
-            { // just helps us ease into red
-                "hue": 0,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 10,
-                "thickness": 20
-            }, { // more easing into red
-                "hue": 0,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 40,
-                "thickness": 10
-            }, { // this is the actual red
-                "hue": 0,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 1
-            }
-        ]
-
-        // next we have the stage 2 data
-        let flameLineStageTwoData = [
-            { // same as flameLineStageOneData, except a little bigger
-                "hue": 0,
-                "saturation": 50, // it'll be too dark if we do 100
-                "brightness": 100,
-                "opacity": 10,
-                "thickness": 30
-            }, {
-                "hue": 0,
-                "saturation": 75, // same here
-                "brightness": 100,
-                "opacity": 40,
-                "thickness": 22
-            }, {
-                "hue": 0,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 15
-            }, { // now we add orange to make it more flame-colored
-                "hue": 25,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 12
-            }, { // after that we add yellow, makes it even more flame-colored
-                "hue": 45,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 5
-            }, { // finally we add white to make it glow
-                "hue": 0,
-                "saturation": 0,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 1
-            }
-        ]
-
-        // next we have the stage 3 data
-        let flameLineStageThreeData = [
-            { // same as flameLineStageTwoData, except a little bigger and it
-              // has vermillion and yellow-white
-                "hue": 0,
-                "saturation": 50, // it'll be too dark if we do 100
-                "brightness": 100,
-                "opacity": 10,
-                "thickness": 40
-            }, {
-                "hue": 0,
-                "saturation": 75, // same here
-                "brightness": 100,
-                "opacity": 40,
-                "thickness": 30
-            }, { // red
-                "hue": 0,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 25
-            }, { // vermillion
-                "hue": 11,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 22
-            }, { // orange
-                "hue": 25,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 18
-            }, { // yellow
-                "hue": 45,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 10
-            }, { // yellow-white
-                "hue": 45,
-                "saturation": 50,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 6
-            }, { // white
-                "hue": 0,
-                "saturation": 0,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 3
-            }
-        ]
-
-        // next we have the stage 3 data
-        let flameLineStageFourData = [
-            { // same as flameLineStageThreeData, except a little bigger
-                "hue": 0,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 5,
-                "thickness": 310 // notify players of how thick the line AoE is!
-            }, {
-                "hue": 0,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 10,
-                "thickness": 150
-            }, { // red
-                "hue": 0,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 35
-            }, { // vermillion
-                "hue": 11,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 31
-            }, { // orange
-                "hue": 25,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 25
-            }, { // yellow
-                "hue": 45,
-                "saturation": 100,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 19
-            }, { // yellow-white
-                "hue": 45,
-                "saturation": 50,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 13
-            }, { // white
-                "hue": 0,
-                "saturation": 0,
-                "brightness": 100,
-                "opacity": 100,
-                "thickness": 7
-            }
-        ]
-
-        switch (this.stage) {
-            case 1:
-                for (let lineToDisplay of flameLineStageOneData) {
-                    stroke(lineToDisplay.hue, lineToDisplay.saturation,
-                        lineToDisplay.brightness, lineToDisplay.opacity)
-                    strokeWeight(lineToDisplay.thickness)
-                    line(this.x1, this.y1, this.x2, this.y2)
-                }
-                break
-            case 2:
-                for (let lineToDisplay of flameLineStageTwoData) {
-                    stroke(lineToDisplay.hue, lineToDisplay.saturation,
-                        lineToDisplay.brightness, lineToDisplay.opacity)
-                    strokeWeight(lineToDisplay.thickness)
-                    line(this.x1, this.y1, this.x2, this.y2)
-                }
-                break
-            case 3:
-                for (let lineToDisplay of flameLineStageThreeData) {
-                    stroke(lineToDisplay.hue, lineToDisplay.saturation,
-                        lineToDisplay.brightness, lineToDisplay.opacity)
-                    strokeWeight(lineToDisplay.thickness)
-                    line(this.x1, this.y1, this.x2, this.y2)
-                }
-                break
-            case 4:
-                for (let lineToDisplay of flameLineStageFourData) {
-                    stroke(lineToDisplay.hue, lineToDisplay.saturation,
-                        lineToDisplay.brightness, lineToDisplay.opacity)
-                    strokeWeight(lineToDisplay.thickness)
-                    line(this.x1, this.y1, this.x2, this.y2)
-                }
-                break
-        }
-        noStroke()
-    }
-}
 class WaterLine {
     constructor(x1, y1, x2, y2, growingTimes) {
-        this.x1 = x1
-        this.y1 = y1
-        this.x2 = x2
-        this.y2 = y2
+        this.x1 = x1 - 700
+        this.y1 = y1 - 300
+        this.x2 = x2 - 700
+        this.y2 = y2 - 300
         this.growingTimes = growingTimes
         this.initiatedAt = millis()
         this.stage = 0 // not displayed
@@ -1237,8 +905,8 @@ class WaterLine {
 // This rectangle AoE persists for some amount of time. Untelegraphed.
 class PersistingRectangleAOE {
     constructor(x, y, w, h, millisUntilActivation, millisUntilActivationEnds) {
-        this.x = x
-        this.y = y
+        this.x = x - 700
+        this.y = y - 300
         this.w = w
         this.h = h
         this.activateAt = millis() + millisUntilActivation
@@ -1256,8 +924,8 @@ class PersistingRectangleAOE {
             // if you are in it, though, party wipe (you're dead)!
             // the rectangle AoE is 20 bigger than it looks because it has to
             // account for just your symbol, not your center, touching the AoE.
-            if (posX > this.x - 10 && posX < this.x + this.w + 10 &&
-                posY > this.y - 10 && posY < this.y + this.h + 10) {
+            if (posX > this.x - 710 && posX < this.x + this.w - 290 &&
+                posY > this.y - 310 && posY < this.y + this.h - 290) {
                 inRectangleAoE = true
                 partyWiped = true
                 causeOfWipe = "You are in a persisting rectangle AoE."

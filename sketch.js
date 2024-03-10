@@ -1556,7 +1556,7 @@ function draw() {
     // red dot for boss
     strokeWeight(30)
     stroke(0, 100, 100)
-    point(bossPosX, bossPosY)
+    point(bossPosX - 700, bossPosY - 300)
 
     push()
     translate(posX - 700, posY - 300)
