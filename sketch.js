@@ -384,7 +384,7 @@ function setup() {
     analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
 
 
-    // test
+    // opening statements
     logWindowRow6 = {"text": "Movement abilities are restricted.", "color": [0, 80, 80]}
     logWindowRow5 = {"text": "Use W, A, S, and D to move.", "color": [72, 80, 80]}
     logWindowRow4 = {"text": "Click on part of the microscope to change" +
@@ -393,6 +393,11 @@ function setup() {
     logWindowRow2 = {"text": "Feel free to execute mechanics incorrectly to" +
             " test!", "color": [144, 80, 80]}
     logWindowRow1 = {"text": "Loading Analysis...", "color": [0, 0, 100]}
+
+    // the board rotation degrees is an arriving number
+    boardRotationDegrees = new ArrivingNumber(5, 50)
+    boardRotationDegrees.pos = 0
+    boardRotationDegrees.target = 0
 
     textSize(14)
 }
@@ -607,7 +612,9 @@ function draw() {
 
     push()
     translate(700, 300)
-    rotate(radians(boardRotationDegrees))
+    boardRotationDegrees.arrive()
+    boardRotationDegrees.update()
+    rotate(radians(boardRotationDegrees.pos))
 
     // display a wooden chess board, basically
     // (with red stuff on the outside and a purple entrance on at the bottom)
@@ -824,13 +831,13 @@ function draw() {
     // red color for north
     fill(0, 100, 100)
     noStroke()
-    text("N", 700 - textWidth("N")/2, textAscent())
+    text("N", textWidth("N")/2, -300 + textAscent())
 
-    // creamy color for south, west, and east
+    // creamy color for east, south, and west
     fill(45, 20, 100)
-    text("E", 1000 - textWidth("E") - 5, 300 + textAscent()/2)
-    text("W", 402, 300 + textAscent()/2)
-    text("S", 700 - textWidth("S")/2, 598)
+    text("E", 300 - textWidth("E") - 5, textAscent()/2)
+    text("S", -textWidth("S")/2, 298)
+    text("W", -298, textAscent()/2)
 
     textSize(30)
     switch (mechanic) {
@@ -1086,44 +1093,6 @@ function draw() {
             arc(0, 0, 80, 80, 135, 45)
             angleMode(RADIANS)
             pop()
-
-            // display debuff direction over a very-dark brown background
-            fill(20, 100, 20)
-            rect(-640, -240, 40, 40)
-
-            // display arcs for each direction
-            fill(20, 100, 40) // up
-            if (230 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 310) {
-                fill(180, 100, 90)
-            }
-            angleMode(DEGREES)
-            arc(-620, -222, 28, 28, 225, 315)
-
-            fill(20, 100, 40) // right
-            if ((320 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 360) ||
-                (0 <= debuffDirection.angle % 360 && debuffDirection.angle % 360 < 40)) {
-                fill(180, 100, 90)
-            }
-            arc(-618, -220, 28, 28, -45, 45)
-
-            fill(20, 100, 40) // down
-            if (50 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 130) {
-                fill(180, 100, 90)
-            }
-            arc(-620, -218, 28, 28, 45, 135)
-
-            fill(20, 100, 40) // left
-            if (140 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 220) {
-                fill(180, 100, 90)
-            }
-            arc(-622, -220, 28, 28, 135, 225)
-            angleMode(RADIANS)
-
-            // now since we drew filled arcs, draw a circle in the middle
-            fill(20, 100, 20)
-            circle(-620, -220, 15)
-
-            // note: we drew filled arcs so that it wouldn't have rounded edges
 
 
             // timings:
@@ -1622,7 +1591,7 @@ function draw() {
     textSize(30)
     text("YOU", 185, 90)
 
-    // and debuffs
+    // and debuffs (in the static section)
     switch (mechanic) {
         case "Exoflares":
             // display stacks and spreads (at correct time).
@@ -1895,6 +1864,45 @@ function draw() {
                 line(355, 315, 360, 330)
                 line(365, 315, 360, 330)
             }
+
+            // display debuff direction over a very-dark brown background
+            fill(20, 100, 20)
+            noStroke()
+            rect(60, 60, 40, 40)
+
+            // display arcs for each direction
+            fill(20, 100, 40) // up
+            if (230 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 310) {
+                fill(180, 100, 90)
+            }
+            angleMode(DEGREES)
+            arc(80, 78, 28, 28, 225, 315)
+
+            fill(20, 100, 40) // right
+            if ((320 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 360) ||
+                (0 <= debuffDirection.angle % 360 && debuffDirection.angle % 360 < 40)) {
+                fill(180, 100, 90)
+            }
+            arc(82, 80, 28, 28, -45, 45)
+
+            fill(20, 100, 40) // down
+            if (50 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 130) {
+                fill(180, 100, 90)
+            }
+            arc(80, 82, 28, 28, 45, 135)
+
+            fill(20, 100, 40) // left
+            if (140 < debuffDirection.angle % 360 && debuffDirection.angle % 360 < 220) {
+                fill(180, 100, 90)
+            }
+            arc(78, 80, 28, 28, 135, 225)
+            angleMode(RADIANS)
+
+            // now since we drew filled arcs, draw a circle in the middle
+            fill(20, 100, 20)
+            circle(80, 80, 15)
+
+            // note: we drew filled arcs so that it wouldn't have rounded edges
             break
     }
 
@@ -2030,10 +2038,10 @@ function mousePressed() {
     }
     if (mouseX > padding && mouseX < counterClockwiseWidth + 5 &&
         mouseY > counterClockwiseYPos && mouseY < counterClockwiseYPos + heightForNoTextDescent) {
-        boardRotationDegrees += 90.00000000
+        boardRotationDegrees.target += 90.00000000
     } if (mouseX > padding && mouseX < clockwiseWidth + 5 &&
         mouseY > clockwiseYPos && mouseY < clockwiseYPos + heightForNoTextDescent) {
-        boardRotationDegrees += 270.0000000
+        boardRotationDegrees.target += 270.0000000
     }
     if (mouseX > padding && mouseX < exaflareWidth + 5 &&
         mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent) {
