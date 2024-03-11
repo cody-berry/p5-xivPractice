@@ -165,6 +165,7 @@ let inEdgeOfArena
 let doneWithMechanic
 
 let boardRotationDegrees = 0
+let angleDiffFromMouse = 0
 
 // there's some noise from cos() and sin(). this only matters for 0.
 function normalize(value, threshold) {
@@ -619,7 +620,10 @@ function draw() {
     if (mouseIsPressed &&
         mouseX > 400 && mouseX < 1000 &&
         mouseY > 0 && mouseY < 700) {
-        boardRotationDegrees.target = degrees(atan2(mouseY - 300, mouseX - 700)) + 90
+        if (angleDiffFromMouse === 0) {
+            angleDiffFromMouse = degrees(atan2(mouseY - 300, mouseX - 700)) + 90 - boardRotationDegrees.target
+        }
+        boardRotationDegrees.target = degrees(atan2(mouseY - 300, mouseX - 700)) + 90 - angleDiffFromMouse
         boardRotationDegrees.target = boardRotationDegrees.target % 360
     } else {
         // otherwise, set it to the nearest corner
@@ -627,6 +631,7 @@ function draw() {
         if (boardRotationDegrees.target % 360 > 135 && boardRotationDegrees.target % 360 < 225) boardRotationDegrees.target = 180
         if (boardRotationDegrees.target % 360 > 225 && boardRotationDegrees.target % 360 < 315) boardRotationDegrees.target = 270
         if (boardRotationDegrees.target % 360 < 45 || boardRotationDegrees.target % 360 > 315) boardRotationDegrees.target = 0
+        angleDiffFromMouse = 0
     }
 
     // update the arriving number, then rotate to it
@@ -1518,21 +1523,24 @@ function draw() {
             break
     } if (directions.length > 0) {
         yourFacing = mixDirections(directions)
-        yourFacing = new Direction(yourFacing.angle - boardRotationDegrees)
 
         // we modify the directions differently based on the board rotation angle
-        if (boardRotationDegrees % 360 === 0) {
+        if (315 < boardRotationDegrees.target % 360 || boardRotationDegrees.target % 360 < 45) {
             posX += posXDiff
             posY += posYDiff
-        } if (boardRotationDegrees % 360 === 90) {
+            yourFacing = new Direction(yourFacing.angle)
+        } if (45 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 135) {
             posX += posYDiff
             posY -= posXDiff
-        } if (boardRotationDegrees % 360 === 180) {
+            yourFacing = new Direction(yourFacing.angle - 90)
+        } if (135 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 225) {
             posX -= posXDiff
             posY -= posYDiff
-        } if (boardRotationDegrees % 360 === 270) {
+            yourFacing = new Direction(yourFacing.angle - 180)
+        } if (225 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 315) {
             posX -= posYDiff
             posY += posXDiff
+            yourFacing = new Direction(yourFacing.angle - 270)
         }
     }
     image(sgeSymbol, sgePosX - 720, sgePosY - 320, 40, 40)
