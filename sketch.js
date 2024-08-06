@@ -141,6 +141,7 @@ let tripleKasumiGiriWidth
 let fleetingLaiGiriWidth
 let azureAuspiceWidth
 let analysisWidth
+let alarmPheremonesWidth
 let counterClockwiseYPos
 let clockwiseYPos
 let exaflareYPos
@@ -150,6 +151,7 @@ let tripleKasumiGiriYPos
 let fleetingLaiGiriYPos
 let azureAuspiceYPos
 let analysisYPos
+let alarmPheremonesYPos
 let padding
 
 let logWindowRow6
@@ -373,6 +375,7 @@ function setup() {
     // fleetingLaiGiriWidth = textWidth("Fleeting Lai-Giri") + padding*2
     azureAuspiceWidth = textWidth("Azure Auspice") + padding*2
     analysisWidth = textWidth("Analysis") + padding*2
+    alarmPheremonesWidth = textWidth("Alarm Pheremones") + padding*2
 
     counterClockwiseYPos = 300
     clockwiseYPos = 340
@@ -383,6 +386,7 @@ function setup() {
     // fleetingLaiGiriYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
     azureAuspiceYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
     analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
+    alarmPheremonesYPos = analysisYPos + heightForTextDescent + 5
 
 
     // opening statements
@@ -581,6 +585,12 @@ function draw() {
         mouseY > analysisYPos && mouseY < analysisYPos + heightForTextDescent) fill(0, 0, 15)
     rect(padding + 1, analysisYPos, analysisWidth, heightForTextDescent, 5)
 
+    // alarm pheremones
+    fill(0, 0, 25)
+    if (mouseX > padding && mouseX < alarmPheremonesWidth + 5 &&
+        mouseY > alarmPheremonesYPos && mouseY < alarmPheremonesYPos + heightForTextDescent) fill(0, 0, 15)
+    rect(padding + 1, alarmPheremonesYPos, alarmPheremonesWidth, heightForNoTextDescent, 5)
+
     // also add a few rotation buttons
     // counterclockwise
     fill(0, 0, 25)
@@ -607,6 +617,7 @@ function draw() {
     // text("Fleeting Lai-Giri", padding*2 + 1, fleetingLaiGiriYPos + textAscent())
     text("Azure Auspice", padding*2 + 1, azureAuspiceYPos + textAscent())
     text("Analysis", padding*2 + 1, analysisYPos + textAscent())
+    text("Alarm Pheremones", padding*2 + 1, alarmPheremonesYPos + textAscent())
 
 
 
@@ -846,6 +857,22 @@ function draw() {
             logWindowRow2 = logWindowRow1
             logWindowRow1 = {"text": "You left the persisting rectangle AoE(s).", "color": [144, 80, 80]}
         }
+    } if (mechanic === "Alarm Pheremones") { // Arcadion M2S background
+        // display the death donut as just a square, but then add a grey
+        // circle for the base of the board ond top of it
+        fill(240, 50, 50)
+        square(-300, -300, 600)
+        fill(0, 0, 40)
+        circle(0, 0, 560)
+
+        // add 4 lines going through the center at cardinals and intercards
+        stroke(0, 0, 100)
+        line(-280, 0, 280, 0)
+        line(0, -280, 0, 280)
+        line(-280*sin(radians(45)), -280*sin(radians(45)),
+             280*sin(radians(45)), 280*sin(radians(45)))
+        line(280*sin(radians(45)), -280*sin(radians(45)),
+             -280*sin(radians(45)), 280*sin(radians(45)))
     }
 
     // display N, S, W, and E
@@ -1496,30 +1523,26 @@ function draw() {
     let posYDiff = 0
     switch (directions.length) {
         case 1: // move the full 1.3
-            if (directions[0] === Direction.Left) posXDiff -= 1.3
-            if (directions[0] === Direction.Up) posYDiff -= 1.3
-            if (directions[0] === Direction.Right) posXDiff += 1.3
-            if (directions[0] === Direction.Down) posYDiff += 1.3
+            if (directions[0] === Direction.Left) posXDiff -= 1.25
+            if (directions[0] === Direction.Up) posYDiff -= 1.25
+            if (directions[0] === Direction.Right) posXDiff += 1.25
+            if (directions[0] === Direction.Down) posYDiff += 1.25
             break
         case 2: // move 0.92 both directions. They still cancel out each other if they're opposite
-            if (directions[0] === Direction.Left) posXDiff -= 0.92
-            if (directions[0] === Direction.Up) posYDiff -= 0.92
-            if (directions[0] === Direction.Right) posXDiff += 0.92
-            if (directions[0] === Direction.Down) posYDiff += 0.92
-            if (directions[1] === Direction.Up) posYDiff -= 0.92
-            if (directions[1] === Direction.Right) posXDiff += 0.92
-            if (directions[1] === Direction.Down) posYDiff += 0.92
+            if (directions[0] === Direction.Left) posXDiff -= 0.88
+            if (directions[0] === Direction.Up) posYDiff -= 0.88
+            if (directions[0] === Direction.Right) posXDiff += 0.883
+            if (directions[1] === Direction.Up) posYDiff -= 0.88
+            if (directions[1] === Direction.Right) posXDiff += 0.88
+            if (directions[1] === Direction.Down) posYDiff += 0.88
             break
         case 3: // move the full 1.3 each direction. Virtually moving 1 of the directions, as 2 are guaranteed to cancel out.
-            if (directions[0] === Direction.Left) posXDiff -= 1.3
-            if (directions[0] === Direction.Up) posYDiff -= 1.3
-            if (directions[0] === Direction.Right) posXDiff += 1.3
-            if (directions[0] === Direction.Down) posYDiff += 1.3
-            if (directions[1] === Direction.Up) posYDiff -= 1.3
-            if (directions[1] === Direction.Right) posXDiff += 1.3
-            if (directions[1] === Direction.Down) posYDiff += 1.3
-            if (directions[2] === Direction.Right) posXDiff += 1.3
-            if (directions[2] === Direction.Down) posYDiff += 1.3
+            if (directions[0] === Direction.Left) posXDiff -= 1.25
+            if (directions[0] === Direction.Up) posYDiff -= 1.25
+            if (directions[1] === Direction.Up) posYDiff -= 1.25
+            if (directions[1] === Direction.Right) posXDiff += 1.25
+            if (directions[2] === Direction.Right) posXDiff += 1.25
+            if (directions[2] === Direction.Down) posYDiff += 1.25
             break
     } if (directions.length > 0) {
         yourFacing = mixDirections(directions)
@@ -1938,7 +1961,7 @@ function draw() {
     noStroke()
     rect(350, 190, 50, 20) // wood handle
     // then just add a few steel dots
-    fill(240, 8, 65)
+    fill(240, 8, 40)
     rect(350, 190, 10, 20)
     circle(370, 200, 10)
     circle(390, 200, 10)
@@ -2631,12 +2654,39 @@ function mousePressed() {
         gotHitByFirstOrb = false
         gotHitBySecondOrb = false
         gotHitByTether = false
+    } if (mouseX > padding && mouseX < alarmPheremonesWidth + 5 &&
+        mouseY > alarmPheremonesYPos && mouseY < alarmPheremonesYPos
+        + heightForNoTextDescent) {
+        doneWithMechanic = false
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        // log message for reloading mechanic
+        if (mechanic === "Alarm Pheremones") logWindowRow1 =
+            {"text": "Reloading Alarm Pheremones...", "color": [0, 0, 100]}
+        // log message for switching mechanics
+        else logWindowRow1 = {"text": "Switching to Alarm Pheremones...", "color": [0, 0, 100]}
+        partyWiped = false
+        mechanic = "Alarm Pheremones"
+
+        // everything except for you and the background starts off the map
+        drgPosX = -100000
+        drgPosY = -100000
+        sgePosX = -100000
+        sgePosY = -100000
+        warPosX = -100000
+        warPosY = -100000
+        bossPosX = -100000
+        bossPosY = -100000
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
         // click on the microscope to make you turn to the microscope
         angleMode(DEGREES)
         yourFacing = new Direction(-atan2(mouseX - 300, mouseY - 200) + 90)
         angleMode(RADIANS)
     }
+
 }
 
 function sortByGrowingTime(a, b) {
