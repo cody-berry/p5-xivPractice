@@ -1508,6 +1508,14 @@ function draw() {
             }
 
             break
+        case "Alarm Pheremones":
+            for (let AoE of AoEs) {
+                try {
+                    AoE.update()
+                    AoE.displayAoE()
+                } catch {}
+            }
+            break
     }
 
     // display you and your party members in your and their respective position
@@ -2680,6 +2688,14 @@ function mousePressed() {
         warPosY = -100000
         bossPosX = -100000
         bossPosY = -100000
+
+        AoEs.push(new LineAOE(400, 0, 1000, 0, 100, 1000))
+        AoEs.push(new LineAOE(400, 120, 1000, 120, 100, 2000))
+        AoEs.push(new LineAOE(400, 240, 1000, 240, 100, 3000))
+        AoEs.push(new LineAOE(400, 360, 1000, 360, 100, 4000))
+        AoEs.push(new LineAOE(400, 480, 1000, 480, 100, 5000))
+        AoEs.push(new LineAOE(400, 600, 1000, 600, 100, 6000))
+
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
         // click on the microscope to make you turn to the microscope
         angleMode(DEGREES)

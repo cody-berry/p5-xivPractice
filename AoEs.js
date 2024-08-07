@@ -26,7 +26,7 @@ function updateOpacity(AoE) {
         if (AoE.stopAccumulatingOpacity && AoE.opacity > 5 && helper) {
             // decrease the opacity slightly so that you can tell z-index
             // only if the helper is enabled, though!
-            AoE.opacity -= 0.1
+            AoE.opacity -= 0.05
         }
     }
     // if it did go off, then we leave that to the one that's calling the
