@@ -363,7 +363,7 @@ function setup() {
     textFont(variableWidthFont, 20)
     padding = 4
 
-    heightForNoTextDescent = textAscent() + 2
+    heightForNoTextDescent = textAscent() + 4
     heightForTextDescent = textAscent() + 4 + textDescent()/2
 
     counterClockwiseWidth = textWidth("Rotate counterclockwise 90º") + 5
@@ -2689,12 +2689,42 @@ function mousePressed() {
         bossPosX = -100000
         bossPosY = -100000
 
-        AoEs.push(new LineAOE(400, 0, 1000, 0, 100, 1000))
-        AoEs.push(new LineAOE(400, 120, 1000, 120, 100, 2000))
-        AoEs.push(new LineAOE(400, 240, 1000, 240, 100, 3000))
-        AoEs.push(new LineAOE(400, 360, 1000, 360, 100, 4000))
-        AoEs.push(new LineAOE(400, 480, 1000, 480, 100, 5000))
-        AoEs.push(new LineAOE(400, 600, 1000, 600, 100, 6000))
+        AoEs = []
+
+        // then create 16 GroupBees
+        let beeAngles = []
+        for (let i = 0; i < 16; i++) {
+            let angle = random(0, TWO_PI)
+            let x = 700 + cos(angle)*290
+            let y = 300 + sin(angle)*290
+
+            // the angle is invalid if it is a twenty-fifth of the
+            // revolution away from another bee
+            let angleValid = true
+            for (let beeAngle of beeAngles) {
+                if (abs(angle - beeAngle) < TWO_PI/25) {
+                    angleValid = false
+                }
+            }
+
+            // if the angle isn't initially valid, keep selecting angles
+            // until it is valid
+            while (!angleValid) {
+                let angle = random(0, TWO_PI)
+                x = 700 + cos(angle)*290
+                y = 300 + sin(angle)*290
+                angleValid = true
+                for (let beeAngle of beeAngles) {
+                    if (abs(angle - beeAngle) < TWO_PI/25) {
+                        angleValid = false
+                    }
+                }
+            }
+
+            beeAngles.push(angle)
+
+            AoEs.push(new GroupBee(x, y, angle, i*1000 + 1000))
+        }
 
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
         // click on the microscope to make you turn to the microscope

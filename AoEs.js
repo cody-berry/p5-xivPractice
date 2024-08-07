@@ -33,6 +33,80 @@ function updateOpacity(AoE) {
     // function to handle.
 }
 
+// From M2S and M2 (Arcadion), we have group bees that have late-telegraphed
+// line AoEs towards the direction the arrow is pointing.
+class GroupBee {
+    constructor(posX, posY, // the initial position of the group bee
+                spawnAngle, // the angle it spawned in relative to the center
+                spawnsInMillis) { // the number of ms the bee spawns in
+        this.x = posX - 700
+        this.y = posY - 300
+        this.angle = spawnAngle
+        this.arrowAngle = 0
+        this.destX = 0
+        this.destY = 0
+        this.spawnsAt = millis() + spawnsInMillis
+        this.telegraphsArrowAt = this.spawnsAt + 3500
+        this.displaysLineAoEAt = this.telegraphsArrowAt + 5000
+        this.arrowDisappearsAt = this.displaysLineAoEAt + 1000
+        this.madeLineAOE = false
+        this.decidedArrowPosition = false
+    }
+
+    update() {
+        if (millis() > this.displaysLineAoEAt) {
+            if (!this.madeLineAOE) {
+                AoEs.push(new LineAOE(
+                    this.x + 700, this.y + 300, this.destX + 700, this.destY + 300,
+                    100, 1000))
+                this.madeLineAOE = true
+            }
+        } if (millis() > this.spawnsAt) {
+            if (!this.decidedArrowPosition) {
+                // the arrow angle is always towards you
+                this.arrowAngle = atan2(posY - 300 - this.y, posX - 700 - this.x)
+                angleMode(RADIANS)
+                this.destX = this.x + cos(this.arrowAngle)*500
+                this.destY = this.y + sin(this.arrowAngle)*500
+
+                this.decidedArrowPosition = true
+            }
+        }
+    }
+
+    displayAoE() {
+        if (millis() < this.arrowDisappearsAt) {
+            if (millis() > this.spawnsAt) {
+                // display a cute little bee after this.spawnsAt
+                // start with a yellow rectangle
+                fill(50, 100, 90)
+                rect(this.x - 10, this.y - 17, 20, 34)
+
+                // display 2 stripes at the bottom
+                fill(0, 0, 0)
+                rect(this.x - 10, this.y + 3, 20, 5)
+                rect(this.x - 10, this.y + 10, 20, 5)
+
+                // display an eye as a circle
+                circle(this.x + 5, this.y - 10, 6)
+
+                // then display a green arrow if it's time
+                if (millis() > this.telegraphsArrowAt) {
+                    stroke(120, 50, 50)
+                    strokeWeight(5)
+                    line(this.x, this.y,
+                         this.x + cos(this.arrowAngle)*250, this.y + sin(this.arrowAngle)*250)
+                    stroke(120, 50, 100)
+                    strokeWeight(3)
+                    line(this.x + cos(this.arrowAngle)*250, this.y + sin(this.arrowAngle)*250,
+                         this.x + cos(this.arrowAngle)*350, this.y + sin(this.arrowAngle)*350)
+                    noStroke()
+                }
+            }
+        }
+    }
+}
+
 // Displays a circle-shaped AoE on the screen
 class CircleAOE {
     constructor(posX, posY, size, goesOffInMillis) {
