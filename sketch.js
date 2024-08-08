@@ -2698,11 +2698,11 @@ function mousePressed() {
             let x = 700 + cos(angle)*290
             let y = 300 + sin(angle)*290
 
-            // the angle is invalid if it is a twenty-fifth of the
+            // the angle is invalid if it is a twenty-eth of the
             // revolution away from another bee
             let angleValid = true
             for (let beeAngle of beeAngles) {
-                if (abs(angle - beeAngle) < TWO_PI/25) {
+                if (abs(angle - beeAngle) < TWO_PI/20) {
                     angleValid = false
                 }
             }
@@ -2715,7 +2715,7 @@ function mousePressed() {
                 y = 300 + sin(angle)*290
                 angleValid = true
                 for (let beeAngle of beeAngles) {
-                    if (abs(angle - beeAngle) < TWO_PI/25) {
+                    if (abs(angle - beeAngle) < TWO_PI/20) {
                         angleValid = false
                     }
                 }

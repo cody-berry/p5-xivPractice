@@ -91,15 +91,31 @@ class GroupBee {
                 circle(this.x + 5, this.y - 10, 6)
 
                 // then display a green arrow if it's time
+                // it gets much brighter as it moves out, but much thinner
+                // as well
                 if (millis() > this.telegraphsArrowAt) {
                     stroke(120, 50, 50)
-                    strokeWeight(5)
+                    strokeWeight(10)
                     line(this.x, this.y,
+                         this.x + cos(this.arrowAngle)*210, this.y + sin(this.arrowAngle)*210)
+                    stroke(120, 50, 70)
+                    strokeWeight(5)
+                    line(this.x + cos(this.arrowAngle)*210, this.y + sin(this.arrowAngle)*210,
                          this.x + cos(this.arrowAngle)*250, this.y + sin(this.arrowAngle)*250)
-                    stroke(120, 50, 100)
+                    stroke(120, 50, 90)
                     strokeWeight(3)
                     line(this.x + cos(this.arrowAngle)*250, this.y + sin(this.arrowAngle)*250,
-                         this.x + cos(this.arrowAngle)*350, this.y + sin(this.arrowAngle)*350)
+                        this.x + cos(this.arrowAngle)*290, this.y + sin(this.arrowAngle)*290)
+
+                    // if the helper is enabled it draws another line
+                    // directly to the destination.
+                    if (helper) {
+                        stroke(120, 50, 100)
+                        strokeWeight(1)
+                        line(this.x + cos(this.arrowAngle)*290, this.y + sin(this.arrowAngle)*290,
+                             this.destX, this.destY)
+                    }
+
                     noStroke()
                 }
             }
