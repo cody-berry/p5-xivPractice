@@ -243,18 +243,44 @@ class LineAOE {
                 // find the length as well
                 let centerX = (this.x1 + this.x2)/2
                 let centerY = (this.y1 + this.y2)/2
-                let l = sqrt((this.x2 - this.x1)**2 + (this.y2 - this.y1)**23)
+                let l = sqrt((this.x2 - this.x1)**2 + (this.y2 - this.y1)**2)
 
                 // the approach will be to translate the center of the line
                 // to the origin (0, 0) and rotate the line so that it is
-                // horizontal, adn then calculate from there
+                // horizontal, and then calculate from there
 
                 // let's translate your position first, and then find your
                 // angle and distance from the center
-                let posXTranslated = posX - centerX
-                let posYTranslated = posY - centerY
+                let posXTranslated = posX - centerX - 700
+                let posYTranslated = posY - centerY - 300
                 let distFromCent = sqrt(posXTranslated**2 + posYTranslated**2)
                 let angle = atan2(posYTranslated, posXTranslated)
+                print(posXTranslated, posYTranslated)
+                print(distFromCent, angle)
+
+                // rotate your position around the origin, calculating the
+                // final position with distFromCenter and angle
+                let posXRotated = cos(angle - this.angleOfLine)*distFromCent
+                let posYRotated = sin(angle - this.angleOfLine)*distFromCent
+
+                // now check if that is within the rectangle (width of l,
+                // height of thickness)
+
+                print(posXRotated, posYRotated)
+                print(l, this.thickness)
+                if (posXRotated < l/2 &&
+                    posXRotated > -l/2 &&
+                    posYRotated < this.thickness/2 &&
+                    posYRotated > -this.thickness/2) {
+                    partyWiped = true
+                    causeOfWipe = "You got hit by a line AOE."
+                    logWindowRow6 = logWindowRow5
+                    logWindowRow5 = logWindowRow4
+                    logWindowRow4 = logWindowRow3
+                    logWindowRow3 = logWindowRow2
+                    logWindowRow2 = logWindowRow1
+                    logWindowRow1 = {"text": "You got hit by a line.", "color": [0, 80, 80]}
+                }
             }
         }
     }

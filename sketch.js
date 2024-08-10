@@ -2698,7 +2698,7 @@ function mousePressed() {
             // this helps to prevent overlap
             let angle = random([
                 0, PI/8, PI/4, 3*PI/8, PI/2, 5*PI/8, 3*PI/4, 7*PI/8,
-                PI, 9*PI/8, 5*PI/4, 11*PI/8, 3*PI/2, 13*PI/8, 7*PI/4, 15*PI/8
+                9*PI/8, 5*PI/4, 11*PI/8, 3*PI/2, 13*PI/8, 7*PI/4, 15*PI/8
             ])
             let x = 700 + cos(angle)*290
             let y = 300 + sin(angle)*290
