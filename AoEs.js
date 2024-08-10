@@ -61,13 +61,13 @@ class GroupBee {
                     100, 1000))
                 this.madeLineAOE = true
             }
-        } if (millis() > this.spawnsAt) {
+        } if (millis() > this.telegraphsArrowAt) {
             if (!this.decidedArrowPosition) {
                 // the arrow angle is always towards you
                 this.arrowAngle = atan2(posY - 300 - this.y, posX - 700 - this.x)
                 angleMode(RADIANS)
-                this.destX = this.x + cos(this.arrowAngle)*500
-                this.destY = this.y + sin(this.arrowAngle)*500
+                this.destX = this.x + cos(this.arrowAngle)*580
+                this.destY = this.y + sin(this.arrowAngle)*580
 
                 this.decidedArrowPosition = true
             }
@@ -222,6 +222,7 @@ class LineAOE {
         this.goesOffAt = millis() + goesOffInMillis
         this.opacity = 0
         this.stopAccumulatingOpacity = false
+        this.wentOff = false
     }
 
     // update the AoE by checking whether it's gone off and updating its
@@ -233,6 +234,28 @@ class LineAOE {
             stroke(0, 100, 50, min(this.opacity*20, 100)/2)
             strokeWeight(this.thickness)
             line(this.x1, this.y1, this.x2, this.y2)
+
+            if (!this.wentOff) {
+                this.wentOff = true
+
+                // we see whether you got hit
+                // find the center of the line
+                // find the length as well
+                let centerX = (this.x1 + this.x2)/2
+                let centerY = (this.y1 + this.y2)/2
+                let l = sqrt((this.x2 - this.x1)**2 + (this.y2 - this.y1)**23)
+
+                // the approach will be to translate the center of the line
+                // to the origin (0, 0) and rotate the line so that it is
+                // horizontal, adn then calculate from there
+
+                // let's translate your position first, and then find your
+                // angle and distance from the center
+                let posXTranslated = posX - centerX
+                let posYTranslated = posY - centerY
+                let distFromCent = sqrt(posXTranslated**2 + posYTranslated**2)
+                let angle = atan2(posYTranslated, posXTranslated)
+            }
         }
     }
 
