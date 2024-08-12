@@ -608,18 +608,16 @@ function draw() {
 
     fill(0, 0, 100)
     noStroke()
-    text("Rotate counterclockwise 90º", padding*2 + 1, counterClockwiseYPos + textAscent() - 1)
-    text("Rotate clockwise 90º", padding*2 + 1, clockwiseYPos + textAscent() - 1)
-    text("Exaflares", padding*2 + 1, exaflareYPos + textAscent() - 1)
+    text("Rotate counterclockwise 90º", padding * 2 + 1, counterClockwiseYPos + textAscent() - 1)
+    text("Rotate clockwise 90º", padding * 2 + 1, clockwiseYPos + textAscent() - 1)
+    text("Exaflares", padding * 2 + 1, exaflareYPos + textAscent() - 1)
     // text("Fighting Spirits", padding*2 + 1, fightingSpiritsYPos + textAscent())
     // text("Malformed Reincarnation", padding*2 + 1, malformedReincarnationYPos + textAscent() - 1)
-    text("Triple Kasumi-Giri", padding*2 + 1, tripleKasumiGiriYPos + textAscent())
+    text("Triple Kasumi-Giri", padding * 2 + 1, tripleKasumiGiriYPos + textAscent())
     // text("Fleeting Lai-Giri", padding*2 + 1, fleetingLaiGiriYPos + textAscent())
-    text("Azure Auspice", padding*2 + 1, azureAuspiceYPos + textAscent())
-    text("Analysis", padding*2 + 1, analysisYPos + textAscent())
-    text("Alarm Pheremones", padding*2 + 1, alarmPheremonesYPos + textAscent())
-
-
+    text("Azure Auspice", padding * 2 + 1, azureAuspiceYPos + textAscent())
+    text("Analysis", padding * 2 + 1, analysisYPos + textAscent())
+    text("Alarm Pheremones", padding * 2 + 1, alarmPheremonesYPos + textAscent())
 
 
     push()
@@ -684,9 +682,10 @@ function draw() {
         strokeWeight(1)
         line(280, -280, 280, 280) // total bottom x line
         line(-280, 280, 280, 280) // total right y line
-    } if (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri" || mechanic === "Azure Auspice") { // Moko
-        let rowHeight = 600/19 // there are 19 rows and 20 columns
-        let columnWidth = 600/20
+    }
+    if (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri" || mechanic === "Azure Auspice") { // Moko
+        let rowHeight = 600 / 19 // there are 19 rows and 20 columns
+        let columnWidth = 600 / 20
         fill(0, 0, 50)
         rect(-300, -300, 600, 600)
 
@@ -721,18 +720,18 @@ function draw() {
             // these are all the horizontal lines
             if ([1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19].includes(yIncrements)) {
 
-                line(-300, -300 + rowHeight*yIncrements, 300, -300 + rowHeight*yIncrements) // straight line across
+                line(-300, -300 + rowHeight * yIncrements, 300, -300 + rowHeight * yIncrements) // straight line across
             } else { // many fragmented lines across
                 line(-300 + columnWidth, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 3, -300 + rowHeight * yIncrements)
+                    -300 + columnWidth * 3, -300 + rowHeight * yIncrements)
                 line(-300 + columnWidth * 5, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 7, -300 + rowHeight * yIncrements)
+                    -300 + columnWidth * 7, -300 + rowHeight * yIncrements)
                 line(-300 + columnWidth * 9, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 11, -300 + rowHeight * yIncrements)
+                    -300 + columnWidth * 11, -300 + rowHeight * yIncrements)
                 line(-300 + columnWidth * 13, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 15, -300 + rowHeight * yIncrements)
+                    -300 + columnWidth * 15, -300 + rowHeight * yIncrements)
                 line(-300 + columnWidth * 17, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 19, -300 + rowHeight * yIncrements)
+                    -300 + columnWidth * 19, -300 + rowHeight * yIncrements)
             }
 
 
@@ -759,33 +758,33 @@ function draw() {
             //                     19
             if ([1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17].includes(yIncrements)) {
                 line(-300 + columnWidth, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 3, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 3, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 3, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 4, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 4, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 4, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 5, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 5, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 5, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 7, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 7, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 7, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 8, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 8, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 8, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 9, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 9, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 9, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 11, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 11, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 11, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 12, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 12, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 12, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 13, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 13, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 13, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 15, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 15, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 15, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 16, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 16, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 16, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 17, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 17, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 17, -300 + rowHeight * (yIncrements + 1))
                 line(-300 + columnWidth * 19, -300 + rowHeight * yIncrements,
-                     -300 + columnWidth * 19, -300 + rowHeight * (yIncrements + 1))
+                    -300 + columnWidth * 19, -300 + rowHeight * (yIncrements + 1))
             }
         }
 
@@ -799,13 +798,14 @@ function draw() {
         vertex(300, 300)
         vertex(300, -300)
         beginContour()
-        vertex(-300 + columnWidth*2, -300 + rowHeight*2 - 3)
-        vertex(700 - columnWidth*2, -300 + rowHeight*2 - 3)
-        vertex(700 - columnWidth*2, 300 - rowHeight*2 + 3)
-        vertex(-300 + columnWidth*2, 300 - rowHeight*2 + 3)
+        vertex(-300 + columnWidth * 2, -300 + rowHeight * 2 - 3)
+        vertex(700 - columnWidth * 2, -300 + rowHeight * 2 - 3)
+        vertex(700 - columnWidth * 2, 300 - rowHeight * 2 + 3)
+        vertex(-300 + columnWidth * 2, 300 - rowHeight * 2 + 3)
         endContour()
         endShape()
-    } if (mechanic === "Analysis") { // Lala background
+    }
+    if (mechanic === "Analysis") { // Lala background
         // there are 5 rows and 5 columns, and all we really need to do is
         // display that in the 560 width and 560 height that we have after
         // making the outside unsafe. Each square has a size of 560/5 = 112.
@@ -848,16 +848,24 @@ function draw() {
             logWindowRow4 = logWindowRow3
             logWindowRow3 = logWindowRow2
             logWindowRow2 = logWindowRow1
-            logWindowRow1 = {"text": "You are in a persisting rectangle AoE.", "color": [0, 80, 80]}
-        } if (!inRectangleAoE && previouslyInRectangleAoE) {
+            logWindowRow1 = {
+                "text": "You are in a persisting rectangle AoE.",
+                "color": [0, 80, 80]
+            }
+        }
+        if (!inRectangleAoE && previouslyInRectangleAoE) {
             logWindowRow6 = logWindowRow5
             logWindowRow5 = logWindowRow4
             logWindowRow4 = logWindowRow3
             logWindowRow3 = logWindowRow2
             logWindowRow2 = logWindowRow1
-            logWindowRow1 = {"text": "You left the persisting rectangle AoE(s).", "color": [144, 80, 80]}
+            logWindowRow1 = {
+                "text": "You left the persisting rectangle AoE(s).",
+                "color": [144, 80, 80]
+            }
         }
-    } if (mechanic === "Alarm Pheremones") { // Arcadion M2S background
+    }
+    if (mechanic === "Alarm Pheremones") { // Arcadion M2S background
         // display the death donut as just a square, but then add a grey
         // circle for the base of the board ond top of it
         fill(240, 50, 50)
@@ -869,10 +877,10 @@ function draw() {
         stroke(0, 0, 100)
         line(-280, 0, 280, 0)
         line(0, -280, 0, 280)
-        line(-280*sin(radians(45)), -280*sin(radians(45)),
-             280*sin(radians(45)), 280*sin(radians(45)))
-        line(280*sin(radians(45)), -280*sin(radians(45)),
-             -280*sin(radians(45)), 280*sin(radians(45)))
+        line(-280 * sin(radians(45)), -280 * sin(radians(45)),
+            280 * sin(radians(45)), 280 * sin(radians(45)))
+        line(280 * sin(radians(45)), -280 * sin(radians(45)),
+            -280 * sin(radians(45)), 280 * sin(radians(45)))
     }
 
     // display N, S, W, and E
@@ -881,13 +889,13 @@ function draw() {
     // red color for north
     fill(0, 100, 100)
     noStroke()
-    text("N", textWidth("N")/2, -300 + textAscent())
+    text("N", textWidth("N") / 2, -300 + textAscent())
 
     // creamy color for east, south, and west
     fill(45, 20, 100)
-    text("E", 300 - textWidth("E") - 5, textAscent()/2)
-    text("S", -textWidth("S")/2, 298)
-    text("W", -298, textAscent()/2)
+    text("E", 300 - textWidth("E") - 5, textAscent() / 2)
+    text("S", -textWidth("S") / 2, 298)
+    text("W", -298, textAscent() / 2)
 
     textSize(30)
     switch (mechanic) {
@@ -1026,16 +1034,19 @@ function draw() {
             // along with the triangle pointing the way that the boss is facing
             if (bossFacing === 1) { // up
                 triangle(bossPosX - 710, bossPosY - 380, bossPosX - 690,
-                         bossPosY - 380, bossPosX - 700, bossPosY - 396)
-            } if (bossFacing === 2) { // right
+                    bossPosY - 380, bossPosX - 700, bossPosY - 396)
+            }
+            if (bossFacing === 2) { // right
                 triangle(bossPosX - 620, bossPosY - 310, bossPosX - 620,
-                         bossPosY - 290, bossPosX - 604, bossPosY - 300)
-            } if (bossFacing === 3) { // down
+                    bossPosY - 290, bossPosX - 604, bossPosY - 300)
+            }
+            if (bossFacing === 3) { // down
                 triangle(bossPosX - 710, bossPosY - 220, bossPosX - 690,
-                         bossPosY - 220, bossPosX - 700, bossPosY - 204)
-            } if (bossFacing === 4) { // left
+                    bossPosY - 220, bossPosX - 700, bossPosY - 204)
+            }
+            if (bossFacing === 4) { // left
                 triangle(bossPosX - 780, bossPosY - 310, bossPosX - 780,
-                         bossPosY - 290, bossPosX - 796, bossPosY - 300)
+                    bossPosY - 290, bossPosX - 796, bossPosY - 300)
             }
 
             // first cleave
@@ -1054,8 +1065,8 @@ function draw() {
                 // now add the cone
                 AoEs.push(
                     new ConeAOE(bossPosX, bossPosY, 848,
-                        225 + cleaveOneSafeDirection*90 - 90 + bossFacing*90,
-                        135 + cleaveOneSafeDirection*90 - 90 + bossFacing*90, 0)
+                        225 + cleaveOneSafeDirection * 90 - 90 + bossFacing * 90,
+                        135 + cleaveOneSafeDirection * 90 - 90 + bossFacing * 90, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
@@ -1078,8 +1089,8 @@ function draw() {
                 // now add the cone
                 AoEs.push(
                     new ConeAOE(bossPosX, bossPosY, 848,
-                        225 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90,
-                        135 + cleaveTwoSafeDirection*90 - 90 + bossFacing*90, 0)
+                        225 + cleaveTwoSafeDirection * 90 - 90 + bossFacing * 90,
+                        135 + cleaveTwoSafeDirection * 90 - 90 + bossFacing * 90, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
@@ -1102,8 +1113,8 @@ function draw() {
                 // now add the cone
                 AoEs.push(
                     new ConeAOE(bossPosX, bossPosY, 848,
-                        225 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90,
-                        135 + cleaveThreeSafeDirection*90 - 90 + bossFacing*90, 0)
+                        225 + cleaveThreeSafeDirection * 90 - 90 + bossFacing * 90,
+                        135 + cleaveThreeSafeDirection * 90 - 90 + bossFacing * 90, 0)
                 )
                 AoEs[AoEs.length - 1].opacity = 10
 
@@ -1302,7 +1313,10 @@ function draw() {
                         logWindowRow4 = logWindowRow3
                         logWindowRow3 = logWindowRow2
                         logWindowRow2 = logWindowRow1
-                        logWindowRow1 = {"text": "You got hit by the first orb.", "color": [0, 80, 80]}
+                        logWindowRow1 = {
+                            "text": "You got hit by the first orb.",
+                            "color": [0, 80, 80]
+                        }
                         gotHitByFirstOrb = true
                     } else {
                         logWindowRow6 = logWindowRow5
@@ -1310,7 +1324,10 @@ function draw() {
                         logWindowRow4 = logWindowRow3
                         logWindowRow3 = logWindowRow2
                         logWindowRow2 = logWindowRow1
-                        logWindowRow1 = {"text": "You didn't get hit by the first orb.", "color": [144, 80, 80]}
+                        logWindowRow1 = {
+                            "text": "You didn't get hit by the first orb.",
+                            "color": [144, 80, 80]
+                        }
                     }
                     angleMode(RADIANS)
                 }
@@ -1331,7 +1348,7 @@ function draw() {
             }
 
             if (millis() - mechanicStarted < 13800 ||
-                 (millis() - mechanicStarted < 14900 && possibility % 2 === 0)) {
+                (millis() - mechanicStarted < 14900 && possibility % 2 === 0)) {
                 stroke(0, 0, 50)
                 strokeWeight(30)
                 point(orbTwoPosition[0] - 700, orbTwoPosition[1] - 300)
@@ -1377,7 +1394,10 @@ function draw() {
                         logWindowRow4 = logWindowRow3
                         logWindowRow3 = logWindowRow2
                         logWindowRow2 = logWindowRow1
-                        logWindowRow1 = {"text": "You got hit by the second orb.", "color": [0, 80, 80]}
+                        logWindowRow1 = {
+                            "text": "You got hit by the second orb.",
+                            "color": [0, 80, 80]
+                        }
                         gotHitBySecondOrb = true
                     } else {
                         logWindowRow6 = logWindowRow5
@@ -1385,7 +1405,10 @@ function draw() {
                         logWindowRow4 = logWindowRow3
                         logWindowRow3 = logWindowRow2
                         logWindowRow2 = logWindowRow1
-                        logWindowRow1 = {"text": "You didn't get hit by the second orb.", "color": [144, 80, 80]}
+                        logWindowRow1 = {
+                            "text": "You didn't get hit by the second orb.",
+                            "color": [144, 80, 80]
+                        }
                     }
                     angleMode(RADIANS)
                 }
@@ -1448,16 +1471,17 @@ function draw() {
                     // avoid modifying the direction itself
                     cleaveOneSafeDirection = new Direction(cleaveOneSafeDirection.angle)
                     cleaveOneSafeDirection.angle +=
-                        ((bossRotationClockwise) ? 90 : -90)*bossBuffNumber
+                        ((bossRotationClockwise) ? 90 : -90) * bossBuffNumber
                 }
-            } if (millis() - mechanicStarted > 19950) {
+            }
+            if (millis() - mechanicStarted > 19950) {
                 if (!yourRotationWentOff) {
                     yourRotationWentOff = true
 
                     // rotate
                     debuffDirection = new Direction(debuffDirection.angle)
                     debuffDirection.angle +=
-                        ((yourRotationClockwise) ? 90 : -90)*yourDebuffNumber
+                        ((yourRotationClockwise) ? 90 : -90) * yourDebuffNumber
 
                     // then make the tether go off
                     // check if angle is correct
@@ -1479,14 +1503,20 @@ function draw() {
                         logWindowRow4 = logWindowRow3
                         logWindowRow3 = logWindowRow2
                         logWindowRow2 = logWindowRow1
-                        logWindowRow1 = {"text": "You got hit by the tether.", "color": [0, 80, 80]}
+                        logWindowRow1 = {
+                            "text": "You got hit by the tether.",
+                            "color": [0, 80, 80]
+                        }
                     } else {
                         logWindowRow6 = logWindowRow5
                         logWindowRow5 = logWindowRow4
                         logWindowRow4 = logWindowRow3
                         logWindowRow3 = logWindowRow2
                         logWindowRow2 = logWindowRow1
-                        logWindowRow1 = {"text": "You didn't get hit by the tether.", "color": [144, 80, 80]}
+                        logWindowRow1 = {
+                            "text": "You didn't get hit by the tether.",
+                            "color": [144, 80, 80]
+                        }
                     }
                     angleMode(RADIANS)
                 }
@@ -1513,7 +1543,8 @@ function draw() {
                 try {
                     AoE.update()
                     AoE.displayAoE()
-                } catch {}
+                } catch {
+                }
             }
             break
     }
@@ -1552,7 +1583,8 @@ function draw() {
             if (directions[2] === Direction.Right) posXDiff += 1.25
             if (directions[2] === Direction.Down) posYDiff += 1.25
             break
-    } if (directions.length > 0) {
+    }
+    if (directions.length > 0) {
         yourFacing = mixDirections(directions)
 
         // we modify the directions differently based on the board rotation angle
@@ -1560,15 +1592,18 @@ function draw() {
             posX += posXDiff
             posY += posYDiff
             yourFacing = new Direction(yourFacing.angle)
-        } if (45 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 135) {
+        }
+        if (45 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 135) {
             posX += posYDiff
             posY -= posXDiff
             yourFacing = new Direction(yourFacing.angle - 90)
-        } if (135 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 225) {
+        }
+        if (135 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 225) {
             posX -= posXDiff
             posY -= posYDiff
             yourFacing = new Direction(yourFacing.angle - 180)
-        } if (225 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 315) {
+        }
+        if (225 < boardRotationDegrees.target % 360 && boardRotationDegrees.target % 360 < 315) {
             posX -= posYDiff
             posY += posXDiff
             yourFacing = new Direction(yourFacing.angle - 270)
@@ -1698,7 +1733,7 @@ function draw() {
             // ones
             for (let player of [1, 2, 3, 4]) {
                 // each player is displayed on a different y-coordinate
-                let yPos = 45 + player*50
+                let yPos = 45 + player * 50
                 if (triplesGivenTo.includes(player)) {
                     if (majorityRed.includes(player)) { // drop blue, soak red-red-red
                         stroke(240, 100, 100)
@@ -1794,10 +1829,11 @@ function draw() {
                 // display an arc with the cleaveOneSafeDirection not included
                 // (this is filled as a pie segment)
                 // not rotated towards boss facing!
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection*90,
-                    135 + cleaveOneSafeDirection*90)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveOneSafeDirection * 90,
+                    135 + cleaveOneSafeDirection * 90)
                 angleMode(RADIANS)
-            } if (millis() - mechanicStarted > 2500 && millis() - mechanicStarted < 4500) { // cleave #2
+            }
+            if (millis() - mechanicStarted > 2500 && millis() - mechanicStarted < 4500) { // cleave #2
                 fill(0, 0, 0)
                 rect(bossPosX - 15, bossPosY - 45, 30, 30)
                 if (cleaveTwoColor === "orange") {
@@ -1809,10 +1845,11 @@ function draw() {
 
                 // display an arc with the cleaveTwoSafeDirection not included
                 // (this is filled as a pie segment)
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection*90,
-                    135 + cleaveTwoSafeDirection*90)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveTwoSafeDirection * 90,
+                    135 + cleaveTwoSafeDirection * 90)
                 angleMode(RADIANS)
-            } if (millis() - mechanicStarted > 5000 && millis() - mechanicStarted < 7000) { // cleave #2
+            }
+            if (millis() - mechanicStarted > 5000 && millis() - mechanicStarted < 7000) { // cleave #2
                 fill(0, 0, 0)
                 rect(bossPosX - 15, bossPosY - 45, 30, 30)
                 if (cleaveThreeColor === "orange") {
@@ -1824,8 +1861,8 @@ function draw() {
 
                 // display an arc with the cleaveThreeSafeDirection not included
                 // (this is filled as a pie segment)
-                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection*90,
-                    135 + cleaveThreeSafeDirection*90)
+                arc(bossPosX, bossPosY - 30, 25, 25, 225 + cleaveThreeSafeDirection * 90,
+                    135 + cleaveThreeSafeDirection * 90)
                 angleMode(RADIANS)
             }
             break
@@ -1876,7 +1913,7 @@ function draw() {
                 rect(bossPosX - 20, bossPosY - 60, 40, 40)
                 fill(300, 100, 30) // purple-ish color for shadow cleave
                 angleMode(DEGREES)
-                arc(bossPosX, bossPosY - 40, 30, 30, 225 + cleaveOneSafeDirection*90, 135 + cleaveOneSafeDirection*90)
+                arc(bossPosX, bossPosY - 40, 30, 30, 225 + cleaveOneSafeDirection * 90, 135 + cleaveOneSafeDirection * 90)
                 angleMode(RADIANS)
             }
             break
@@ -1991,7 +2028,7 @@ function draw() {
 
     // if your mouse is in the microscope, highlight your facing if your self in
     // the microscope would turn to the mouse
-    if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
+    if (sqrt((mouseX - 300) ** 2 + (mouseY - 200) ** 2) < 50) {
         angleMode(DEGREES)
         push()
         translate(300, 200)
@@ -2002,32 +2039,69 @@ function draw() {
         angleMode(RADIANS)
     }
 
-    if ((posX < 432 || posY < 32 ||
-        posX > 978 || posY > 578) ||
-        ((posX < 42 || posY < 42 ||
-        posX > 958 || posY > 558)) &&
-        (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri")) {
-        if (!inEdgeOfArena) {
-            inEdgeOfArena = true
-            logWindowRow6 = logWindowRow5
-            logWindowRow5 = logWindowRow4
-            logWindowRow4 = logWindowRow3
-            logWindowRow3 = logWindowRow2
-            logWindowRow2 = logWindowRow1
-            logWindowRow1 = {"text": "You are in the edge of the arena.", "color": [0, 80, 80]}
-        }
+    let inEdgeOfArenaThisFrame = false
+
+    // for Gorai (exoflares, fighting spirits, malformed reincarnation), the
+    // board is 560x560, so the death wall is 20 pixels on each side
+    if (mechanic === "Exoflares" || mechanic === "Fighting Spirits" || mechanic === "Malformed Reincarnation") {
+        if (posX > 980 ||
+            posX < 420 ||
+            posY > 580 ||
+            posY < 20)
+            inEdgeOfArenaThisFrame = true
+    }
+
+    // for Moko (triple kasumi-giri, fleeting lai-giri, azure auspice), the
+    // boar is visible all 600x600, but there is a death wall with 30 pixels
+    // on each side
+    if (mechanic === "Triple Kasumi-Giri" || mechanic === "Fleeting Lai-Giri" || mechanic === "Azure Auspice") { // Moko
+        if (posX > 970 ||
+            posX < 430 ||
+            posY > 570 ||
+            posY < 30)
+            inEdgeOfArenaThisFrame = true
+    }
+
+    // for Lala (analysis), the board is 560x560, so again the deal wall is
+    // 20 pixels on each side
+    if (mechanic === "Analysis") {
+        if (posX > 980 ||
+            posX < 420 ||
+            posY > 580 ||
+            posY < 20)
+            inEdgeOfArenaThisFrame = true
+    }
+
+    // for M2S (Honey B. Lovely Alarm Pheremones ), the board is a circle with a
+    // radius of 280, so the death wall is a donut with a donut hole radius
+    // of 280.
+    if (mechanic === "Alarm Pheremones") {
+        if (sqrt((posX - 700)**2 + (posY - 300)**2) > 280)
+            inEdgeOfArenaThisFrame = true
+    }
+
+
+    // based on whether you're in the edge this frame, toggle inEdgeOfArena
+    // and display the appropriate log window message (without spamming)
+    if (!inEdgeOfArena && inEdgeOfArenaThisFrame) {
         partyWiped = true
         causeOfWipe = "You entered the edge of the arena."
-    } else {
-        if (inEdgeOfArena) {
-            inEdgeOfArena = false
-            logWindowRow6 = logWindowRow5
-            logWindowRow5 = logWindowRow4
-            logWindowRow4 = logWindowRow3
-            logWindowRow3 = logWindowRow2
-            logWindowRow2 = logWindowRow1
-            logWindowRow1 = {"text": "You left the edge of the arena.", "color": [144, 80, 80]}
-        }
+        inEdgeOfArena = true
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        logWindowRow1 = {"text": "You are in the edge of the arena.", "color": [0, 80, 80]}
+    }
+    if (inEdgeOfArena && !inEdgeOfArenaThisFrame) {
+        inEdgeOfArena = false
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        logWindowRow1 = {"text": "You left the edge of the arena.", "color": [144, 80, 80]}
     }
 
     if (partyWiped === true) {
