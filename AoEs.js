@@ -255,8 +255,6 @@ class LineAOE {
                 let posYTranslated = posY - centerY - 300
                 let distFromCent = sqrt(posXTranslated**2 + posYTranslated**2)
                 let angle = atan2(posYTranslated, posXTranslated)
-                print(posXTranslated, posYTranslated)
-                print(distFromCent, angle)
 
                 // rotate your position around the origin, calculating the
                 // final position with distFromCenter and angle
@@ -265,9 +263,6 @@ class LineAOE {
 
                 // now check if that is within the rectangle (width of l,
                 // height of thickness)
-
-                print(posXRotated, posYRotated)
-                print(l, this.thickness)
                 if (posXRotated < l/2 &&
                     posXRotated > -l/2 &&
                     posYRotated < this.thickness/2 &&
@@ -280,6 +275,13 @@ class LineAOE {
                     logWindowRow3 = logWindowRow2
                     logWindowRow2 = logWindowRow1
                     logWindowRow1 = {"text": "You got hit by a line.", "color": [0, 80, 80]}
+
+                    // in Alarm Pheremones, getting hit by one of these gets
+                    // you knocked back to x2, y2
+                    if (mechanic === "Alarm Pheremones") {
+                        posX = this.x2 + 700
+                        posY = this.y2 + 300
+                    }
                 }
             }
         }
