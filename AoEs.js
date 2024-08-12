@@ -223,6 +223,7 @@ class LineAOE {
         this.opacity = 0
         this.stopAccumulatingOpacity = false
         this.wentOff = false
+        this.youGotHitByLineAOE = false
     }
 
     // update the AoE by checking whether it's gone off and updating its
@@ -275,13 +276,7 @@ class LineAOE {
                     logWindowRow3 = logWindowRow2
                     logWindowRow2 = logWindowRow1
                     logWindowRow1 = {"text": "You got hit by a line.", "color": [0, 80, 80]}
-
-                    // in Alarm Pheremones, getting hit by one of these gets
-                    // you knocked back to x2, y2
-                    if (mechanic === "Alarm Pheremones") {
-                        posX = this.x2 + 700
-                        posY = this.y2 + 300
-                    }
+                    this.youGotHitByLineAOE = true
                 }
             }
         }
@@ -293,6 +288,35 @@ class LineAOE {
             stroke(20, 100, 100, this.opacity)
             strokeWeight(this.thickness)
             line(this.x1, this.y1, this.x2, this.y2)
+        } else {
+            // in Alarm Pheremones, getting hit by one of these gets
+            // you knocked back to x2, y2, 5 pixels every frame
+            // since we already displayed the line AOE in update(), all we
+            // need to do is update your position to be knocked back (Alarm
+            // Pheremones only)
+            if (mechanic === "Alarm Pheremones" && this.youGotHitByLineAOE) {
+                // if you're within 20 pixels of the destination of the line
+                // AOE you stop getting knocked back. turning off
+                // this.youGotHitByLineAOE effectively achieves that
+                if ((posX - this.x2 - 700)**2 + (posY - this.y2 - 300)**2 < 400) {
+                    this.youGotHitByLineAOE = false
+                } else {
+                    // otherwise, you get knocked back 5 pixels towards x2, y2
+                    let angleFromSecondCoordinate =
+                        atan2(posY - this.y2 - 300, posX - this.x2 - 700)
+                    let distFromSecondCoordinate = sqrt((posX - this.x2 - 700)**2 + (posY - this.y2 - 300)**2)
+                    posX -= cos(angleFromSecondCoordinate)*(1000/distFromSecondCoordinate)
+                    posY -= sin(angleFromSecondCoordinate)*(1000/distFromSecondCoordinate)
+
+                    // also display where you're getting knocked back to
+                    fill(0, 0, 0)
+                    noStroke()
+                    circle(this.x2, this.y2, 40)
+                    stroke(0, 0, 0)
+                    strokeWeight(2)
+                    line(posX - 700, posY - 300, this.x2, this.y2)
+                }
+            }
         }
     }
 }
