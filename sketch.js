@@ -383,8 +383,8 @@ function setup() {
     alarmPheremonesWidth = textWidth("Alarm Pheremones") + padding*2
     chainDeathmatchWidth = textWidth("Chain Deathmatch") + padding*2
 
-    counterClockwiseYPos = 300
-    clockwiseYPos = 340
+    counterClockwiseYPos = 260
+    clockwiseYPos = counterClockwiseYPos + heightForNoTextDescent + 5
     // exaflareYPos = 380
     // fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
     // malformedReincarnationYPos = fightingSpiritsYPos + heightForTextDescent + 5
@@ -607,15 +607,16 @@ function draw() {
     // also add a few rotation buttons
     // counterclockwise
     fill(0, 0, 25)
+    noStroke()
     if (mouseX > padding && mouseX < counterClockwiseWidth + 5 &&
-        mouseY > counterClockwiseYPos && mouseY < counterClockwiseYPos + heightForNoTextDescent) fill(0, 0, 15)
+        mouseY > counterClockwiseYPos && mouseY < counterClockwiseYPos + heightForNoTextDescent) fill(0, 0, 20)
     rect(padding + 1, counterClockwiseYPos, counterClockwiseWidth, heightForNoTextDescent, 5)
 
     // clockwise
     fill(0, 0, 25)
     if (mouseX > padding && mouseX < clockwiseWidth + 5 &&
         mouseY > clockwiseYPos && mouseY < clockwiseYPos + heightForNoTextDescent)
-        fill(0, 0, 15)
+        fill(0, 0, 20)
     rect(padding + 1, clockwiseYPos, clockwiseWidth, heightForNoTextDescent, 5)
 
     fill(0, 0, 100)
