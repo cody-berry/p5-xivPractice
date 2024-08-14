@@ -300,21 +300,16 @@ class LineAOE {
                 // this.youGotHitByLineAOE effectively achieves that
                 if ((posX - this.x2 - 700)**2 + (posY - this.y2 - 300)**2 < 400) {
                     this.youGotHitByLineAOE = false
+                    posX = min(984, max(posX, 416))
+                    posY = min(584, max(posY, 16))
                 } else {
-                    // otherwise, you get knocked back 5 pixels towards x2, y2
+                    // otherwise, you get knocked back towards x2, y2,
+                    // faster the closer you are
                     let angleFromSecondCoordinate =
                         atan2(posY - this.y2 - 300, posX - this.x2 - 700)
                     let distFromSecondCoordinate = sqrt((posX - this.x2 - 700)**2 + (posY - this.y2 - 300)**2)
-                    posX -= cos(angleFromSecondCoordinate)*(1000/distFromSecondCoordinate)
-                    posY -= sin(angleFromSecondCoordinate)*(1000/distFromSecondCoordinate)
-
-                    // also display where you're getting knocked back to
-                    fill(0, 0, 0)
-                    noStroke()
-                    circle(this.x2, this.y2, 40)
-                    stroke(0, 0, 0)
-                    strokeWeight(2)
-                    line(posX - 700, posY - 300, this.x2, this.y2)
+                    posX -= cos(angleFromSecondCoordinate)*(2000/distFromSecondCoordinate)
+                    posY -= sin(angleFromSecondCoordinate)*(2000/distFromSecondCoordinate)
                 }
             }
         }

@@ -132,6 +132,7 @@ let gotHitByTether
 
 let heightForNoTextDescent
 let heightForTextDescent
+
 let counterClockwiseWidth
 let clockwiseWidth
 let exaflareWidth
@@ -142,6 +143,8 @@ let fleetingLaiGiriWidth
 let azureAuspiceWidth
 let analysisWidth
 let alarmPheremonesWidth
+let chainDeathmatchWidth
+
 let counterClockwiseYPos
 let clockwiseYPos
 let exaflareYPos
@@ -152,6 +155,8 @@ let fleetingLaiGiriYPos
 let azureAuspiceYPos
 let analysisYPos
 let alarmPheremonesYPos
+let chainDeathmatchYPos
+
 let padding
 
 let logWindowRow6
@@ -376,17 +381,19 @@ function setup() {
     azureAuspiceWidth = textWidth("Azure Auspice") + padding*2
     analysisWidth = textWidth("Analysis") + padding*2
     alarmPheremonesWidth = textWidth("Alarm Pheremones") + padding*2
+    chainDeathmatchWidth = textWidth("Chain Deathmatch") + padding*2
 
     counterClockwiseYPos = 300
     clockwiseYPos = 340
-    exaflareYPos = 380
+    // exaflareYPos = 380
     // fightingSpiritsYPos = exaflareYPos + heightForNoTextDescent + 5
     // malformedReincarnationYPos = fightingSpiritsYPos + heightForTextDescent + 5
-    tripleKasumiGiriYPos = exaflareYPos + heightForNoTextDescent + 5
+    tripleKasumiGiriYPos = 380
     // fleetingLaiGiriYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
     azureAuspiceYPos = tripleKasumiGiriYPos + heightForTextDescent + 5
     analysisYPos = azureAuspiceYPos + heightForTextDescent + 5
     alarmPheremonesYPos = analysisYPos + heightForTextDescent + 5
+    chainDeathmatchYPos = alarmPheremonesYPos + heightForNoTextDescent + 5
 
 
     // opening statements
@@ -538,11 +545,11 @@ function draw() {
     strokeWeight(1)
     textSize(20)
 
-    // exaflares
-    if (mouseX > padding && mouseX < exaflareWidth + 5 &&
-        mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent)
-        fill(0, 0, 15)
-    rect(padding + 1, exaflareYPos, exaflareWidth, heightForNoTextDescent, 5)
+    // // exaflares
+    // if (mouseX > padding && mouseX < exaflareWidth + 5 &&
+    //     mouseY > exaflareYPos && mouseY < exaflareYPos + heightForNoTextDescent)
+    //     fill(0, 0, 15)
+    // rect(padding + 1, exaflareYPos, exaflareWidth, heightForNoTextDescent, 5)
 
     // // fighting spirits
     // fill(0, 0, 25)
@@ -588,15 +595,20 @@ function draw() {
     // alarm pheremones
     fill(0, 0, 25)
     if (mouseX > padding && mouseX < alarmPheremonesWidth + 5 &&
-        mouseY > alarmPheremonesYPos && mouseY < alarmPheremonesYPos + heightForTextDescent) fill(0, 0, 15)
+        mouseY > alarmPheremonesYPos && mouseY < alarmPheremonesYPos + heightForNoTextDescent) fill(0, 0, 15)
     rect(padding + 1, alarmPheremonesYPos, alarmPheremonesWidth, heightForNoTextDescent, 5)
+
+    // chain deathmatch
+    fill(0, 0, 25)
+    if (mouseX > padding && mouseX < chainDeathmatchWidth + 5 &&
+        mouseY > chainDeathmatchYPos && mouseY < chainDeathmatchYPos + heightForNoTextDescent) fill(0, 0, 15)
+    rect(padding + 1, chainDeathmatchYPos, chainDeathmatchWidth, heightForNoTextDescent, 5)
 
     // also add a few rotation buttons
     // counterclockwise
     fill(0, 0, 25)
     if (mouseX > padding && mouseX < counterClockwiseWidth + 5 &&
-        mouseY > counterClockwiseYPos && mouseY < counterClockwiseYPos + heightForNoTextDescent)
-        fill(0, 0, 15)
+        mouseY > counterClockwiseYPos && mouseY < counterClockwiseYPos + heightForNoTextDescent) fill(0, 0, 15)
     rect(padding + 1, counterClockwiseYPos, counterClockwiseWidth, heightForNoTextDescent, 5)
 
     // clockwise
@@ -610,7 +622,7 @@ function draw() {
     noStroke()
     text("Rotate counterclockwise 90º", padding * 2 + 1, counterClockwiseYPos + textAscent() - 1)
     text("Rotate clockwise 90º", padding * 2 + 1, clockwiseYPos + textAscent() - 1)
-    text("Exaflares", padding * 2 + 1, exaflareYPos + textAscent() - 1)
+    // text("Exaflares", padding * 2 + 1, exaflareYPos + textAscent() - 1)
     // text("Fighting Spirits", padding*2 + 1, fightingSpiritsYPos + textAscent())
     // text("Malformed Reincarnation", padding*2 + 1, malformedReincarnationYPos + textAscent() - 1)
     text("Triple Kasumi-Giri", padding * 2 + 1, tripleKasumiGiriYPos + textAscent())
@@ -618,6 +630,7 @@ function draw() {
     text("Azure Auspice", padding * 2 + 1, azureAuspiceYPos + textAscent())
     text("Analysis", padding * 2 + 1, analysisYPos + textAscent())
     text("Alarm Pheremones", padding * 2 + 1, alarmPheremonesYPos + textAscent())
+    text("Chain Deathmatch", padding * 2 + 1, chainDeathmatchYPos + textAscent())
 
 
     push()
@@ -881,6 +894,77 @@ function draw() {
             280 * sin(radians(45)), 280 * sin(radians(45)))
         line(280 * sin(radians(45)), -280 * sin(radians(45)),
             -280 * sin(radians(45)), 280 * sin(radians(45)))
+    }
+    if (mechanic === "Chain Deathmatch") { // Arcadion M3S background
+        // red square with smaller greyish brown square on top of it
+        fill(0, 100, 80)
+        square(-300, -300, 600)
+        fill(20, 20, 30)
+        square(-280, -280, 560)
+
+        // then add the 4 circles that don't quite go to the center
+        stroke(20, 20, 40)
+        strokeWeight(4)
+        noFill()
+        circle(-145, -145, 310)
+        circle(145, -145, 310)
+        circle(145, 145, 310)
+        circle(-145, 145, 310)
+
+        // there are 4 arcs that intersect further away from the center,
+        // with a center point of around halfway to each corner
+        // the outside of the arc has a blacker border
+        stroke(20, 20, 60, 70)
+        strokeWeight(10)
+        arc(-150, -150, 600, 600, -PI/7, -27*PI/20)
+        stroke(20, 20, 100, 70)
+        strokeWeight(1)
+        arc(-150, -150, 610, 610, -PI/7, -27*PI/20)
+        stroke(20, 20, 60, 70)
+        strokeWeight(10)
+        arc(150, -150, 600, 600, 7*PI/20, 8*PI/7)
+        stroke(20, 20, 100, 70)
+        strokeWeight(1)
+        arc(150, -150, 610, 610, 7*PI/20, 8*PI/7)
+        stroke(20, 20, 60, 70)
+        strokeWeight(10)
+        arc(150, 150, 600, 600, 6*PI/7, -7*PI/20)
+        stroke(20, 20, 100, 70)
+        strokeWeight(1)
+        arc(150, 150, 610, 610, 6*PI/7, -7*PI/20)
+        stroke(20, 20, 60, 70)
+        strokeWeight(10)
+        arc(-150, 150, 600, 600, 27*PI/20, PI/7)
+        stroke(20, 20, 100, 70)
+        strokeWeight(1)
+        arc(-150, 150, 610, 610, 27*PI/20, PI/7)
+
+
+        // there are 4 points at each intercardinal
+        stroke(20, 20, 60)
+        strokeWeight(10)
+        point(-135, -135)
+        point(135, -135)
+        point(135, 135)
+        point(-135, 135)
+
+
+        // redraw the edge of the arena to hide the edge of everything that we
+        // just drew
+        fill(0, 100, 80)
+        noStroke()
+        beginShape()
+        vertex(-300, -300)
+        vertex(300, -300)
+        vertex(300, 300)
+        vertex(-300, 300)
+        beginContour()
+        vertex(-280, 280)
+        vertex(280, 280)
+        vertex(280, -280)
+        vertex(-280, -280)
+        endContour()
+        endShape(CLOSE)
     }
 
     // display N, S, W, and E
@@ -2807,6 +2891,32 @@ function mousePressed() {
 
             AoEs.push(new GroupBee(x, y, angle, i*1000 + 1000))
         }
+
+    } if (mouseX > padding && mouseX < chainDeathmatchWidth + 5 &&
+        mouseY > chainDeathmatchYPos && mouseY < chainDeathmatchYPos
+        + heightForNoTextDescent) {
+        logWindowRow6 = logWindowRow5
+        logWindowRow5 = logWindowRow4
+        logWindowRow4 = logWindowRow3
+        logWindowRow3 = logWindowRow2
+        logWindowRow2 = logWindowRow1
+        // log message for reloading mechanic
+        if (mechanic === "Chain Deathmatch") logWindowRow1 =
+            {"text": "Reloading Chain Deathmatch...", "color": [0, 0, 100]}
+        // log message for switching mechanics
+        else logWindowRow1 = {"text": "Switching to Chain Deathmatch...", "color": [0, 0, 100]}
+        partyWiped = false
+        mechanic = "Chain Deathmatch"
+
+        // everything except for you and the boss starts off the map
+        drgPosX = -100000
+        drgPosY = -100000
+        sgePosX = -100000
+        sgePosY = -100000
+        warPosX = -100000
+        warPosY = -100000
+        bossPosX = 700
+        bossPosY = 300
 
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
         // click on the microscope to make you turn to the microscope
