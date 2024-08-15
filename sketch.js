@@ -1624,12 +1624,17 @@ function draw() {
 
             break
         case "Alarm Pheremones":
+            // here we just display the AoEs
             for (let AoE of AoEs) {
-                try {
-                    AoE.update()
-                    AoE.displayAoE()
-                } catch {
-                }
+                AoE.update()
+                AoE.displayAoE()
+            }
+            break
+        case "Chain Deathmatch":
+            // here we just display the AoEs
+            for (let AoE of AoEs) {
+                AoE.update()
+                AoE.displayAoE()
             }
             break
     }
@@ -2918,6 +2923,31 @@ function mousePressed() {
         warPosY = -100000
         bossPosX = 700
         bossPosY = 300
+
+        // a test set of AOEs. Right now this mechanic is being used for
+        // testing AoE animations, as maintenance is currently ongoing.
+        AoEs = [
+            new ConeAOE(700, 300, 600, 45, 315, 3000),
+            new DonutAOE(700, 300, 300, 3000),
+            new ConeAOE(700, 300, 600, 135, 405, 4000),
+            new DonutAOE(700, 300, 300, 4000),
+            new ConeAOE(700, 300, 600, 225, 495, 5000),
+            new DonutAOE(700, 300, 300, 5000),
+            new ConeAOE(700, 300, 600, 315, 585, 6000),
+            new DonutAOE(700, 300, 300, 6000),
+            new CircleAOE(700, 300, 300, 10000),
+            new DonutAOE(700, 300, 150, 13000),
+        ]
+        AoEs[0].opacity = -60*2.8
+        AoEs[1].opacity = -60*2.8
+        AoEs[2].opacity = -60*3.8
+        AoEs[3].opacity = -60*3.8
+        AoEs[4].opacity = -60*4.8
+        AoEs[5].opacity = -60*4.8
+        AoEs[6].opacity = -60*5.8
+        AoEs[7].opacity = -60*5.8
+        AoEs[8].opacity = -60*8
+        AoEs[9].opacity = -60*11
 
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
         // click on the microscope to make you turn to the microscope
