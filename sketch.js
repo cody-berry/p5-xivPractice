@@ -2927,27 +2927,42 @@ function mousePressed() {
         // a test set of AOEs. Right now this mechanic is being used for
         // testing AoE animations, as maintenance is currently ongoing.
         AoEs = [
-            new ConeAOE(700, 300, 600, 45, 315, 3000),
-            new DonutAOE(700, 300, 300, 3000),
-            new ConeAOE(700, 300, 600, 135, 405, 4000),
-            new DonutAOE(700, 300, 300, 4000),
-            new ConeAOE(700, 300, 600, 225, 495, 5000),
-            new DonutAOE(700, 300, 300, 5000),
-            new ConeAOE(700, 300, 600, 315, 585, 6000),
-            new DonutAOE(700, 300, 300, 6000),
-            new CircleAOE(700, 300, 300, 10000),
-            new DonutAOE(700, 300, 150, 13000),
+            new DonutAOE(700, 300, 300, 3000, true),
+            new CircleAOE(700, 300, 500, 3000, true),
+            new DonutAOE(700, 300, 250, 5000, false),
+            new CircleAOE(700, 300, 400, 5000, true),
+            new DonutAOE(700, 300, 200, 7000, false),
+            new CircleAOE(700, 300, 300, 7000, true),
+            new DonutAOE(700, 300, 150, 9000, false),
+            new CircleAOE(700, 300, 200, 9000, false),
+            new DonutAOE(700, 300, 100, 11000, false),
+            new CircleAOE(700, 300, 100, 11000, false),
+            new DonutAOE(700, 300, 50, 13000, false),
+
+            new RectAOE(400, 300, 600, 300, 3000, true),
+            new RectAOE(400, 0, 600, 300, 5000, false),
+
+            new ConeAOE(700, 300, 800, 0, 90, 7000, true),
+            new ConeAOE(700, 300, 800, 90, 360, 9000, false),
         ]
-        AoEs[0].opacity = -60*2.8
-        AoEs[1].opacity = -60*2.8
-        AoEs[2].opacity = -60*3.8
-        AoEs[3].opacity = -60*3.8
+        AoEs[0].opacity = -60*0.8
+        AoEs[1].opacity = -60*0.8
+        AoEs[2].opacity = -60*2.8
+        AoEs[3].opacity = -60*3.9
         AoEs[4].opacity = -60*4.8
-        AoEs[5].opacity = -60*4.8
-        AoEs[6].opacity = -60*5.8
-        AoEs[7].opacity = -60*5.8
-        AoEs[8].opacity = -60*8
-        AoEs[9].opacity = -60*11
+        AoEs[5].opacity = -60*6
+        AoEs[6].opacity = -60*6.8
+        AoEs[7].opacity = -60*6.8
+        AoEs[8].opacity = -60*8.8
+        AoEs[9].opacity = -60*8.8
+        AoEs[10].opacity = -60*10.8
+
+
+        AoEs[11].opacity = -60*0.8
+        AoEs[12].opacity = -60*2.8
+
+        AoEs[13].opacity = -60*4.8
+        AoEs[14].opacity = -60*6.8
 
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
         // click on the microscope to make you turn to the microscope

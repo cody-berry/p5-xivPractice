@@ -125,7 +125,7 @@ class GroupBee {
 
 // Displays a circle-shaped AoE on the screen
 class CircleAOE {
-    constructor(posX, posY, size, goesOffInMillis) {
+    constructor(posX, posY, size, goesOffInMillis, isTelegraphed) {
         this.x = posX - 700
         this.y = posY - 300
         this.diameter = size
@@ -133,6 +133,7 @@ class CircleAOE {
         this.createdAt = millis()
         this.opacity = 0
         this.stopAccumulatingOpacity = false
+        this.isTelegraphed = isTelegraphed
     }
 
     // update the AoE by checking whether it's gone off and updating its
@@ -163,30 +164,32 @@ class CircleAOE {
 
     // displays the orange version of the AoE.
     displayAoE() {
-        fill(20, 100, 100, this.opacity)
-        circle(this.x, this.y, this.diameter)
+        if (this.isTelegraphed) {
+            fill(20, 100, 100, this.opacity)
+            circle(this.x, this.y, this.diameter)
 
-        // we also have the highlight
-        // moves from inner to outer
-        noFill()
-        stroke(20, 100, 100,
-            map(((millis() - this.createdAt)/5) % (this.diameter + 10),
-                4*this.diameter/5, this.diameter + 5, this.opacity/2, 0))
-        strokeWeight(5)
-        circle(this.x, this.y, ((millis() - this.createdAt)/5) % (this.diameter + 10))
+            // we also have the highlight
+            // moves from inner to outer
+            noFill()
+            stroke(20, 100, 100,
+                map(((millis() - this.createdAt) / 5) % (this.diameter + 10),
+                    4 * this.diameter / 5, this.diameter + 5, this.opacity / 2, 0))
+            strokeWeight(5)
+            circle(this.x, this.y, ((millis() - this.createdAt) / 5) % (this.diameter + 10))
 
-        stroke(20, 100, 100,
-            map(((millis() - this.createdAt)/5) % (this.diameter + 10),
-                4*this.diameter/5, this.diameter + 5, this.opacity/4, 0))
-        strokeWeight(10)
-        circle(this.x, this.y, ((millis() - this.createdAt)/5) % (this.diameter + 10))
+            stroke(20, 100, 100,
+                map(((millis() - this.createdAt) / 5) % (this.diameter + 10),
+                    4 * this.diameter / 5, this.diameter + 5, this.opacity / 4, 0))
+            strokeWeight(10)
+            circle(this.x, this.y, ((millis() - this.createdAt) / 5) % (this.diameter + 10))
 
-        noStroke()
+            noStroke()
+        }
     }
 }
 
 class RectAOE {
-    constructor(posX, posY, width, height, goesOffInMillis) {
+    constructor(posX, posY, width, height, goesOffInMillis, isTelegraphed) {
         this.x = posX - 700
         this.y = posY - 300
         this.width = width
@@ -195,6 +198,7 @@ class RectAOE {
         this.createdAt = millis()
         this.opacity = 0
         this.stopAccumulatingOpacity = false
+        this.isTelegraphed = isTelegraphed
     }
 
     // update the AoE by checking whether it's gone off and updating its
@@ -225,26 +229,28 @@ class RectAOE {
 
     // displays the orange version of the AoE.
     displayAoE() {
-        fill(20, 100, 100, this.opacity)
-        rect(this.x, this.y, this.width, this.height)
+        if (this.isTelegraphed) {
+            fill(20, 100, 100, this.opacity)
+            rect(this.x, this.y, this.width, this.height)
 
-        // create a highlighted part, moving from left to right
-        noFill()
-        stroke(20, 100, 100,
-            map(((millis() - this.createdAt)/4) % (this.width + 10),
-                4*this.width/5, this.width + 5, this.opacity/2, 0))
-        strokeWeight(5)
-        line(this.x + ((millis() - this.createdAt)/4) % (this.width + 10), this.y,
-             this.x + ((millis() - this.createdAt)/4) % (this.width + 10), this.y + this.height)
+            // create a highlighted part, moving from left to right
+            noFill()
+            stroke(20, 100, 100,
+                map(((millis() - this.createdAt) / 4) % (this.width + 10),
+                    4 * this.width / 5, this.width + 5, this.opacity / 2, 0))
+            strokeWeight(5)
+            line(this.x + ((millis() - this.createdAt) / 4) % (this.width + 10), this.y,
+                this.x + ((millis() - this.createdAt) / 4) % (this.width + 10), this.y + this.height)
 
-        stroke(20, 100, 100,
-            map(((millis() - this.createdAt)/4) % (this.width + 10),
-                4*this.width/5, this.width + 5, this.opacity/4, 0))
-        strokeWeight(10)
-        line(this.x + ((millis() - this.createdAt)/4) % (this.width + 10), this.y,
-             this.x + ((millis() - this.createdAt)/4) % (this.width + 10), this.y + this.height)
+            stroke(20, 100, 100,
+                map(((millis() - this.createdAt) / 4) % (this.width + 10),
+                    4 * this.width / 5, this.width + 5, this.opacity / 4, 0))
+            strokeWeight(10)
+            line(this.x + ((millis() - this.createdAt) / 4) % (this.width + 10), this.y,
+                this.x + ((millis() - this.createdAt) / 4) % (this.width + 10), this.y + this.height)
 
-        noStroke()
+            noStroke()
+        }
     }
 }
 
@@ -354,7 +360,7 @@ class LineAOE {
 }
 
 class DonutAOE {
-    constructor(posX, posY, size, goesOffInMillis) {
+    constructor(posX, posY, size, goesOffInMillis, isTelegraphed) {
         this.x = posX - 700
         this.y = posY - 300
         this.size = size
@@ -362,6 +368,7 @@ class DonutAOE {
         this.createdAt = millis()
         this.opacity = 0
         this.stopAccumulatingOpacity = false
+        this.isTelegraphed = isTelegraphed
     }
 
     // update the AoE by checking whether it's gone off and updating its
@@ -405,105 +412,107 @@ class DonutAOE {
 
     // displays the orange version of the AoE.
     displayAoE() {
-        // the only way to display a donut is to have a beginShape rectangle
-        // and manually display a circle in the contour.
-        fill(20, 100, 100, this.opacity)
-        beginShape()
-        vertex(-300, -300)
-        vertex(300, -300)
-        vertex(300, 300)
-        vertex(-300, 300)
-        beginContour()
-        for (let angle = TWO_PI; angle > 0; angle -= TWO_PI/60) {
-            let x = this.x + cos(angle) * this.size
-            let y = this.y + sin(angle) * this.size
-            vertex(x, y)
+        if (this.isTelegraphed) {
+            // the only way to display a donut is to have a beginShape rectangle
+            // and manually display a circle in the contour.
+            fill(20, 100, 100, this.opacity)
+            beginShape()
+            vertex(-300, -300)
+            vertex(300, -300)
+            vertex(300, 300)
+            vertex(-300, 300)
+            beginContour()
+            for (let angle = TWO_PI; angle > 0; angle -= TWO_PI / 60) {
+                let x = this.x + cos(angle) * this.size
+                let y = this.y + sin(angle) * this.size
+                vertex(x, y)
+            }
+            endContour()
+            endShape(CLOSE)
+
+            // then add a highlight
+            // now, you might not know how we're going to highlight a donut.
+            // this is understandable, because it's quite complex.
+            // we're going to start with the inner 60 points of the circle, and
+            // then lerp those to the outer points repeatedly every 3s.
+
+            // first we figure out the num millis the highlight has been lerping
+            // to the outside for, and the progress in the lerp.
+            let millisSinceHighlightAppeared = (millis() - this.createdAt) % 2000
+            let lerpProgress = millisSinceHighlightAppeared / 2000
+
+            // then make a list of the end points of the lerp and the starting
+            // points of the lerp.
+            // the starting points are the points along the inner circle. for
+            // that, we use the same code we did earlier to display the hole of
+            // the donut, except without the contour and vertex shenanigans and
+            // instead appending x and y to the list.
+            let startingXPoints = []
+            let startingYPoints = []
+            for (let angle = TWO_PI; angle > 0; angle -= TWO_PI / 60) {
+                startingXPoints.push(this.x + cos(angle) * this.size)
+                startingYPoints.push(this.y + sin(angle) * this.size)
+            }
+
+            // the ending points are the points along the outside. since there
+            // must be 60 points evenly distributed across the outside of the
+            // arena, there must be 14 points on each side and 1 point on each
+            // corner.
+            // we will start at the right, then make our way counterclockwise to
+            // the point right before the right point in order to minimize
+            // random rotation in the highlight.
+            // since there is no middle right point (the closest we can get to
+            // 300, 0 is 300, -20 or 300, 20 without breaking our points), we'll
+            // start at 300, -20 for smoother rotation
+            let endingXPoints = [
+                300, 300, 300, 300, 300, 300, 300, 290,         // top part of right side + top-right corner
+                260, 220, 180, 140, 100, 60, 20,                // right part of top side
+                -20, -60, -100, -140, -180, -220, -260, -290,   // left part of top side + top-left corner
+                -300, -300, -300, -300, -300, -300, -300,       // top part of left side
+                -300, -300, -300, -300, -300, -300, -300, -290, // bottom part of left side + bottom-left corner
+                -260, -220, -180, -140, -100, -60, -20,         // left part of bottom side
+                20, 60, 100, 140, 180, 260, 290,                // right part of bottom side + bottom-right corner
+                300, 300, 300, 300, 300, 300, 300               // bottom part of right side
+            ]
+            let endingYPoints = [
+                -20, -60, -100, -140, -180, -220, -260, -290,   // top part of right side + top-right corner
+                -300, -300, -300, -300, -300, -300, -300,       // right part of top side
+                -300, -300, -300, -300, -300, -300, -300, -290, // left part of top side + top-left corner
+                -260, -220, -180, -140, -100, -60, -20,         // top part of left side
+                20, 60, 100, 140, 180, 260, 290,                // bottom part of left side + bottom-left corner
+                300, 300, 300, 300, 300, 300, 300,              // left part of bottom side
+                300, 300, 300, 300, 300, 300, 300, 290,         // right part of bottom side + bottom-right corner
+                260, 220, 180, 140, 100, 60, 20,                // bottom part of right side
+            ]
+
+            // our highlight has less and less opacity starting from
+            // lerpProgress=0.8, until it reaches lerpProgress=0.99 where the
+            // highlight completely disappears.
+            stroke(20, 100, 100,
+                map(lerpProgress, 0.8, 0.99, this.opacity / 2, 0))
+            noFill()
+            strokeWeight(5)
+
+            // we display all 60 points
+            beginShape()
+            for (let i = 0; i < 60; i++) {
+                let startingX = startingXPoints[i]
+                let startingY = startingYPoints[i]
+                let endingX = endingXPoints[i]
+                let endingY = endingYPoints[i]
+                let x = map(lerpProgress, 0, 1, startingX, endingX)
+                let y = map(lerpProgress, 0, 1, startingY, endingY)
+                vertex(x, y)
+            }
+            endShape(CLOSE)
+
+            noStroke()
         }
-        endContour()
-        endShape(CLOSE)
-
-        // then add a highlight
-        // now, you might not know how we're going to highlight a donut.
-        // this is understandable, because it's quite complex.
-        // we're going to start with the inner 60 points of the circle, and
-        // then lerp those to the outer points repeatedly every 3s.
-
-        // first we figure out the num millis the highlight has been lerping
-        // to the outside for, and the progress in the lerp.
-        let millisSinceHighlightAppeared = (millis() - this.createdAt) % 2000
-        let lerpProgress = millisSinceHighlightAppeared/2000
-
-        // then make a list of the end points of the lerp and the starting
-        // points of the lerp.
-        // the starting points are the points along the inner circle. for
-        // that, we use the same code we did earlier to display the hole of
-        // the donut, except without the contour and vertex shenanigans and
-        // instead appending x and y to the list.
-        let startingXPoints = []
-        let startingYPoints = []
-        for (let angle = TWO_PI; angle > 0; angle -= TWO_PI/60) {
-            startingXPoints.push(this.x + cos(angle) * this.size)
-            startingYPoints.push(this.y + sin(angle) * this.size)
-        }
-
-        // the ending points are the points along the outside. since there
-        // must be 60 points evenly distributed across the outside of the
-        // arena, there must be 14 points on each side and 1 point on each
-        // corner.
-        // we will start at the right, then make our way counterclockwise to
-        // the point right before the right point in order to minimize
-        // random rotation in the highlight.
-        // since there is no middle right point (the closest we can get to
-        // 300, 0 is 300, -20 or 300, 20 without breaking our points), we'll
-        // start at 300, -20 for smoother rotation
-        let endingXPoints = [
-            300, 300, 300, 300, 300, 300, 300, 290,         // top part of right side + top-right corner
-            260, 220, 180, 140, 100, 60, 20,                // right part of top side
-            -20, -60, -100, -140, -180, -220, -260, -290,   // left part of top side + top-left corner
-            -300, -300, -300, -300, -300, -300, -300,       // top part of left side
-            -300, -300, -300, -300, -300, -300, -300, -290, // bottom part of left side + bottom-left corner
-            -260, -220, -180, -140, -100, -60, -20,         // left part of bottom side
-            20, 60, 100, 140, 180, 260, 290,                // right part of bottom side + bottom-right corner
-            300, 300, 300, 300, 300, 300, 300               // bottom part of right side
-        ]
-        let endingYPoints = [
-            -20, -60, -100, -140, -180, -220, -260, -290,   // top part of right side + top-right corner
-            -300, -300, -300, -300, -300, -300, -300,       // right part of top side
-            -300, -300, -300, -300, -300, -300, -300, -290, // left part of top side + top-left corner
-            -260, -220, -180, -140, -100, -60, -20,         // top part of left side
-            20, 60, 100, 140, 180, 260, 290,                // bottom part of left side + bottom-left corner
-            300, 300, 300, 300, 300, 300, 300,              // left part of bottom side
-            300, 300, 300, 300, 300, 300, 300, 290,         // right part of bottom side + bottom-right corner
-            260, 220, 180, 140, 100, 60, 20,                // bottom part of right side
-        ]
-
-        // our highlight has less and less opacity starting from
-        // lerpProgress=0.8, until it reaches lerpProgress=0.99 where the
-        // highlight completely disappears.
-        stroke(20, 100, 100,
-               map(lerpProgress, 0.8, 0.99, this.opacity/2, 0))
-        noFill()
-        strokeWeight(5)
-
-        // we display all 60 points
-        beginShape()
-        for (let i = 0; i < 60; i++) {
-            let startingX = startingXPoints[i]
-            let startingY = startingYPoints[i]
-            let endingX = endingXPoints[i]
-            let endingY = endingYPoints[i]
-            let x = map(lerpProgress, 0, 1, startingX, endingX)
-            let y = map(lerpProgress, 0, 1, startingY, endingY)
-            vertex(x, y)
-        }
-        endShape(CLOSE)
-
-        noStroke()
     }
 }
 
 class ConeAOE {
-    constructor(posX, posY, size, startingAngle, endingAngle, goesOffInMillis) {
+    constructor(posX, posY, size, startingAngle, endingAngle, goesOffInMillis, isTelegraphed) {
         this.x = posX - 700
         this.y = posY - 300
         this.size = size
@@ -513,6 +522,7 @@ class ConeAOE {
         this.createdAt = millis()
         this.opacity = 0
         this.stopAccumulatingOpacity = false
+        this.isTelegraphed = isTelegraphed
     }
 
     // update the AoE by checking whether it's gone off and updating its
@@ -542,33 +552,35 @@ class ConeAOE {
 
     // displays the orange version of the AoE.
     displayAoE() {
-        fill(20, 100, 100, this.opacity)
-        arc(this.x, this.y, this.size, this.size, radians(this.startAngle), radians(this.endAngle))
+        if (this.isTelegraphed) {
+            fill(20, 100, 100, this.opacity)
+            arc(this.x, this.y, this.size, this.size, radians(this.startAngle), radians(this.endAngle))
 
-        // then highlight part of it, moving out
-        // it disappears as it moves out
-        stroke(20, 100, 100,
-              map(((millis() - this.createdAt)/3) % (this.size + 10),
-                  4*this.size/5, this.size + 5, this.opacity/2, 0))
-        strokeWeight(5)
-        noFill()
-        arc(this.x, this.y,
-            ((millis() - this.createdAt)/3) % (this.size + 10),
-            ((millis() - this.createdAt)/3) % (this.size + 10),
-            radians(this.startAngle), radians(this.endAngle))
-        noStroke()
+            // then highlight part of it, moving out
+            // it disappears as it moves out
+            stroke(20, 100, 100,
+                map(((millis() - this.createdAt) / 3) % (this.size + 10),
+                    4 * this.size / 5, this.size + 5, this.opacity / 2, 0))
+            strokeWeight(5)
+            noFill()
+            arc(this.x, this.y,
+                ((millis() - this.createdAt) / 3) % (this.size + 10),
+                ((millis() - this.createdAt) / 3) % (this.size + 10),
+                radians(this.startAngle), radians(this.endAngle))
+            noStroke()
 
-        // there's a lesser but thicker highlighting over that
-        stroke(20, 100, 100,
-            map(((millis() - this.createdAt)/3) % (this.size + 10),
-                4*this.size/5, this.size + 5, this.opacity/4, 0))
-        strokeWeight(10)
-        noFill()
-        arc(this.x, this.y,
-            ((millis() - this.createdAt)/3) % (this.size + 10),
-            ((millis() - this.createdAt)/3) % (this.size + 10),
-            radians(this.startAngle), radians(this.endAngle))
-        noStroke()
+            // there's a lesser but thicker highlighting over that
+            stroke(20, 100, 100,
+                map(((millis() - this.createdAt) / 3) % (this.size + 10),
+                    4 * this.size / 5, this.size + 5, this.opacity / 4, 0))
+            strokeWeight(10)
+            noFill()
+            arc(this.x, this.y,
+                ((millis() - this.createdAt) / 3) % (this.size + 10),
+                ((millis() - this.createdAt) / 3) % (this.size + 10),
+                radians(this.startAngle), radians(this.endAngle))
+            noStroke()
+        }
     }
 }
 
