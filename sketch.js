@@ -71,6 +71,7 @@ let exoflares
 let helper
 let AoEs
 
+// malformed reincarnation
 let blueSoakTowers
 let orangeSoakTowers
 let directionOfBlue
@@ -85,17 +86,18 @@ let triplesGivenTo
 let triplesNotGivenTo
 let droppedTowers
 
+// exaflares
 let swapMovement // whether the top-right or top-left is originally safe, basically
 let stackFirst // do we stack first or spread first?
 let whoGetsStack // who got "stack"?
 let swap // only used for sage: did both DPS or both supports get it?
 let rotateExaflares // the exaflares could be on the north and south or on the east and west
-
 let lastHitBy // Keeps track of what and when each character suffered an AoE
 
 let mechanic // keeps track of what mechanic we're practicing
 let mechanicStarted
 
+// triple kasumi-giri
 let bossFacing
 let cleaveOneColor
 let cleaveOneSafeDirection
@@ -107,14 +109,17 @@ let firstAoEResolved
 let secondAoEResolved
 let thirdAoEResolved
 
+// fleeting lai-giri
 let circleResolved
 let topLeftCrossExpandsFirst // whether the top-left to bottom-right cross expands first or the bottom-left to top-right one
 let northLineExpandsFirst // whether the top horizontal line expands first or the bottom horizontal line
 let tetheredPlayer
 let jumpResolved
 
+// azure auspice
 let linesInOrderOfResolvingOrder
 
+// analysis
 let debuffDirection
 let orbOnePosition
 let orbTwoPosition
@@ -129,6 +134,8 @@ let secondOrbWentOff
 let gotHitByFirstOrb
 let gotHitBySecondOrb
 let gotHitByTether
+
+//
 
 let heightForNoTextDescent
 let heightForTextDescent
@@ -399,8 +406,8 @@ function setup() {
     // opening statements
     logWindowRow6 = {"text": "Movement abilities are restricted.", "color": [0, 80, 80]}
     logWindowRow5 = {"text": "Use W, A, S, and D to move.", "color": [72, 80, 80]}
-    logWindowRow4 = {"text": "Click on part of the microscope to change" +
-            " facing.", "color": [72, 80, 80]}
+    logWindowRow4 = {"text": "Click on part of the magnifying glass to change" +
+            " facing. This was originally called a microscope.", "color": [72, 80, 80]}
     logWindowRow3 = {"text": "Click on any mechanic button to change to it.", "color": [72, 80, 80]}
     logWindowRow2 = {"text": "Feel free to execute mechanics incorrectly to" +
             " test!", "color": [144, 80, 80]}
@@ -2090,8 +2097,8 @@ function draw() {
             break
     }
 
-    // to the right of the buttons is a microscope displaying your facing
-    // add microscope "handle"
+    // to the right of the buttons is a magnifying glass displaying your facing
+    // add magnifying glass "handle"
     fill(20, 100, 30)
     noStroke()
     rect(350, 190, 50, 20) // wood handle
@@ -2101,7 +2108,7 @@ function draw() {
     circle(370, 200, 10)
     circle(390, 200, 10)
 
-    // then the microscope glass
+    // then the glass
     stroke(70, 50, 50)
     strokeWeight(2)
     noFill()
@@ -2116,8 +2123,8 @@ function draw() {
     triangle(25, -10, 25, 10, 45, 0)
     pop()
 
-    // if your mouse is in the microscope, highlight your facing if your self in
-    // the microscope would turn to the mouse
+    // if your mouse is in the magnifying glass, highlight your facing if your self in
+    // the magnifying glass would turn to the mouse
     if (sqrt((mouseX - 300) ** 2 + (mouseY - 200) ** 2) < 50) {
         angleMode(DEGREES)
         push()
@@ -2924,48 +2931,14 @@ function mousePressed() {
         bossPosX = 700
         bossPosY = 300
 
-        // a test set of AOEs. Right now this mechanic is being used for
-        // testing AoE animations, as maintenance is currently ongoing.
-        AoEs = [
-            new DonutAOE(700, 300, 300, 3000, true),
-            new CircleAOE(700, 300, 500, 3000, true),
-            new DonutAOE(700, 300, 250, 5000, false),
-            new CircleAOE(700, 300, 400, 5000, true),
-            new DonutAOE(700, 300, 200, 7000, false),
-            new CircleAOE(700, 300, 300, 7000, true),
-            new DonutAOE(700, 300, 150, 9000, false),
-            new CircleAOE(700, 300, 200, 9000, false),
-            new DonutAOE(700, 300, 100, 11000, false),
-            new CircleAOE(700, 300, 100, 11000, false),
-            new DonutAOE(700, 300, 50, 13000, false),
 
-            new RectAOE(400, 300, 600, 300, 3000, true),
-            new RectAOE(400, 0, 600, 300, 5000, false),
+        AoEs = []
 
-            new ConeAOE(700, 300, 800, 0, 90, 7000, true),
-            new ConeAOE(700, 300, 800, 90, 360, 9000, false),
-        ]
-        AoEs[0].opacity = -60*0.8
-        AoEs[1].opacity = -60*0.8
-        AoEs[2].opacity = -60*2.8
-        AoEs[3].opacity = -60*3.9
-        AoEs[4].opacity = -60*4.8
-        AoEs[5].opacity = -60*6
-        AoEs[6].opacity = -60*6.8
-        AoEs[7].opacity = -60*6.8
-        AoEs[8].opacity = -60*8.8
-        AoEs[9].opacity = -60*8.8
-        AoEs[10].opacity = -60*10.8
-
-
-        AoEs[11].opacity = -60*0.8
-        AoEs[12].opacity = -60*2.8
-
-        AoEs[13].opacity = -60*4.8
-        AoEs[14].opacity = -60*6.8
+        // add positions of the boss's clones (top and left edge for now,
+        // although they will change
 
     } if (sqrt((mouseX - 300)**2 + (mouseY - 200)**2) < 50) {
-        // click on the microscope to make you turn to the microscope
+        // click on the magnifying glass to make you turn to the magnifying glass
         angleMode(DEGREES)
         yourFacing = new Direction(-atan2(mouseX - 300, mouseY - 200) + 90)
         angleMode(RADIANS)
